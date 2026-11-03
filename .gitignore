@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.env
+.env.*
+tasks.json
+runs/
+runs-v2/
+model-runs/
+*.zip
+!reports/calibration-traces.zip
