@@ -78,13 +78,16 @@ class ApiAgentTests(unittest.TestCase):
                 frozen = configuration()
                 req = request_for(task, CONDITIONS[0], 1, task["starter"], None, [])
                 with patch("api_agent.configuration", side_effect=AssertionError("unexpected reread")):
-                    direct = call_model(req, resolved_config=frozen)
+                    direct = call_model(req, resolved_config=frozen,
+                                        instructions="DISCOVERY_TEST_INSTRUCTIONS")
         finally:
             server.shutdown()
             server.server_close()
             thread.join(timeout=2)
         self.assertEqual(len(ModelStub.received), 6)
         self.assertEqual(direct["metrics"]["model"], "stub-model")
+        self.assertEqual(ModelStub.received[-1]["messages"][0]["content"],
+                         "DISCOVERY_TEST_INSTRUCTIONS")
         self.assertTrue(all(r["error"] is None for r in runs))
         self.assertTrue(all(r["total_tokens"] == 51 for r in runs))
         self.assertTrue(all(r["trace"][0]["response"]["metrics"]["model"] == "stub-model"

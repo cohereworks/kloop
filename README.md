@@ -130,6 +130,15 @@ Python dependencies or evidence that model inference was performed.
 
 The current status, priority order, residual risks, and next experiment are recorded in [PLAN.md](PLAN.md).
 
+## Discoverable uncertainty stratum
+
+The second pilot permits agents to spend turns querying an environmental
+oracle before submitting a solution. Unlike the original closed-specification
+task, initial evidence is deliberately underdetermined. Its four-arm control
+plane, deterministic baseline, and hosted-model adapter are documented in
+[STRATA.md](STRATA.md). The discovery trials are separate from the original
+calibration and must not be pooled with it without a stratified analysis plan.
+
 ## Kaggle environment
 
 ```text
