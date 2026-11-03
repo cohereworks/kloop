@@ -30,6 +30,30 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
+def arm_schedule(task_ids, *, mode="fixed", seed=None):
+    """Assign four-arm order per task; balanced mode rotates a shuffled square.
+
+    Every complete block of four tasks uses each arm once in each position.
+    This changes execution order, not the paired evidence or scoring contract.
+    """
+    if len(task_ids) != len(set(task_ids)):
+        raise ValueError("Task IDs must be unique")
+    if mode == "fixed":
+        return {task: CONDITIONS for task in task_ids}
+    if mode != "balanced" or type(seed) is not int:
+        raise ValueError("Balanced scheduling requires an explicit integer seed")
+    rng = random.Random(seed)
+    base = list(CONDITIONS)
+    rng.shuffle(base)
+    result = {}
+    for start in range(0, len(task_ids), len(CONDITIONS)):
+        rotations = list(range(len(CONDITIONS)))
+        rng.shuffle(rotations)
+        for task, rotation in zip(task_ids[start:start + len(CONDITIONS)], rotations):
+            result[task] = tuple(base[rotation:] + base[:rotation])
+    return result
+
+
 def validate_expr(expr, depth=0):
     if depth > 6 or not isinstance(expr, dict):
         raise ValueError("Expression must be a bounded JSON object")
@@ -170,6 +194,22 @@ def request_for(task, condition, turn, candidate, ledger, history):
     }
 
 
+def validate_response(response, request):
+    if not isinstance(response, dict) or "candidate" not in response:
+        raise RuntimeError("Agent response requires candidate")
+    validate_expr(response["candidate"])
+    message = response.get("message", "")
+    if not isinstance(message, str) or len(message) > 4000:
+        raise RuntimeError("Invalid message")
+    if request["condition"]["state"] == "explicit":
+        ledger = response.get("ledger")
+        if not isinstance(ledger, dict) or not all(k in ledger for k in STATE_FIELDS):
+            raise RuntimeError(f"Explicit-state response requires ledger fields {STATE_FIELDS}")
+        if len(canonical(ledger)) > MAX_STATE_CHARS:
+            raise RuntimeError("Ledger exceeds size limit")
+    return response
+
+
 def invoke_agent(command, request, cwd, timeout):
     start = time.monotonic()
     try:
@@ -185,22 +225,11 @@ def invoke_agent(command, request, cwd, timeout):
         response = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         raise RuntimeError(f"Agent returned invalid JSON: {proc.stdout[:500]}") from exc
-    if not isinstance(response, dict) or "candidate" not in response:
-        raise RuntimeError("Agent response requires candidate")
-    validate_expr(response["candidate"])
-    message = response.get("message", "")
-    if not isinstance(message, str) or len(message) > 4000:
-        raise RuntimeError("Invalid message")
-    if request["condition"]["state"] == "explicit":
-        ledger = response.get("ledger")
-        if not isinstance(ledger, dict) or not all(k in ledger for k in STATE_FIELDS):
-            raise RuntimeError(f"Explicit-state response requires ledger fields {STATE_FIELDS}")
-        if len(canonical(ledger)) > MAX_STATE_CHARS:
-            raise RuntimeError("Ledger exceeds size limit")
-    return response, time.monotonic() - start
+    return validate_response(response, request), time.monotonic() - start
 
 
-def run_one(task, condition, command, workdir, max_turns, timeout, max_total_tokens=None):
+def run_one(task, condition, command, workdir, max_turns, timeout,
+            max_total_tokens=None, adapter=None):
     workdir.mkdir(parents=True, exist_ok=True)
     candidate, ledger, history = copy.deepcopy(task["starter"]), None, []
     records = []
@@ -210,7 +239,12 @@ def run_one(task, condition, command, workdir, max_turns, timeout, max_total_tok
     for turn in range(1, max_turns + 1):
         req = request_for(task, condition, turn, candidate, ledger, history)
         try:
-            response, duration = invoke_agent(command, req, workdir, timeout)
+            if adapter is None:
+                response, duration = invoke_agent(command, req, workdir, timeout)
+            else:
+                start = time.monotonic()
+                response = validate_response(adapter(req), req)
+                duration = time.monotonic() - start
             token_count = response.get("metrics", {}).get("total_tokens")
             if type(token_count) is int and token_count >= 0:
                 token_counts.append(token_count)
@@ -231,7 +265,7 @@ def run_one(task, condition, command, workdir, max_turns, timeout, max_total_tok
                 break
             if public_pass:
                 break
-        except (RuntimeError, ValueError) as exc:
+        except (RuntimeError, ValueError, KeyError, TypeError) as exc:
             error = str(exc)
             records.append({"request": req, "error": error})
             break
@@ -288,6 +322,9 @@ def cli(argv=None):
     run.add_argument("--timeout", type=float, default=30)
     run.add_argument("--max-total-tokens", type=int, default=None,
                      help="Measured tokens per task/condition; adapter must return usage")
+    run.add_argument("--arm-order", choices=("fixed", "balanced"), default="fixed")
+    run.add_argument("--arm-seed", type=int,
+                     help="Required for balanced task-block scheduling")
     args = parser.parse_args(argv)
     if args.command == "generate":
         if not 1 <= args.count <= 1000:
@@ -307,10 +344,15 @@ def cli(argv=None):
     if not command:
         parser.error("empty agent command")
     runs = []
+    try:
+        schedule = arm_schedule([task["id"] for task in data["tasks"]],
+                                mode=args.arm_order, seed=args.arm_seed)
+    except ValueError as exc:
+        parser.error(str(exc))
     for task in data["tasks"]:
         validate_expr(task["starter"])
         validate_expr(task["_target"])
-        for condition in CONDITIONS:
+        for condition in schedule[task["id"]]:
             run_path = args.out / task["id"] / f"{condition[0]}_{condition[1]}"
             if run_path.exists() and any(run_path.iterdir()):
                 parser.error(f"Run directory not empty (use a fresh --out): {run_path}")
@@ -323,6 +365,9 @@ def cli(argv=None):
         "schema": SCHEMA, "task_file_sha256": hashlib.sha256(args.tasks.read_bytes()).hexdigest(),
         "agent_command": command, "max_turns": args.max_turns,
         "max_total_tokens": args.max_total_tokens,
+        "arm_order": args.arm_order, "arm_seed": args.arm_seed,
+        "execution_schedule": {task: [f"{a}_{b}" for a, b in order]
+                               for task, order in schedule.items()},
         "conditions": aggregate(runs),
         "warning": "No causal inference from a smoke-test adapter; this records protocol mechanics only.",
     }

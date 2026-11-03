@@ -4,8 +4,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pilot import (CONDITIONS, aggregate, evaluate, make_tasks, request_for,
-                   results, run_one, validate_expr)
+from pilot import (CONDITIONS, aggregate, arm_schedule, evaluate, make_tasks,
+                   request_for, results, run_one, validate_expr)
 
 
 class PilotTests(unittest.TestCase):
@@ -50,6 +50,44 @@ class PilotTests(unittest.TestCase):
             self.assertEqual(len(runs), 4)
             self.assertTrue(all(r["error"] is None for r in runs))
             self.assertEqual(set(aggregate(runs)), {f"{a}_{b}" for a, b in CONDITIONS})
+
+    def test_balanced_schedule_deterministic_and_positionally_balanced(self):
+        task_ids = [f"t{i:04d}" for i in range(13)]
+        first = arm_schedule(task_ids, mode="balanced", seed=125)
+        self.assertEqual(first, arm_schedule(task_ids, mode="balanced", seed=125))
+        self.assertNotEqual(first, arm_schedule(task_ids, mode="balanced", seed=126))
+        for start in (0, 4, 8):
+            block = [first[task] for task in task_ids[start:start + 4]]
+            self.assertTrue(all(set(order) == set(CONDITIONS) for order in block))
+            for position in range(4):
+                self.assertEqual({order[position] for order in block}, set(CONDITIONS))
+        with self.assertRaisesRegex(ValueError, "explicit integer seed"):
+            arm_schedule(task_ids, mode="balanced")
+        with self.assertRaisesRegex(ValueError, "unique"):
+            arm_schedule(["t1", "t1"])
+
+    def test_in_process_adapter_receives_public_only_request(self):
+        task = make_tasks(88, 1)["tasks"][0]
+        observed = []
+
+        def adapter(request):
+            wire = json.dumps(request)
+            self.assertNotIn("_hidden", wire)
+            self.assertNotIn("_target", wire)
+            observed.append(request)
+            return {"candidate": request["candidate"], "message": "No edit",
+                    "ledger": {key: "unchanged" for key in (
+                        "objective", "established", "falsified", "unresolved",
+                        "next_action", "verification")},
+                    "metrics": {"total_tokens": 30}}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run = run_one(task, ("k", "explicit"), None, Path(tmp),
+                          2, 10, max_total_tokens=60, adapter=adapter)
+        self.assertEqual(run["turns"], 2)
+        self.assertEqual(run["total_tokens"], 60)
+        self.assertEqual(len(observed), 2)
+        self.assertIsNone(run["error"])
 
 
 if __name__ == "__main__":
