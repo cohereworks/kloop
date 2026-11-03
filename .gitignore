@@ -10,5 +10,7 @@ runs-v2/
 model-runs/
 dist/
 kloop-kaggle-results.json
+private-holdouts/
+trial-analysis.json
 *.zip
 !reports/calibration-traces.zip

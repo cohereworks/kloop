@@ -13,11 +13,18 @@ Status: **mechanics verified; real-model hypothesis untested**.
 - [x] Record calibration results and archive complete deterministic smoke traces.
 - [x] Restore the original `KAGGLE_API_TOKEN` integration requirement.
 - [x] Build and mock-test a self-contained Kaggle Benchmarks task with isolated chat contexts.
+- [x] Add a reusable paired four-arm H3/H4/H5 analysis, complete-pair and
+      token-cap validation, conservative finite-sample decision bounds, and
+      reproducible descriptive bootstrap intervals.
+- [x] Add salted private-holdout manifest commitments with tamper verification.
 
 ## Next, in order
 
 1. **Exercise the intended Kaggle route**. The original README specified `KAGGLE_API_TOKEN`. A first-party Benchmarks task and manually gated GitHub Actions workflow are implemented, but require an authorized repository secret or worker token. Check available model slugs and quota; run the small exploratory task before planning confirmatory inference. The current worker has no Kaggle token or CLI.
-2. **Fix the confirmatory evaluation protocol**. Set sample size, seed commitment, run repetitions, and confidence interval method before evaluating a model; do not reuse the public calibration set as a hidden holdout.
+2. **Freeze the confirmatory evaluation** after an independent live pilot. The
+   [preregistration contract](PREREGISTRATION.md) and analysis/holdout tools now
+   exist; sample size/power, repeats, model settings, inference budget, and
+   private-holdout execution remain uncommitted. Do not reuse calibration data.
 3. **Harden adapter isolation**. A trusted HTTP adapter sends only public task fields, but arbitrary local adapters are not sandboxed by the runner. Run untrusted adapters in a real container or other constrained process environment.
 4. **Expand task strata**. Add discoverable uncertainty and private-preference tasks as distinct strata; the current DSL represents only closed-specification work.
 5. **Measure capability and drift**. Add recovery after injected errors, false-success rates, state-quality measures, cost, and independent evidence/relevance certificates.
@@ -31,3 +38,6 @@ Status: **mechanics verified; real-model hypothesis untested**.
 - The visible task data can be identical across arms while the generated prompt lengths and effective token usage differ. Use token accounting and report both outcome and cost.
 - The calibration dataset contains reference targets and cannot serve as an undisclosed benchmark once published.
 - Kaggle Benchmarks may retain model conversation state by default. Start a new chat per agent turn so only explicit `history` or `ledger` fields carry state across turns.
+- The present Kaggle benchmark embeds a public exploratory seed. It is not a
+  private-holdout executor, and the local pilot fixes arm order. Confirmatory
+  execution must address both before applying any inferential decision rule.

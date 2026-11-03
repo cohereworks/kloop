@@ -11,7 +11,7 @@ A standard-library Python harness for the four-condition continuation-feedback e
 From this directory (Python 3.10+):
 
 ```sh
-python -m unittest -v test_pilot test_api_agent test_kaggle_task
+python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment
 python pilot.py generate --seed 1337 --count 24 --out tasks.json
 python pilot.py run --tasks tasks.json --out runs --agent "python /absolute/path/to/baseline_agent.py" --max-turns 6
 ```
@@ -79,6 +79,23 @@ Output:
 The expression grammar is: `{ "var": "x"|"y" }`, `{ "const": integer -8..8 }`, or `{ "op": "add"|"sub"|"mul"|"min"|"max", "args": [expression, expression] }` (maximum 31 nodes).
 
 The harness writes one trace per task/condition and a scored `runs/summary.json`. See [PROTOCOL.md](PROTOCOL.md) for hypotheses, validity limits, and reporting requirements.
+
+## Analyze paired trials and commit a private holdout
+
+`analyze_trial.py` computes the three preregistered-candidate paired contrasts
+(H3/H4/H5), deterministic bootstrap intervals, and per-arm usage from either
+Kaggle result JSON or the local `runs/` directory. It rejects incomplete pairs
+and can enforce a precommitted measured-token cap:
+
+```sh
+python analyze_trial.py runs --resamples 20000 --bootstrap-seed 20261103
+```
+
+`holdout_commitment.py` creates a random private seed/nonce manifest and a
+public SHA-256 commitment to commit *before* model inference. Neither the
+existing calibration data nor the public Kaggle exploratory task is a private
+holdout. See [PREREGISTRATION.md](PREREGISTRATION.md) for the complete protocol,
+required operator decisions, and the explicit limits on inferential claims.
 
 ## Calibration artifacts
 
