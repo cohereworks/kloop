@@ -9,7 +9,7 @@ would make the one-bit feedback question meaningless.
 |---|---|---|---|---|
 | Closed specification | Public examples constrain target expression | Candidate evaluation against supplied examples | Exhaustive hidden cases | Implemented in `pilot.py` |
 | Discoverable uncertainty | Two observations underdetermine function | Agent-selected `probe(x,y)` | Coefficients and unqueried outputs | Implemented in `discovery_pilot.py` |
-| Private user preference | Environmental observations cannot determine preference | Directional feedback from preference holder | Preference itself | **Not implemented** |
+| Private user preference | Environmental observations cannot determine preference | Acceptance/rejection from preference holder | Preference itself | Implemented in `preference_pilot.py` |
 
 ## Discoverable-uncertainty pilot
 
@@ -51,6 +51,48 @@ For authorized hosted inference with an OpenAI-compatible endpoint, substitute
 configuration as the expression-repair adapter. Set a measured
 `--max-total-tokens` cap. No live model has been run through this stratum.
 
+## Private-preference pilot
+
+Eight publicly identical alternatives are indexed `0..7`; the evaluator holds
+one uniformly randomized favorite that is independent of the public request.
+The agent can make **up to four proposals** and then commit an option, within
+a five-turn cap. In the rich arms, the holder responds `Accepted` or `Rejected`
+after a proposal. In the `K` arms, every proposal elicits `K`, including
+proposals that happen to name the favorite. Nothing in the environment can
+disclose the preference. Both state modes have identical action budgets.
+
+Under a uniformly random target, and with no side channel, the entire all-`K`
+transcript is independent of the preference. Any decision policy therefore has
+success probability exactly **1/8** (in expectation over random preferences).
+With four distinct yes/no proposals, a rich-feedback policy can succeed on
+the first four options, then guess one of the four remaining options: **5/8**.
+This is an information-theoretic contrast, not a comparison of model skill.
+
+### Reproduce the negative control
+
+```sh
+python preference_pilot.py --seed 1337 --count 8 \
+  --agent "python /absolute/path/to/preference_baseline_agent.py" \
+  --out preference-runs --max-turns 5 --arm-seed 20261103
+python analyze_trial.py preference-runs --expected-tasks 8
+```
+
+The deterministic baseline proposes `0,1,2,3`, commits immediately on rich
+acceptance, and otherwise commits `4`. It yields 1/8 in both `K` conditions
+and 5/8 in both rich conditions over each complete block of eight preferences.
+The trace archive is `reports/preference-calibration-traces.zip`. The `public_pass`
+field here means the agent committed an option, **not** that the hidden
+preference was satisfied; `hidden_pass` alone measures success.
+
+To try a hosted model, substitute `preference_api_agent.py` and supply the
+same `KLOOP_*` endpoint configuration as the other adapters, with a measured
+`--max-total-tokens` cap. **The seeded generator and its algorithm are public.**
+An agent with access to the repository or seed could reconstruct calibration
+targets and invalidate the information limit. This runner is suitable for
+protocol smoke testing, not confirmatory private-preference experiments. A
+future trusted private-target runner must keep the preference seed and target
+mapping inaccessible to the model and to any executable it controls.
+
 ## Limits and future comparisons
 
 - The discovery stratum is still a toy, exactly specified hypothesis class.
@@ -59,8 +101,6 @@ configuration as the expression-repair adapter. Set a measured
 - The rich reviewer changes *guidance*, not target information. It does not
   answer questions the user has not been asked.
 - Do not pool strata without a precommitted stratified design and analysis.
-- A future private-preference stratum must deliberately separate recoverable
-  environmental evidence from information only the preference holder can
-  reveal. Under all-`K` feedback it may be information-theoretically impossible
-  to identify the preferred outcome; that failure must not be mislabeled as
-  poor reasoning.
+- The private-preference stratum deliberately contains information available
+  only from the holder. Its all-`K` identification limit is an experimental
+  boundary, not evidence of bad reasoning or deficient state management.

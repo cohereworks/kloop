@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Current tests: **10 passing**, including local mock HTTP integration across all four conditions and a Kaggle task-generation test that checks isolated turns, public-only prompts, and usage accounting with a mock model
+- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **36 passing tests**, including mock HTTP, paired analysis, noninterference, and four-arm subprocess checks
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -31,7 +31,7 @@ An earlier, easier two-mutation task generator was solved in 11/12 tasks by the 
 2. Run adapters in isolation from hidden targets (the pilot has logical request separation but not filesystem confinement).
 3. Fix a sample-size and random-seed plan; report paired confidence intervals rather than interpreting 12 tasks as conclusive.
 4. Add a genuine resource-matched feedback budget; the rich reviewer currently reformulates available public evidence rather than providing new user information.
-5. Add task strata for discoverable uncertainty and privately held preferences; the current task family tests only fully specified goals.
+5. Preserve the implemented discovery and preference strata as separate task families; do not pool them into the closed-specification trial or infer model performance from their synthetic controls.
 6. Check instruction adherence and state quality independently of final hidden-test success.
 
 ## Working conclusion
@@ -42,7 +42,7 @@ The later private-holdout runner uses a trusted in-process HTTPS adapter,
 HMAC-derived task streams from a committed private seed, and seeded balanced
 arm scheduling. Mock integration verifies that model-facing messages and
 persisted traces contain no hidden cases, targets, or private nonce. The
-expanded suite has 24 tests. This does not constitute live inference or an
+suite at that stage had 24 tests. This does not constitute live inference or an
 external security audit.
 
 ## Discoverable-uncertainty calibration
@@ -70,3 +70,29 @@ were `-0.8261` (H3), `-1.6521` (H4), and `-0.8261` (H5); none crossed its
 decision threshold. The legacy traces lack token-usage measurements, so the
 analyzer correctly reports usage as unknown. This is **still only a deterministic
 plumbing check**, not a model result or a preregistered trial.
+
+## Private-preference information-bound calibration
+
+The third stratum holds a favorite among eight alternatives, independently of
+all public information, with four proposals and up to five total turns. The
+rich reviewer responds to proposals with acceptance/rejection; the `K` reviewer
+always returns `K`. The theoretical success rates for an all-`K` policy and a
+four-distinct-proposal rich policy are **1/8** and **5/8**, respectively.
+
+The deterministic control ran `seed=1337`, `arm_seed=20261103`, eight tasks
+covering every preferred option exactly once, and all four conditions. Both
+`K` arms succeeded **1/8**; both rich arms succeeded **5/8**, with zero
+protocol errors. The paired-analysis evidence-tree digest was
+`783d18672adc5f50b511e333390069a7460db3554829c2722dbc88ab7b722bed`.
+The complete subprocess traces and summary are archived in
+`reports/preference-calibration-traces.zip` (ZIP SHA-256
+`58f4690123bd6b9a7453cfa6f4d9d64d952ac90f2796b59db1f89ce625503c02`).
+Reproduction commands and the separate hosted adapter are in [STRATA.md](STRATA.md).
+
+This result establishes only the **negative-control mechanics**. An arbitrary
+model that can read the public generator and its known seed can reconstruct
+the calibration answers; no live model was tested, and this is not a secured
+preference holdout. The private-preference feedback advantage represents
+**new target information**, not increased reasoning quality. The existing H3–H5
+analyzer can process these traces as a software smoke check, but those
+hypotheses must not be interpreted as the same causal estimands here.

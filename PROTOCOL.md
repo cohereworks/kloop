@@ -38,6 +38,12 @@ agents can elect to obtain additional environmental evidence through probes.
 It is separately scored; results must not be pooled into the original pilot's
 preregistered-candidate contrasts without an explicit stratified design.
 
+The [private-preference stratum](STRATA.md) tests a different regime: the
+user's private goal cannot be inferred from public observations. Rich feedback
+in this stratum *does* disclose preference information, so its all-`K` versus
+rich contrast is not a clean measure of guidance or state quality. It must be
+analyzed separately, and public synthetic tasks are not private holdouts.
+
 ## Hypotheses to test with a real model
 
 - H3: `P(K, explicit) > P(K, implicit)`.
