@@ -49,6 +49,20 @@ Secondary: average turns, protocol errors, public/hidden discrepancy, inference 
 
 All requests, responses, reported errors, provider-reported usage (if available), and public outcomes are recorded in per-run `trace.json`; `summary.json` includes dataset SHA-256. Externally visible inputs and scored outputs are separate. This pilot does **not** sandbox the external agent command or prove that an adapter refrains from reading the dataset through other paths; production evaluation should run agents in an isolated environment without filesystem access to hidden targets. The bundled API adapter sends only the projected public task/request fields to the remote model.
 
+## Confirmatory analysis addendum (not yet preregistered)
+
+The mechanics for complete-pair validation, H3/H4/H5 contrasts, adjusted
+one-sided conservative Hoeffding lower bounds, descriptive paired bootstrap
+intervals, usage-cap disqualification, and salted
+holdout commitments are documented in [PREREGISTRATION.md](PREREGISTRATION.md)
+and implemented by `analyze_trial.py` and `holdout_commitment.py`.
+
+This addendum does **not** retroactively preregister the published calibration
+trials, nor does it authorize labeling a future Kaggle exploratory run
+confirmatory. It still requires a frozen sample size/power calculation,
+independent holdout transport, model/version/budget controls, and randomized
+arm order before any confirmatory outcomes are observed.
+
 ## Interpretation rules
 
 1. A smoke-test run demonstrates operational correctness only, never a model-capability result.

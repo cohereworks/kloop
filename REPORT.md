@@ -37,3 +37,16 @@ An earlier, easier two-mutation task generator was solved in 11/12 tasks by the 
 ## Working conclusion
 
 The four-arm control plane is implemented, executable, and traceable. Its direct model API path is integration-tested against a local mock server, and a Kaggle Benchmarks task is generated and mock-tested without requiring the Kaggle library locally. Neither route has completed live inference. The scientific claim remains **untested** until a properly controlled evaluation is run.
+
+## Retrospective paired-analysis smoke check
+
+The subsequent `analyze_trial.py` implementation was also exercised against
+the archived `reports/calibration-traces.zip` (`runs-v2`, 12 complete task
+pairs). The evidence digest for the extracted trace tree was
+`7c9c5e66a2acdf343b2db607bd3b7c963ab4e5e850bba2454401bea4cfa35c39`.
+It reproduced the 2/12 completions per arm. All three paired contrast
+estimates were exactly zero. The conservative Bonferroni-Hoeffding lower bounds
+were `-0.8261` (H3), `-1.6521` (H4), and `-0.8261` (H5); none crossed its
+decision threshold. The legacy traces lack token-usage measurements, so the
+analyzer correctly reports usage as unknown. This is **still only a deterministic
+plumbing check**, not a model result or a preregistered trial.
