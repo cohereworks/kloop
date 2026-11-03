@@ -38,6 +38,13 @@ An earlier, easier two-mutation task generator was solved in 11/12 tasks by the 
 
 The four-arm control plane is implemented, executable, and traceable. Its direct model API path is integration-tested against a local mock server, and a Kaggle Benchmarks task is generated and mock-tested without requiring the Kaggle library locally. Neither route has completed live inference. The scientific claim remains **untested** until a properly controlled evaluation is run.
 
+The later private-holdout runner uses a trusted in-process HTTPS adapter,
+HMAC-derived task streams from a committed private seed, and seeded balanced
+arm scheduling. Mock integration verifies that model-facing messages and
+persisted traces contain no hidden cases, targets, or private nonce. The
+expanded suite has 24 tests. This does not constitute live inference or an
+external security audit.
+
 ## Retrospective paired-analysis smoke check
 
 The subsequent `analyze_trial.py` implementation was also exercised against

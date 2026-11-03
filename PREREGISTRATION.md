@@ -11,8 +11,8 @@ Use a **paired task instance** as the unit: the same generated task is presented
 once to each of the four arms, all with the same model, decoding parameters,
 tools, public evidence, and nominal turn/token limits. If a task is repeated,
 its repetition has a unique ID and its four arms remain together. Arm order
-should be randomized and recorded; the current pilot runner uses fixed order
-and therefore needs modification before a confirmatory run.
+is randomized and recorded. `pilot.py` supports seeded balanced rotation per
+four-task block; `private_trial.py` uses it by default.
 
 Define binary hidden-test completion indicators:
 
@@ -65,8 +65,15 @@ verify the commitment and regenerate the task set. This script does not itself
 prove the *time* of commitment; GitHub commit history supplies that evidence.
 
 The current Kaggle task deliberately uses a public exploratory seed; it is not
-yet a private-holdout transport. A confirmatory executor must prevent task
-seeds/reference answers from reaching the model or a public task artifact.
+a private-holdout transport. The separate `private_trial.py` executor validates
+the manifest/commitment pair, derives per-task pseudorandom streams with HMAC,
+holds reference answers in its trusted evaluator, and sends only public
+requests through the reviewed `api_agent.call_model()` HTTPS adapter. It does
+not start a model-controlled subprocess, and no hidden target file is created.
+This is a logical network boundary, **not** an OS sandbox for arbitrary
+imported dependencies or a formally proved confidentiality guarantee. The
+live CLI pins the endpoint/decoder configuration once and detects drift in
+provider-reported model identity across turns.
 
 ## Analysis and audit
 
@@ -101,8 +108,8 @@ python analyze_trial.py kaggle-results/kloop-kaggle-results.json \
    inference quota based on that independent pilot. Current quota is unknown.
 3. Freeze model identity/version, all inference settings, per-run cap, max
    turns, code commit, analysis settings, task strata, and arm-order policy.
-4. Implement an isolated private-holdout execution path and randomized arm
-   scheduling. Validate that untrusted model/tool contexts cannot read targets.
+4. Audit the in-process private-holdout executor and its dependency/host trust
+   boundary. Extend OS isolation if arbitrary external adapters are allowed.
 5. Commit the public holdout commitment and preregistration **before** any
    confirmatory outcomes; preserve an immutable run/analysis provenance chain.
 

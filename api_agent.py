@@ -58,8 +58,10 @@ def configuration():
     return url, key, params, integer_env("KLOOP_HTTP_TIMEOUT", 60)
 
 
-def call_model(request):
-    url, key, params, timeout = configuration()
+def call_model(request, *, resolved_config=None):
+    # Private trials pin the full endpoint/decoder configuration at startup.
+    url, key, params, timeout = (configuration() if resolved_config is None
+                                 else resolved_config)
     payload = {**params, "messages": [
         {"role": "developer", "content": INSTRUCTIONS},
         {"role": "user", "content": json.dumps(request, sort_keys=True, ensure_ascii=False)},

@@ -60,8 +60,11 @@ and implemented by `analyze_trial.py` and `holdout_commitment.py`.
 This addendum does **not** retroactively preregister the published calibration
 trials, nor does it authorize labeling a future Kaggle exploratory run
 confirmatory. It still requires a frozen sample size/power calculation,
-independent holdout transport, model/version/budget controls, and randomized
-arm order before any confirmatory outcomes are observed.
+model/version/budget controls, and an independently audited trust boundary
+before any confirmatory outcomes are observed. The subsequent `private_trial.py`
+provides deterministic HMAC-derived private task streams, a reviewed HTTP-only
+model channel, and balanced arm scheduling. That route has been mock-tested,
+but not audited or run against a live model.
 
 ## Interpretation rules
 

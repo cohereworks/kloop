@@ -17,6 +17,8 @@ Status: **mechanics verified; real-model hypothesis untested**.
       token-cap validation, conservative finite-sample decision bounds, and
       reproducible descriptive bootstrap intervals.
 - [x] Add salted private-holdout manifest commitments with tamper verification.
+- [x] Add seeded, positionally balanced arm scheduling and a trusted HTTP
+      private-holdout runner that never gives model-facing requests targets.
 
 ## Next, in order
 
@@ -25,7 +27,10 @@ Status: **mechanics verified; real-model hypothesis untested**.
    [preregistration contract](PREREGISTRATION.md) and analysis/holdout tools now
    exist; sample size/power, repeats, model settings, inference budget, and
    private-holdout execution remain uncommitted. Do not reuse calibration data.
-3. **Harden adapter isolation**. A trusted HTTP adapter sends only public task fields, but arbitrary local adapters are not sandboxed by the runner. Run untrusted adapters in a real container or other constrained process environment.
+3. **Audit and harden adapter isolation**. The new in-process private runner
+   uses the reviewed direct HTTP adapter and keeps hidden cases evaluator-side.
+   Arbitrary local subprocess adapters remain unsandboxed by the legacy runner;
+   do not use them for private confirmatory data without OS confinement.
 4. **Expand task strata**. Add discoverable uncertainty and private-preference tasks as distinct strata; the current DSL represents only closed-specification work.
 5. **Measure capability and drift**. Add recovery after injected errors, false-success rates, state-quality measures, cost, and independent evidence/relevance certificates.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
@@ -38,6 +43,6 @@ Status: **mechanics verified; real-model hypothesis untested**.
 - The visible task data can be identical across arms while the generated prompt lengths and effective token usage differ. Use token accounting and report both outcome and cost.
 - The calibration dataset contains reference targets and cannot serve as an undisclosed benchmark once published.
 - Kaggle Benchmarks may retain model conversation state by default. Start a new chat per agent turn so only explicit `history` or `ledger` fields carry state across turns.
-- The present Kaggle benchmark embeds a public exploratory seed. It is not a
-  private-holdout executor, and the local pilot fixes arm order. Confirmatory
-  execution must address both before applying any inferential decision rule.
+- The present Kaggle benchmark embeds a public exploratory seed. Use the
+  separate private HTTP runner with balanced arm order for confidential trials;
+  a private Kaggle transport remains unimplemented.
