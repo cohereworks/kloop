@@ -8,8 +8,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
-from api_agent import configuration
-from pilot import CONDITIONS, make_tasks, run_one
+from api_agent import call_model, configuration
+from pilot import CONDITIONS, make_tasks, request_for, run_one
 
 
 class ModelStub(BaseHTTPRequestHandler):
@@ -75,11 +75,16 @@ class ApiAgentTests(unittest.TestCase):
                         for c in CONDITIONS]
                 over_budget = run_one(task, CONDITIONS[0], [sys.executable, adapter],
                                       Path(tmp) / "over_budget", 1, 8, 40)
+                frozen = configuration()
+                req = request_for(task, CONDITIONS[0], 1, task["starter"], None, [])
+                with patch("api_agent.configuration", side_effect=AssertionError("unexpected reread")):
+                    direct = call_model(req, resolved_config=frozen)
         finally:
             server.shutdown()
             server.server_close()
             thread.join(timeout=2)
-        self.assertEqual(len(ModelStub.received), 5)
+        self.assertEqual(len(ModelStub.received), 6)
+        self.assertEqual(direct["metrics"]["model"], "stub-model")
         self.assertTrue(all(r["error"] is None for r in runs))
         self.assertTrue(all(r["total_tokens"] == 51 for r in runs))
         self.assertTrue(all(r["trace"][0]["response"]["metrics"]["model"] == "stub-model"

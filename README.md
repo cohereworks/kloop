@@ -106,7 +106,9 @@ required operator decisions, and the explicit limits on inferential claims.
 HTTPS adapter. It validates the public commitment and generator hash, derives
 fresh task streams without writing hidden targets, uses balanced arm order,
 and stores public-only traces. It never launches an arbitrary model-controlled
-subprocess next to the holdout. Once model credentials and a preregistered
+subprocess next to the holdout. It pins the endpoint/decoder configuration at
+startup and treats changes in provider-reported model identity as protocol
+errors. Once model credentials and a preregistered
 budget exist, invocation is:
 
 ```sh

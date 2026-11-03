@@ -95,11 +95,25 @@ def main(argv=None):
         from api_agent import call_model, configuration
 
         # Validate endpoint/credentials before touching the output directory.
-        url, _secret_key, params, timeout = configuration()
+        fixed_config = configuration()
+        url, _secret_key, params, timeout = fixed_config
         private = json.loads(args.private.read_text(encoding="utf-8"))
         public = json.loads(args.commitment.read_text(encoding="utf-8"))
         endpoint = urlsplit(url)
-        summary = run_private(private, public, args.out, call_model,
+        observed_model = [None]
+
+        def pinned_adapter(request):
+            response = call_model(request, resolved_config=fixed_config)
+            reported_model = response.get("metrics", {}).get("model")
+            if not isinstance(reported_model, str) or not reported_model:
+                raise RuntimeError("Provider did not identify the model")
+            if observed_model[0] is None:
+                observed_model[0] = reported_model
+            elif observed_model[0] != reported_model:
+                raise RuntimeError("Provider model identity drifted during trial")
+            return response
+
+        summary = run_private(private, public, args.out, pinned_adapter,
                               arm_seed=args.arm_seed, max_turns=args.max_turns,
                               max_total_tokens=args.max_total_tokens,
                               model_metadata={"model": params["model"],

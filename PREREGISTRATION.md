@@ -71,7 +71,9 @@ holds reference answers in its trusted evaluator, and sends only public
 requests through the reviewed `api_agent.call_model()` HTTPS adapter. It does
 not start a model-controlled subprocess, and no hidden target file is created.
 This is a logical network boundary, **not** an OS sandbox for arbitrary
-imported dependencies or a formally proved confidentiality guarantee.
+imported dependencies or a formally proved confidentiality guarantee. The
+live CLI pins the endpoint/decoder configuration once and detects drift in
+provider-reported model identity across turns.
 
 ## Analysis and audit
 
