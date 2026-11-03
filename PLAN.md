@@ -11,10 +11,12 @@ Status: **mechanics verified; real-model hypothesis untested**.
 - [x] Enforce measured token caps; treat over-budget results as non-successes.
 - [x] Test all conditions, mock HTTP inference, missing model configuration, non-HTTPS restrictions, and budget overshoot.
 - [x] Record calibration results and archive complete deterministic smoke traces.
+- [x] Restore the original `KAGGLE_API_TOKEN` integration requirement.
+- [x] Build and mock-test a self-contained Kaggle Benchmarks task with isolated chat contexts.
 
 ## Next, in order
 
-1. **Implement and exercise the intended Kaggle route**. The original README specified `KAGGLE_API_TOKEN`. Prefer the first-party Kaggle Benchmarks task/model-proxy workflow; verify account quota and model availability. Use the same named model and controlled settings across all four arms. The current worker has no Kaggle token or CLI, so remote execution remains blocked.
+1. **Exercise the intended Kaggle route**. The original README specified `KAGGLE_API_TOKEN`. A first-party Benchmarks task and manually gated GitHub Actions workflow are implemented, but require an authorized repository secret or worker token. Check available model slugs and quota; run the small exploratory task before planning confirmatory inference. The current worker has no Kaggle token or CLI.
 2. **Fix the confirmatory evaluation protocol**. Set sample size, seed commitment, run repetitions, and confidence interval method before evaluating a model; do not reuse the public calibration set as a hidden holdout.
 3. **Harden adapter isolation**. A trusted HTTP adapter sends only public task fields, but arbitrary local adapters are not sandboxed by the runner. Run untrusted adapters in a real container or other constrained process environment.
 4. **Expand task strata**. Add discoverable uncertainty and private-preference tasks as distinct strata; the current DSL represents only closed-specification work.

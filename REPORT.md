@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Tests: `python -m unittest -v test_pilot test_api_agent` — **9 passing**, including local mock HTTP integration across all four conditions
+- Current tests: **10 passing**, including local mock HTTP integration across all four conditions and a Kaggle task-generation test that checks isolated turns, public-only prompts, and usage accounting with a mock model
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -27,7 +27,7 @@ An earlier, easier two-mutation task generator was solved in 11/12 tasks by the 
 
 ## Remaining experimental prerequisites
 
-1. Supply an authorized live model endpoint and credentials for the bundled Chat Completions adapter; no API credential or local inference runtime was available in the current execution environment.
+1. Provision `KAGGLE_API_TOKEN` as a GitHub Actions secret or worker credential, then run the manually gated Kaggle exploratory workflow. The direct Chat Completions adapter remains an alternate route. Neither provider credential was available in the current worker.
 2. Run adapters in isolation from hidden targets (the pilot has logical request separation but not filesystem confinement).
 3. Fix a sample-size and random-seed plan; report paired confidence intervals rather than interpreting 12 tasks as conclusive.
 4. Add a genuine resource-matched feedback budget; the rich reviewer currently reformulates available public evidence rather than providing new user information.
@@ -36,4 +36,4 @@ An earlier, easier two-mutation task generator was solved in 11/12 tasks by the 
 
 ## Working conclusion
 
-The proposed four-arm control plane is implemented, executable, traceable, and dependency-free. Its model API wire path is integration-tested against a local mock server. The scientific claim remains **untested** until live inference and a properly controlled evaluation are run.
+The four-arm control plane is implemented, executable, and traceable. Its direct model API path is integration-tested against a local mock server, and a Kaggle Benchmarks task is generated and mock-tested without requiring the Kaggle library locally. Neither route has completed live inference. The scientific claim remains **untested** until a properly controlled evaluation is run.

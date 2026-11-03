@@ -8,5 +8,7 @@ tasks.json
 runs/
 runs-v2/
 model-runs/
+dist/
+kloop-kaggle-results.json
 *.zip
 !reports/calibration-traces.zip
