@@ -11,7 +11,7 @@ A standard-library Python harness for the four-condition continuation-feedback e
 From this directory (Python 3.10+):
 
 ```sh
-python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment
+python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial
 python pilot.py generate --seed 1337 --count 24 --out tasks.json
 python pilot.py run --tasks tasks.json --out runs --agent "python /absolute/path/to/baseline_agent.py" --max-turns 6
 ```
@@ -35,6 +35,11 @@ python pilot.py run --tasks tasks.json --out model-runs \
 Optional adapter settings: `KLOOP_MAX_COMPLETION_TOKENS` (default 1600), `KLOOP_TEMPERATURE`, `KLOOP_SEED`, `KLOOP_HTTP_TIMEOUT` (default 60 seconds), and `KLOOP_JSON_MODE` (`1` by default; set `0` for endpoints that lack JSON-object mode). Not every provider supports every optional parameter; there is no silent parameter fallback. The adapter records response ID, model, finish reason, requested parameters, and provider-reported token usage with each turn. It deliberately omits credentials from logs.
 
 The runner's `--max-total-tokens` enforces a measured per-task/condition cap when usage is reported. A final API call can overshoot the cap; such an outcome is not scored as a success. For a real trial, use the same chosen model and adapter settings in all four arms, and keep API and test data accessible only to the trusted runner and adapter. A separate mock HTTP integration test exercises the entire request/response path without billable inference.
+
+The local runner also accepts `--arm-order balanced --arm-seed INTEGER` to
+randomize arm execution in complete four-task blocks. Every arm occupies each
+position once per block; the selected schedule is saved in the summary.
+Default `fixed` order retains historical calibration compatibility.
 
 ## Plug in a model or agent
 
@@ -96,6 +101,24 @@ public SHA-256 commitment to commit *before* model inference. Neither the
 existing calibration data nor the public Kaggle exploratory task is a private
 holdout. See [PREREGISTRATION.md](PREREGISTRATION.md) for the complete protocol,
 required operator decisions, and the explicit limits on inferential claims.
+
+`private_trial.py` is the trusted, in-process holdout executor for the direct
+HTTPS adapter. It validates the public commitment and generator hash, derives
+fresh task streams without writing hidden targets, uses balanced arm order,
+and stores public-only traces. It never launches an arbitrary model-controlled
+subprocess next to the holdout. Once model credentials and a preregistered
+budget exist, invocation is:
+
+```sh
+python private_trial.py \
+  --private private-holdouts/manifest.json \
+  --commitment holdout-commitment.json \
+  --out private-runs --arm-seed INTEGER \
+  --max-turns 6 --max-total-tokens TOKEN_CAP
+```
+
+This is a reviewed protocol boundary, **not** OS sandboxing of arbitrary
+Python dependencies or evidence that model inference was performed.
 
 ## Calibration artifacts
 

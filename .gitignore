@@ -12,5 +12,6 @@ dist/
 kloop-kaggle-results.json
 private-holdouts/
 trial-analysis.json
+private-runs/
 *.zip
 !reports/calibration-traces.zip
