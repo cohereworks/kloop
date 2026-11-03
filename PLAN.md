@@ -14,7 +14,7 @@ Status: **mechanics verified; real-model hypothesis untested**.
 
 ## Next, in order
 
-1. **Establish a real inference endpoint**. Use the same named model, fixed settings, max turns, and token cap across all four arms. The current worker has no configured provider API credential or local model CLI.
+1. **Implement and exercise the intended Kaggle route**. The original README specified `KAGGLE_API_TOKEN`. Prefer the first-party Kaggle Benchmarks task/model-proxy workflow; verify account quota and model availability. Use the same named model and controlled settings across all four arms. The current worker has no Kaggle token or CLI, so remote execution remains blocked.
 2. **Fix the confirmatory evaluation protocol**. Set sample size, seed commitment, run repetitions, and confidence interval method before evaluating a model; do not reuse the public calibration set as a hidden holdout.
 3. **Harden adapter isolation**. A trusted HTTP adapter sends only public task fields, but arbitrary local adapters are not sandboxed by the runner. Run untrusted adapters in a real container or other constrained process environment.
 4. **Expand task strata**. Add discoverable uncertainty and private-preference tasks as distinct strata; the current DSL represents only closed-specification work.
@@ -28,3 +28,4 @@ Status: **mechanics verified; real-model hypothesis untested**.
 - A single fixed `K` is permission to continue, not user feedback on quality. The human channel may convey no directional information across an all-`K` transcript.
 - The visible task data can be identical across arms while the generated prompt lengths and effective token usage differ. Use token accounting and report both outcome and cost.
 - The calibration dataset contains reference targets and cannot serve as an undisclosed benchmark once published.
+- Kaggle Benchmarks may retain model conversation state by default. Start a new chat per agent turn so only explicit `history` or `ledger` fields carry state across turns.
