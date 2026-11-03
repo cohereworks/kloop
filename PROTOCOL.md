@@ -33,6 +33,11 @@ The explicit-state intervention includes behavioral constraints and a different 
 
 This is a **protocol plumbing benchmark**, not representative software maintenance. Its small grammar and local mutation structure make it susceptible to search strategies unrelated to general agent reasoning.
 
+A separate [discoverable-uncertainty stratum](STRATA.md) now tests whether
+agents can elect to obtain additional environmental evidence through probes.
+It is separately scored; results must not be pooled into the original pilot's
+preregistered-candidate contrasts without an explicit stratified design.
+
 ## Hypotheses to test with a real model
 
 - H3: `P(K, explicit) > P(K, implicit)`.

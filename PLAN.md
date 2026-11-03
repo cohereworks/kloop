@@ -19,6 +19,9 @@ Status: **mechanics verified; real-model hypothesis untested**.
 - [x] Add salted private-holdout manifest commitments with tamper verification.
 - [x] Add seeded, positionally balanced arm scheduling and a trusted HTTP
       private-holdout runner that never gives model-facing requests targets.
+- [x] Implement a separate discoverable-uncertainty stratum with finite
+      probing, environmental observations, four arms, deterministic negative
+      control, and compatible hosted-model adapter.
 
 ## Next, in order
 
@@ -31,7 +34,10 @@ Status: **mechanics verified; real-model hypothesis untested**.
    uses the reviewed direct HTTP adapter and keeps hidden cases evaluator-side.
    Arbitrary local subprocess adapters remain unsandboxed by the legacy runner;
    do not use them for private confirmatory data without OS confinement.
-4. **Expand task strata**. Add discoverable uncertainty and private-preference tasks as distinct strata; the current DSL represents only closed-specification work.
+4. **Expand task strata**. The modular-function discovery stratum is implemented
+   as a separate toy pilot ([STRATA.md](STRATA.md)); next implement a genuinely
+   private-preference task and explicitly characterize the all-`K` information
+   limit rather than attributing impossible inference to poor reasoning.
 5. **Measure capability and drift**. Add recovery after injected errors, false-success rates, state-quality measures, cost, and independent evidence/relevance certificates.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 

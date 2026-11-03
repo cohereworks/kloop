@@ -45,6 +45,19 @@ persisted traces contain no hidden cases, targets, or private nonce. The
 expanded suite has 24 tests. This does not constitute live inference or an
 external security audit.
 
+## Discoverable-uncertainty calibration
+
+The second stratum's deterministic probe-first baseline was run on 12 seeded
+tasks under all four arms (`seed=1337`, `arm_seed=20261103`, 6-turn cap).
+All conditions succeeded on **12/12** tasks, with two probe actions and one
+submission each. The paired H3/H4/H5 contrast estimates were all zero.
+The extracted trace-tree evidence digest is
+`dc39b670a90544298c2404d306339a7bbb85368d95118b504b911996940aab3b`;
+the complete negative-control traces are archived in
+`reports/discovery-calibration-traces.zip` and reproducible using
+`discovery_pilot.py`/`discovery_baseline_agent.py`. Token usage is unknown for
+this non-model baseline. None of these results are evidence of LLM autonomy.
+
 ## Retrospective paired-analysis smoke check
 
 The subsequent `analyze_trial.py` implementation was also exercised against
