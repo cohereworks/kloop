@@ -1,0 +1,5838 @@
+{
+  "schema": 1,
+  "seed": 1337,
+  "tasks": [
+    {
+      "_hidden": [
+        {
+          "expected": 9,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 0
+        },
+        {
+          "expected": 40,
+          "x": -5,
+          "y": 2
+        },
+        {
+          "expected": 12,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": 8,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "expected": 50,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": 15,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "expected": 12,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": 200,
+          "x": -4,
+          "y": -5
+        },
+        {
+          "expected": 32,
+          "x": -4,
+          "y": -2
+        },
+        {
+          "expected": 9,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "expected": 12,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "expected": -2,
+          "x": 1,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": 9,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "expected": -2,
+          "x": 3,
+          "y": -4
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": -2,
+          "x": 1,
+          "y": -2
+        },
+        {
+          "expected": 6,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": 100,
+          "x": -2,
+          "y": 5
+        },
+        {
+          "expected": 32,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -4
+        },
+        {
+          "expected": 6,
+          "x": -3,
+          "y": 1
+        },
+        {
+          "expected": 128,
+          "x": -4,
+          "y": -4
+        },
+        {
+          "expected": -2,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": 128,
+          "x": -4,
+          "y": 4
+        },
+        {
+          "expected": 250,
+          "x": -5,
+          "y": 5
+        },
+        {
+          "expected": 40,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": -2,
+          "x": 5,
+          "y": -2
+        },
+        {
+          "expected": 10,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": -4,
+          "y": 0
+        },
+        {
+          "expected": 50,
+          "x": -1,
+          "y": 5
+        },
+        {
+          "expected": 6,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": 36,
+          "x": -2,
+          "y": -3
+        },
+        {
+          "expected": 8,
+          "x": -1,
+          "y": -2
+        },
+        {
+          "expected": 150,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": 18,
+          "x": -1,
+          "y": -3
+        },
+        {
+          "expected": 36,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 2,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": 64,
+          "x": -2,
+          "y": -4
+        },
+        {
+          "expected": 0,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 4,
+          "y": 1
+        },
+        {
+          "expected": 8,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": -2,
+          "x": 3,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": 6,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "expected": 9,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "expected": 9,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": -2,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": -2,
+          "x": 1,
+          "y": -3
+        },
+        {
+          "expected": -2,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": 96,
+          "x": -3,
+          "y": -4
+        },
+        {
+          "expected": 0,
+          "x": -3,
+          "y": 0
+        },
+        {
+          "expected": 4,
+          "x": -2,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": 0
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": 3
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "max"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "max"
+      },
+      "id": "t0000",
+      "public": [
+        {
+          "expected": 250,
+          "x": -5,
+          "y": -5
+        },
+        {
+          "expected": 150,
+          "x": -3,
+          "y": 5
+        },
+        {
+          "expected": 72,
+          "x": -4,
+          "y": 3
+        },
+        {
+          "expected": 6,
+          "x": -3,
+          "y": -1
+        },
+        {
+          "expected": 54,
+          "x": -3,
+          "y": -3
+        },
+        {
+          "expected": 15,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": -2,
+          "x": 2,
+          "y": -2
+        },
+        {
+          "expected": 3,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": -2,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": 6,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": 32,
+          "x": -4,
+          "y": 2
+        },
+        {
+          "expected": 54,
+          "x": -3,
+          "y": 3
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": 0
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "max"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 9,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": -3,
+          "x": -4,
+          "y": -5
+        },
+        {
+          "expected": -6,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": 2,
+          "x": 1,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": -3,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": 2,
+          "x": 1,
+          "y": -2
+        },
+        {
+          "expected": 2,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "expected": 2,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": 2,
+          "x": 3,
+          "y": -3
+        },
+        {
+          "expected": -1,
+          "x": -2,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "expected": 4,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": 2,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": -3
+        },
+        {
+          "expected": -1,
+          "x": -2,
+          "y": -5
+        },
+        {
+          "expected": -2,
+          "x": -2,
+          "y": 1
+        },
+        {
+          "expected": -2,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": 8,
+          "x": 3,
+          "y": 5
+        },
+        {
+          "expected": 6,
+          "x": 2,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "expected": -2,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 2,
+          "x": 4,
+          "y": -3
+        },
+        {
+          "expected": -5,
+          "x": -5,
+          "y": -4
+        },
+        {
+          "expected": 2,
+          "x": 2,
+          "y": -4
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": 1
+        },
+        {
+          "expected": 7,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "expected": 6,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": -6,
+          "x": -5,
+          "y": -3
+        },
+        {
+          "expected": 2,
+          "x": 5,
+          "y": -2
+        },
+        {
+          "expected": -4,
+          "x": -3,
+          "y": 5
+        },
+        {
+          "expected": 2,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": 2,
+          "x": 1,
+          "y": -4
+        },
+        {
+          "expected": -1,
+          "x": -2,
+          "y": -2
+        },
+        {
+          "expected": 10,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": 2,
+          "x": 2,
+          "y": -3
+        },
+        {
+          "expected": -4,
+          "x": -3,
+          "y": 0
+        },
+        {
+          "expected": 2,
+          "x": 3,
+          "y": -1
+        },
+        {
+          "expected": -2,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": -2,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": -2
+        },
+        {
+          "expected": 2,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": -6,
+          "x": -4,
+          "y": 5
+        },
+        {
+          "expected": 2,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": -6,
+          "x": -4,
+          "y": 4
+        },
+        {
+          "expected": 2,
+          "x": 1,
+          "y": -5
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": 2,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": -5,
+          "x": -4,
+          "y": -2
+        },
+        {
+          "expected": 4,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": 2,
+          "x": 5,
+          "y": -4
+        },
+        {
+          "expected": -4,
+          "x": -3,
+          "y": 4
+        },
+        {
+          "expected": -6,
+          "x": -4,
+          "y": -1
+        },
+        {
+          "expected": -2,
+          "x": -2,
+          "y": 2
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 2
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": 1
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "min"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "sub"
+          }
+        ],
+        "op": "sub"
+      },
+      "id": "t0001",
+      "public": [
+        {
+          "expected": 5,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": -4,
+          "x": -3,
+          "y": -1
+        },
+        {
+          "expected": -4,
+          "x": -3,
+          "y": 3
+        },
+        {
+          "expected": 2,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": 1,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": -6,
+          "x": -4,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 4,
+          "y": 0
+        },
+        {
+          "expected": 2,
+          "x": 1,
+          "y": -1
+        },
+        {
+          "expected": 5,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": -3,
+          "x": -4,
+          "y": -4
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 2
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": 3
+                  }
+                ],
+                "op": "max"
+              }
+            ],
+            "op": "min"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "min"
+          }
+        ],
+        "op": "sub"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": -8,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": -4,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -2
+        },
+        {
+          "expected": -6,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": -3,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "expected": -3,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "expected": -8,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": -4,
+          "x": 1,
+          "y": -2
+        },
+        {
+          "expected": -2,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": 2
+        },
+        {
+          "expected": -5,
+          "x": -2,
+          "y": 1
+        },
+        {
+          "expected": -24,
+          "x": 3,
+          "y": -4
+        },
+        {
+          "expected": -2,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": -5,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": -7,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": -2,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": -2,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": -7,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": -5,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": -10,
+          "x": -3,
+          "y": 5
+        },
+        {
+          "expected": -5,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "expected": -6,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": -6,
+          "x": 1,
+          "y": -3
+        },
+        {
+          "expected": -4,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": -4,
+          "x": 4,
+          "y": 0
+        },
+        {
+          "expected": -10,
+          "x": -1,
+          "y": 5
+        },
+        {
+          "expected": -18,
+          "x": 3,
+          "y": -3
+        },
+        {
+          "expected": -10,
+          "x": -4,
+          "y": 5
+        },
+        {
+          "expected": -7,
+          "x": -4,
+          "y": -5
+        },
+        {
+          "expected": -6,
+          "x": -3,
+          "y": -4
+        },
+        {
+          "expected": -5,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": -32,
+          "x": 4,
+          "y": -4
+        },
+        {
+          "expected": -5,
+          "x": -2,
+          "y": -4
+        },
+        {
+          "expected": -5,
+          "x": -2,
+          "y": 2
+        },
+        {
+          "expected": -20,
+          "x": 5,
+          "y": -2
+        },
+        {
+          "expected": -5,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "expected": -12,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": 1
+        },
+        {
+          "expected": -2,
+          "x": 2,
+          "y": 5
+        },
+        {
+          "expected": -2,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": -6,
+          "x": -3,
+          "y": -3
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": -3
+        },
+        {
+          "expected": -6,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": -40,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": -6,
+          "x": -3,
+          "y": 1
+        },
+        {
+          "expected": -5,
+          "x": -2,
+          "y": -5
+        },
+        {
+          "expected": -2,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "expected": -4,
+          "x": 2,
+          "y": -1
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": -2
+        },
+        {
+          "expected": -2,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "expected": -8,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": -5,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": -8,
+          "x": 1,
+          "y": -4
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": -1
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "const": -3
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "min"
+          }
+        ],
+        "op": "min"
+      },
+      "id": "t0002",
+      "public": [
+        {
+          "expected": -2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "expected": -20,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": -30,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": -4
+        },
+        {
+          "expected": -8,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": -2,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": -24,
+          "x": 4,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -4
+        },
+        {
+          "expected": -16,
+          "x": 4,
+          "y": -2
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": -1
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "const": -3
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "max"
+          }
+        ],
+        "op": "max"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 0
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": -2
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": -3
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": -2
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -4
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": -5
+        },
+        {
+          "expected": 1,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": 1,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": 1,
+          "x": 4,
+          "y": -4
+        },
+        {
+          "expected": 5,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": 1,
+          "x": 3,
+          "y": -4
+        },
+        {
+          "expected": 2,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": -4
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -2
+        },
+        {
+          "expected": 1,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": 5
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": -2
+        },
+        {
+          "expected": 2,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": 5,
+          "x": -5,
+          "y": -4
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -3
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": -2
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": 5,
+          "x": -5,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": 1,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": -4
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": 5
+        },
+        {
+          "expected": 1,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 2
+        },
+        {
+          "expected": 5,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": 1,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": 2
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": -4
+        },
+        {
+          "expected": 2,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "expected": 5,
+          "x": -5,
+          "y": -3
+        },
+        {
+          "expected": 5,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": -4
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": 5
+        },
+        {
+          "expected": 1,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "expected": 1,
+          "x": 5,
+          "y": -5
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": 1
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "min"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "const": 1
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "sub"
+          }
+        ],
+        "op": "max"
+      },
+      "id": "t0003",
+      "public": [
+        {
+          "expected": 2,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": -1
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": -2
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": -1
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": 3
+        },
+        {
+          "expected": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 1
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "min"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "const": 0
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "add"
+          }
+        ],
+        "op": "max"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": -3,
+          "x": 1,
+          "y": -1
+        },
+        {
+          "expected": -12,
+          "x": -4,
+          "y": -4
+        },
+        {
+          "expected": 1,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "expected": 1,
+          "x": -3,
+          "y": 2
+        },
+        {
+          "expected": -8,
+          "x": 0,
+          "y": -4
+        },
+        {
+          "expected": -1,
+          "x": -3,
+          "y": 1
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "expected": 7,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": -13,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": -5,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": -9,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": -1,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": 1,
+          "x": -2,
+          "y": 2
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "expected": -4,
+          "x": 1,
+          "y": -2
+        },
+        {
+          "expected": -7,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": -5,
+          "x": 3,
+          "y": -4
+        },
+        {
+          "expected": 3,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "expected": -2,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": -2,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": -3,
+          "x": -3,
+          "y": 0
+        },
+        {
+          "expected": -7,
+          "x": -2,
+          "y": -2
+        },
+        {
+          "expected": -1,
+          "x": -5,
+          "y": 2
+        },
+        {
+          "expected": 5,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": -9,
+          "x": -1,
+          "y": -4
+        },
+        {
+          "expected": -3,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": -5,
+          "x": 0,
+          "y": -2
+        },
+        {
+          "expected": -9,
+          "x": 1,
+          "y": -5
+        },
+        {
+          "expected": 0,
+          "x": -4,
+          "y": 2
+        },
+        {
+          "expected": -4,
+          "x": -4,
+          "y": 0
+        },
+        {
+          "expected": -1,
+          "x": 4,
+          "y": -2
+        },
+        {
+          "expected": -10,
+          "x": 0,
+          "y": -5
+        },
+        {
+          "expected": 2,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": -8,
+          "x": -4,
+          "y": -2
+        },
+        {
+          "expected": 5,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": 0
+        },
+        {
+          "expected": -4,
+          "x": 2,
+          "y": -3
+        },
+        {
+          "expected": -7,
+          "x": -1,
+          "y": -3
+        },
+        {
+          "expected": 7,
+          "x": -2,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "expected": 3,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": -4,
+          "x": 4,
+          "y": -4
+        },
+        {
+          "expected": -1,
+          "x": -2,
+          "y": 1
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": -8,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": 1,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": -1,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "expected": -6,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": -7,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": -7,
+          "x": 3,
+          "y": -5
+        },
+        {
+          "expected": -2,
+          "x": 4,
+          "y": -3
+        },
+        {
+          "expected": 5,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": -1,
+          "x": 3,
+          "y": -1
+        },
+        {
+          "expected": 7,
+          "x": -1,
+          "y": 5
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": -3
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "min"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "add"
+          }
+        ],
+        "op": "add"
+      },
+      "id": "t0004",
+      "public": [
+        {
+          "expected": -11,
+          "x": -3,
+          "y": -4
+        },
+        {
+          "expected": -1,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "expected": 5,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": -1,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": 2,
+          "x": -4,
+          "y": 3
+        },
+        {
+          "expected": -3,
+          "x": 5,
+          "y": -4
+        },
+        {
+          "expected": -9,
+          "x": -3,
+          "y": -3
+        },
+        {
+          "expected": 7,
+          "x": 3,
+          "y": 5
+        },
+        {
+          "expected": 7,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": -5,
+          "x": 1,
+          "y": -3
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "add"
+          }
+        ],
+        "op": "max"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 18,
+          "x": 2,
+          "y": -3
+        },
+        {
+          "expected": 7,
+          "x": 1,
+          "y": -2
+        },
+        {
+          "expected": 55,
+          "x": 5,
+          "y": -2
+        },
+        {
+          "expected": 10,
+          "x": 1,
+          "y": -5
+        },
+        {
+          "expected": 8,
+          "x": 1,
+          "y": -3
+        },
+        {
+          "expected": 9,
+          "x": -3,
+          "y": 4
+        },
+        {
+          "expected": 2,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": 12,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": 33,
+          "x": 3,
+          "y": -4
+        },
+        {
+          "expected": 6,
+          "x": -2,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": -4,
+          "y": 0
+        },
+        {
+          "expected": 30,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "expected": 35,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": 9,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "expected": -12,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": -20,
+          "x": -5,
+          "y": -5
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": -4,
+          "x": -4,
+          "y": -1
+        },
+        {
+          "expected": 12,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": -8,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": 5,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": -5,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -3
+        },
+        {
+          "expected": 20,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": 5
+        },
+        {
+          "expected": -16,
+          "x": -4,
+          "y": -4
+        },
+        {
+          "expected": 70,
+          "x": 5,
+          "y": -5
+        },
+        {
+          "expected": 20,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": 40,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "expected": -12,
+          "x": -3,
+          "y": -3
+        },
+        {
+          "expected": 2,
+          "x": 2,
+          "y": 5
+        },
+        {
+          "expected": 60,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": -8,
+          "x": -2,
+          "y": -2
+        },
+        {
+          "expected": 0,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": 25,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": -6,
+          "x": -3,
+          "y": -1
+        },
+        {
+          "expected": 30,
+          "x": -5,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "expected": -8,
+          "x": -4,
+          "y": -2
+        },
+        {
+          "expected": -2,
+          "x": -2,
+          "y": 1
+        },
+        {
+          "expected": 18,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": 25,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "expected": 44,
+          "x": 4,
+          "y": -3
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "expected": -4,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": 8,
+          "x": -4,
+          "y": 2
+        },
+        {
+          "expected": -9,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": 12,
+          "x": -3,
+          "y": 5
+        },
+        {
+          "expected": 9,
+          "x": 1,
+          "y": -4
+        },
+        {
+          "expected": 1,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": -15,
+          "x": -5,
+          "y": -4
+        },
+        {
+          "expected": 8,
+          "x": 2,
+          "y": 2
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              },
+              {
+                "args": [
+                  {
+                    "const": -1
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "add"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "sub"
+          }
+        ],
+        "op": "mul"
+      },
+      "id": "t0005",
+      "public": [
+        {
+          "expected": 40,
+          "x": 4,
+          "y": -2
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 2
+        },
+        {
+          "expected": 65,
+          "x": 5,
+          "y": -4
+        },
+        {
+          "expected": -6,
+          "x": -1,
+          "y": -3
+        },
+        {
+          "expected": 22,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": -1,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -4
+        },
+        {
+          "expected": 36,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": -12,
+          "x": -2,
+          "y": -4
+        },
+        {
+          "expected": -2,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": -15,
+          "x": -3,
+          "y": -4
+        },
+        {
+          "expected": 6,
+          "x": 1,
+          "y": -1
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": 0
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "max"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "max"
+          }
+        ],
+        "op": "mul"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 0
+        },
+        {
+          "expected": -72,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "expected": -9,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": -72,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": -24,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": -72,
+          "x": -3,
+          "y": 4
+        },
+        {
+          "expected": 12,
+          "x": -1,
+          "y": -2
+        },
+        {
+          "expected": 3,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": 75,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": 75,
+          "x": 0,
+          "y": -5
+        },
+        {
+          "expected": -105,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": -24,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": -24,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": 48,
+          "x": 2,
+          "y": -4
+        },
+        {
+          "expected": 0,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "expected": -105,
+          "x": -5,
+          "y": 5
+        },
+        {
+          "expected": 27,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": -24,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "expected": 12,
+          "x": -4,
+          "y": -2
+        },
+        {
+          "expected": -105,
+          "x": -1,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": -3,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": -72,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "expected": -105,
+          "x": 1,
+          "y": 5
+        },
+        {
+          "expected": -9,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "expected": -45,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": 75,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": -1
+        },
+        {
+          "expected": 3,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": -9,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": -72,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": -4,
+          "y": 0
+        },
+        {
+          "expected": -45,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": 27,
+          "x": 3,
+          "y": -3
+        },
+        {
+          "expected": 75,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": 48,
+          "x": 1,
+          "y": -4
+        },
+        {
+          "expected": 48,
+          "x": 4,
+          "y": -4
+        },
+        {
+          "expected": 12,
+          "x": 2,
+          "y": -2
+        },
+        {
+          "expected": 0,
+          "x": 4,
+          "y": 0
+        },
+        {
+          "expected": -24,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": 27,
+          "x": -3,
+          "y": -3
+        },
+        {
+          "expected": -72,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": -24,
+          "x": -5,
+          "y": 2
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": 1
+        },
+        {
+          "expected": 27,
+          "x": -5,
+          "y": -3
+        },
+        {
+          "expected": 12,
+          "x": 5,
+          "y": -2
+        },
+        {
+          "expected": -24,
+          "x": -2,
+          "y": 2
+        },
+        {
+          "expected": -72,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": -72,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": -45,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 3,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "expected": -9,
+          "x": -5,
+          "y": 1
+        },
+        {
+          "expected": -9,
+          "x": -3,
+          "y": 1
+        },
+        {
+          "expected": 12,
+          "x": -3,
+          "y": -2
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "add"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "sub"
+              }
+            ],
+            "op": "min"
+          }
+        ],
+        "op": "mul"
+      },
+      "id": "t0006",
+      "public": [
+        {
+          "expected": 12,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": 48,
+          "x": 5,
+          "y": -4
+        },
+        {
+          "expected": 75,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": -45,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "expected": -9,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": -24,
+          "x": -3,
+          "y": 2
+        },
+        {
+          "expected": -9,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": -72,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": -9,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": 27,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": 48,
+          "x": 3,
+          "y": -4
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "add"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              }
+            ],
+            "op": "add"
+          }
+        ],
+        "op": "mul"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 3,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": -2
+        },
+        {
+          "expected": -4,
+          "x": -4,
+          "y": -5
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": -1
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": -4
+        },
+        {
+          "expected": 0,
+          "x": -5,
+          "y": 2
+        },
+        {
+          "expected": -4,
+          "x": -2,
+          "y": -5
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": -3,
+          "x": -2,
+          "y": -4
+        },
+        {
+          "expected": 0,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": -5
+        },
+        {
+          "expected": -1,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": 0,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 5
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": -2,
+          "x": -1,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": -3,
+          "y": -4
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": -3,
+          "x": -5,
+          "y": -4
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": -5,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": -1,
+          "x": 1,
+          "y": -5
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 1
+        },
+        {
+          "expected": 0,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "expected": 0,
+          "x": -4,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": -4,
+          "y": 3
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": -4,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": -2
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 5
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "expected": -1,
+          "x": 0,
+          "y": -2
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": -3
+        },
+        {
+          "expected": 0,
+          "x": -3,
+          "y": 2
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "expected": -2,
+          "x": 0,
+          "y": -3
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": -1,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": -1,
+          "x": -2,
+          "y": -2
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": 4
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": 1
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "const": 0
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "add"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": -3
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "max"
+          }
+        ],
+        "op": "add"
+      },
+      "id": "t0007",
+      "public": [
+        {
+          "expected": 0,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": 1,
+          "y": 5
+        },
+        {
+          "expected": 0,
+          "x": -3,
+          "y": 4
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": -5
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": -1
+        },
+        {
+          "expected": 0,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": -2
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": 0,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": -1,
+          "x": -4,
+          "y": -2
+        },
+        {
+          "expected": 1,
+          "x": 2,
+          "y": 5
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "const": 0
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "add"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": -1
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "max"
+          }
+        ],
+        "op": "min"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 5,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": 7,
+          "x": -4,
+          "y": 3
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": -4
+        },
+        {
+          "expected": -11,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": -11,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": 9,
+          "x": -5,
+          "y": -5
+        },
+        {
+          "expected": 7,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "expected": -1,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": 9,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": -7,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "expected": 7,
+          "x": -4,
+          "y": -4
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": -3
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": -3
+        },
+        {
+          "expected": 9,
+          "x": -5,
+          "y": 5
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": -7,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": -2
+        },
+        {
+          "expected": -7,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "expected": -1,
+          "x": 0,
+          "y": -4
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": 5
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": -1,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 5
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": -4
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": 5
+        },
+        {
+          "expected": 7,
+          "x": -4,
+          "y": 5
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": -2
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": -7,
+          "x": 3,
+          "y": -5
+        },
+        {
+          "expected": -1,
+          "x": 0,
+          "y": -5
+        },
+        {
+          "expected": -11,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": 9,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": 9,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": -4
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": 2
+        },
+        {
+          "expected": -11,
+          "x": 5,
+          "y": -4
+        },
+        {
+          "expected": 1,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": -1,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": -3
+        },
+        {
+          "expected": 7,
+          "x": -4,
+          "y": 2
+        },
+        {
+          "expected": -7,
+          "x": 3,
+          "y": -1
+        },
+        {
+          "expected": -11,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": -3
+        },
+        {
+          "expected": -11,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "expected": 9,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": -11,
+          "x": 5,
+          "y": 0
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "sub"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": 0
+                  }
+                ],
+                "op": "add"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "sub"
+      },
+      "id": "t0008",
+      "public": [
+        {
+          "expected": -7,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "expected": -7,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "expected": -5,
+          "x": 2,
+          "y": -2
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": 3
+        },
+        {
+          "expected": 7,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": -1
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": -5
+        },
+        {
+          "expected": -9,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "sub"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "const": 3
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "const": 1
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "max"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "mul"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 3,
+          "x": -2,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": 5,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": -1,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": -4,
+          "y": 0
+        },
+        {
+          "expected": 6,
+          "x": -1,
+          "y": -4
+        },
+        {
+          "expected": 6,
+          "x": 5,
+          "y": -4
+        },
+        {
+          "expected": 7,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": 3,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": -2
+        },
+        {
+          "expected": 7,
+          "x": 0,
+          "y": -5
+        },
+        {
+          "expected": 3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": 7,
+          "x": 3,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": 7,
+          "x": -4,
+          "y": -5
+        },
+        {
+          "expected": 5,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": 1,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": -4,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": 5,
+          "x": 4,
+          "y": -3
+        },
+        {
+          "expected": 5,
+          "x": -1,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": -1
+        },
+        {
+          "expected": 3,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 4,
+          "y": 1
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "expected": 5,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": 1,
+          "y": -1
+        },
+        {
+          "expected": 3,
+          "x": -4,
+          "y": 5
+        },
+        {
+          "expected": 6,
+          "x": 4,
+          "y": -4
+        },
+        {
+          "expected": 7,
+          "x": 5,
+          "y": -5
+        },
+        {
+          "expected": 3,
+          "x": -4,
+          "y": 3
+        },
+        {
+          "expected": 3,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "expected": 7,
+          "x": -5,
+          "y": -5
+        },
+        {
+          "expected": 6,
+          "x": 2,
+          "y": -4
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "expected": 3,
+          "x": 0,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": 6,
+          "x": 1,
+          "y": -4
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 2
+        },
+        {
+          "expected": 3,
+          "x": -5,
+          "y": 1
+        },
+        {
+          "expected": 5,
+          "x": -2,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": 2,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": -3,
+          "y": 0
+        },
+        {
+          "expected": 3,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": 6,
+          "x": -5,
+          "y": -4
+        },
+        {
+          "expected": 5,
+          "x": -3,
+          "y": -3
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": 2
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "min"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 3
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "max"
+              }
+            ],
+            "op": "add"
+          }
+        ],
+        "op": "max"
+      },
+      "id": "t0009",
+      "public": [
+        {
+          "expected": 5,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "expected": 5,
+          "x": -5,
+          "y": -3
+        },
+        {
+          "expected": 3,
+          "x": -4,
+          "y": -1
+        },
+        {
+          "expected": 3,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": 3,
+          "x": -4,
+          "y": 4
+        },
+        {
+          "expected": 5,
+          "x": 0,
+          "y": -3
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": 3,
+          "x": -5,
+          "y": 3
+        },
+        {
+          "expected": 5,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": 5,
+          "x": 2,
+          "y": -3
+        },
+        {
+          "expected": 7,
+          "x": -2,
+          "y": -5
+        },
+        {
+          "expected": 6,
+          "x": -4,
+          "y": -4
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": 2
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "sub"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 3
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "max"
+              }
+            ],
+            "op": "sub"
+          }
+        ],
+        "op": "add"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": 8,
+          "x": 1,
+          "y": -4
+        },
+        {
+          "expected": 10,
+          "x": -4,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": -2,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": 2
+        },
+        {
+          "expected": 4,
+          "x": -3,
+          "y": 2
+        },
+        {
+          "expected": 8,
+          "x": 3,
+          "y": -4
+        },
+        {
+          "expected": 4,
+          "x": -2,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": 6,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": 10,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": -2,
+          "y": -2
+        },
+        {
+          "expected": 6,
+          "x": 4,
+          "y": -3
+        },
+        {
+          "expected": 4,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": 2
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": -2
+        },
+        {
+          "expected": 4,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "expected": 10,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": -2
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": -3,
+          "y": 0
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": 0
+        },
+        {
+          "expected": 4,
+          "x": -1,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": 4,
+          "x": 0,
+          "y": -2
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": 0
+        },
+        {
+          "expected": 10,
+          "x": 1,
+          "y": -5
+        },
+        {
+          "expected": 8,
+          "x": 2,
+          "y": -4
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": 8,
+          "x": -1,
+          "y": -4
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": 8,
+          "x": -2,
+          "y": -4
+        },
+        {
+          "expected": 4,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": 1
+        },
+        {
+          "expected": 4,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": 8,
+          "x": -5,
+          "y": -4
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": 3
+        },
+        {
+          "expected": 8,
+          "x": 4,
+          "y": -4
+        },
+        {
+          "expected": 4,
+          "x": -2,
+          "y": 2
+        },
+        {
+          "expected": 4,
+          "x": -4,
+          "y": -1
+        },
+        {
+          "expected": 10,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "expected": 6,
+          "x": 3,
+          "y": -3
+        },
+        {
+          "expected": 4,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": 4,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": 4,
+          "x": -5,
+          "y": 1
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": -2
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": 3
+                  },
+                  {
+                    "const": -3
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "max"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "const": 1
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "const": 2
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "max"
+          }
+        ],
+        "op": "mul"
+      },
+      "id": "t0010",
+      "public": [
+        {
+          "expected": 4,
+          "x": -1,
+          "y": 0
+        },
+        {
+          "expected": 10,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": 10,
+          "x": -5,
+          "y": -5
+        },
+        {
+          "expected": 4,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "expected": 4,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": 10,
+          "x": -2,
+          "y": -5
+        },
+        {
+          "expected": 8,
+          "x": 0,
+          "y": -4
+        },
+        {
+          "expected": 4,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": 4,
+          "x": 1,
+          "y": 5
+        },
+        {
+          "expected": 4,
+          "x": 4,
+          "y": -1
+        },
+        {
+          "expected": 4,
+          "x": 2,
+          "y": -1
+        },
+        {
+          "expected": 4,
+          "x": 1,
+          "y": -1
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "const": 3
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": 3
+                  },
+                  {
+                    "const": -3
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "max"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "const": 0
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "const": -2
+                  },
+                  {
+                    "const": -1
+                  }
+                ],
+                "op": "min"
+              }
+            ],
+            "op": "sub"
+          }
+        ],
+        "op": "mul"
+      }
+    },
+    {
+      "_hidden": [
+        {
+          "expected": -3,
+          "x": -1,
+          "y": 1
+        },
+        {
+          "expected": -10,
+          "x": 2,
+          "y": -3
+        },
+        {
+          "expected": -5,
+          "x": -1,
+          "y": 4
+        },
+        {
+          "expected": -32,
+          "x": -4,
+          "y": 4
+        },
+        {
+          "expected": -30,
+          "x": 5,
+          "y": -1
+        },
+        {
+          "expected": -3,
+          "x": -2,
+          "y": -4
+        },
+        {
+          "expected": -40,
+          "x": 5,
+          "y": -3
+        },
+        {
+          "expected": -24,
+          "x": 3,
+          "y": -5
+        },
+        {
+          "expected": -36,
+          "x": 4,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": -3,
+          "y": -4
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": -1
+        },
+        {
+          "expected": -4,
+          "x": -4,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 3
+        },
+        {
+          "expected": -50,
+          "x": -5,
+          "y": 5
+        },
+        {
+          "expected": -50,
+          "x": 5,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 1
+        },
+        {
+          "expected": -20,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "expected": -20,
+          "x": -5,
+          "y": -1
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": 2
+        },
+        {
+          "expected": -3,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "expected": -3,
+          "x": -2,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": -2,
+          "y": -1
+        },
+        {
+          "expected": -12,
+          "x": -4,
+          "y": -1
+        },
+        {
+          "expected": -15,
+          "x": -5,
+          "y": -2
+        },
+        {
+          "expected": -15,
+          "x": 3,
+          "y": -2
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -1
+        },
+        {
+          "expected": -18,
+          "x": 3,
+          "y": -3
+        },
+        {
+          "expected": -24,
+          "x": 4,
+          "y": -2
+        },
+        {
+          "expected": -3,
+          "x": 5,
+          "y": 5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -2
+        },
+        {
+          "expected": -16,
+          "x": 4,
+          "y": 0
+        },
+        {
+          "expected": -8,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "expected": -3,
+          "x": 2,
+          "y": 1
+        },
+        {
+          "expected": -12,
+          "x": 2,
+          "y": -4
+        },
+        {
+          "expected": -12,
+          "x": -2,
+          "y": 4
+        },
+        {
+          "expected": -45,
+          "x": 5,
+          "y": -4
+        },
+        {
+          "expected": -4,
+          "x": -1,
+          "y": 3
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": 3
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": -2
+        },
+        {
+          "expected": -9,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "expected": -18,
+          "x": -3,
+          "y": 3
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": 2
+        },
+        {
+          "expected": -3,
+          "x": -3,
+          "y": -2
+        },
+        {
+          "expected": -3,
+          "x": 2,
+          "y": 5
+        },
+        {
+          "expected": -21,
+          "x": 3,
+          "y": -4
+        },
+        {
+          "expected": -3,
+          "x": -3,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "expected": -28,
+          "x": -4,
+          "y": 3
+        },
+        {
+          "expected": -12,
+          "x": -3,
+          "y": 1
+        },
+        {
+          "expected": -4,
+          "x": -2,
+          "y": 0
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 0
+        },
+        {
+          "expected": -8,
+          "x": 2,
+          "y": -2
+        },
+        {
+          "expected": -3,
+          "x": -5,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "expected": -14,
+          "x": 2,
+          "y": -5
+        },
+        {
+          "expected": -8,
+          "x": -2,
+          "y": 2
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": 2
+        },
+        {
+          "expected": -5,
+          "x": 1,
+          "y": -4
+        }
+      ],
+      "_target": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "max"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "sub"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 2
+                  },
+                  {
+                    "const": -3
+                  }
+                ],
+                "op": "min"
+              },
+              {
+                "args": [
+                  {
+                    "const": 0
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "sub"
+          }
+        ],
+        "op": "min"
+      },
+      "id": "t0011",
+      "public": [
+        {
+          "expected": -20,
+          "x": -4,
+          "y": 1
+        },
+        {
+          "expected": -25,
+          "x": -5,
+          "y": 0
+        },
+        {
+          "expected": -10,
+          "x": -5,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": -3,
+          "y": -3
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": -5
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": 1
+        },
+        {
+          "expected": -30,
+          "x": -5,
+          "y": 1
+        },
+        {
+          "expected": -3,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "expected": -35,
+          "x": -5,
+          "y": 2
+        },
+        {
+          "expected": -3,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "expected": -3,
+          "x": 1,
+          "y": -2
+        },
+        {
+          "expected": -3,
+          "x": -1,
+          "y": 0
+        }
+      ],
+      "spec": "Repair the expression to reproduce the intended integer function of x and y. Use only the documented expression JSON grammar.",
+      "starter": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "var": "x"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "sub"
+              },
+              {
+                "args": [
+                  {
+                    "var": "y"
+                  },
+                  {
+                    "var": "x"
+                  }
+                ],
+                "op": "sub"
+              }
+            ],
+            "op": "max"
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "const": 2
+                  },
+                  {
+                    "const": -3
+                  }
+                ],
+                "op": "add"
+              },
+              {
+                "args": [
+                  {
+                    "const": 0
+                  },
+                  {
+                    "var": "y"
+                  }
+                ],
+                "op": "add"
+              }
+            ],
+            "op": "sub"
+          }
+        ],
+        "op": "min"
+      }
+    }
+  ]
+}
