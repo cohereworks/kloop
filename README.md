@@ -11,7 +11,7 @@ A standard-library Python harness for the four-condition continuation-feedback e
 From this directory (Python 3.10+):
 
 ```sh
-python -m unittest -v test_pilot test_api_agent
+python -m unittest -v test_pilot test_api_agent test_kaggle_task
 python pilot.py generate --seed 1337 --count 24 --out tasks.json
 python pilot.py run --tasks tasks.json --out runs --agent "python /absolute/path/to/baseline_agent.py" --max-turns 6
 ```
@@ -20,7 +20,11 @@ The smoke-test adapter is a deterministic greedy search algorithm. Its result sa
 
 ## Connect a real model
 
-The bundled `api_agent.py` speaks an OpenAI-compatible Chat Completions JSON protocol. Set `KLOOP_MODEL` and either `KLOOP_API_KEY` or `OPENAI_API_KEY` through your normal secret-management mechanism; neither the credential nor its value belongs in the benchmark files. The default HTTPS endpoint is `https://api.openai.com/v1/chat/completions`. Set `KLOOP_API_URL` for a compatible provider or local loopback server.
+**Primary intended route: Kaggle Benchmarks.** The original repository explicitly named `KAGGLE_API_TOKEN`; this is an integration requirement, not merely historical context. Kaggle's CLI can authenticate non-interactively with that variable, submit benchmark tasks, run them against selected models through its Model Proxy, and download the results. See [KAGGLE.md](KAGGLE.md) for the execution flow and current limits.
+
+Build a self-contained Kaggle task with `python build_kaggle_task.py`; the generated file is not checked into source control. The manually dispatched [Kaggle exploratory workflow](.github/workflows/kaggle-exploratory.yml) can verify credentials and quota, then optionally submit the task and run an explicitly selected model.
+
+**Alternate route: direct model endpoint.** The bundled `api_agent.py` speaks an OpenAI-compatible Chat Completions JSON protocol. Set `KLOOP_MODEL` and either `KLOOP_API_KEY` or `OPENAI_API_KEY` through your normal secret-management mechanism; neither the credential nor its value belongs in the benchmark files. The default HTTPS endpoint is `https://api.openai.com/v1/chat/completions`. Set `KLOOP_API_URL` for a compatible provider or local loopback server.
 
 ```sh
 python pilot.py run --tasks tasks.json --out model-runs \
@@ -84,6 +88,10 @@ The harness writes one trace per task/condition and a scored `runs/summary.json`
 
 The current status, priority order, residual risks, and next experiment are recorded in [PLAN.md](PLAN.md).
 
-## Environment notes
+## Kaggle environment
 
-The original repository included `KAGGLE_API_TOKEN` as a prospective environment variable. It is not required by this Python pilot; no credential is included in the repository.
+```text
+KAGGLE_API_TOKEN
+```
+
+This is the credential to provision for non-interactive Kaggle use. The deterministic local smoke test does not require it. It was absent from the worker that built this pilot, so no Kaggle run has been claimed. Do not commit its value.
