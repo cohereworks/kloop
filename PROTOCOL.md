@@ -48,6 +48,10 @@ secret in a precommitted private manifest, binds both task and runner code
 hashes, and exposes unique opaque identifiers to each arm. It uses only the
 reviewed in-process HTTP adapter, not a local agent subprocess. Session or
 provider-level cross-call memory is **not** proven absent.
+`provider_isolation_audit.py` is a black-box attempt to falsify isolation by
+testing for exact recall of random canaries in otherwise independent requests.
+Negative outcomes cannot prove noninterference; a provider may retain data
+without exposing it to this probe.
 
 ## Hypotheses to test with a real model
 

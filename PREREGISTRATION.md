@@ -84,6 +84,10 @@ feedback of the closed-specification and discovery strata. Consequently H4/H5
 cannot be interpreted as the same state/guidance causal effects on preferences.
 This stratum needs its own precommitted estimands and power design. A provider
 with cross-call memory is still an uncontrolled potential contamination channel.
+The optional `provider_isolation_audit.py` probes this channel with synthetic
+128-bit canaries before a live preference trial. Exact recall is a stop signal;
+absence of recall does **not** establish isolation. Preserve all raw audit
+traces and the model/endpoint settings for independent review.
 
 ## Analysis and audit
 

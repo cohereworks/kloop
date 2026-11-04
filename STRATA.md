@@ -129,6 +129,26 @@ Reusing one provider account can still introduce cross-arm contamination.
 Treat any live run as exploratory until model/session isolation, true
 independent sampling, preregistration, and budgets are verified externally.
 
+### Provider cross-request-memory canary
+
+The separate `provider_isolation_audit.py` runs three independent HTTP model
+calls per round: a baseline recall probe, exposure to an unimportant random
+128-bit canary, and a fresh probe that **does not contain that canary**.
+
+```sh
+python provider_isolation_audit.py --rounds 4 \
+  --max-total-tokens TOKEN_CAP --out provider-isolation-audit.json
+```
+
+Use the same `KLOOP_*` model settings intended for the experiment. The raw
+requests, responses, observed model identity, and provider token measurements
+are retained as synthetic evidence. An exact recovery is evidence of
+cross-request contamination and should stop the trial. A nonmatching recall
+is ambiguous. **No recovery does not establish provider/session isolation:**
+the provider might selectively retain, conceal, or later expose information.
+This audit cannot attest to provider-side logging or hidden retention; it is
+a falsification test, not a confidentiality certification.
+
 ## Limits and future comparisons
 
 - The discovery stratum is still a toy, exactly specified hypothesis class.

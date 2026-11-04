@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **41 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, and private-preference trusted-runner checks
+- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **46 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, and endpoint-memory canary controls
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -113,3 +113,20 @@ dispatch, baseline scoring, non-overwriting output directories, and CLI model
 identity pinning. The full local suite passes **41/41 tests**. These are
 synthetic/mocked checks; no private manifest has been established for a live
 model trial, and provider-side hidden state or logging remains unverified.
+
+## Provider-isolation canary audit (mocked only)
+
+`provider_isolation_audit.py` issues a baseline recall probe, exposes a fresh
+synthetic 128-bit hex canary to an independent request, and then asks a new
+request to recall it without reproducing it in the prompt. The output records
+raw request/response events, model identity, reported token usage, exact-match
+classification, endpoint origin, and audit-source SHA-256. A provider with
+cross-request memory was simulated as a **positive control**, and its exact
+canary recovery was detected. A memoryless mock yielded the intentionally
+inconclusive `not_detected_in_test` classification. Unexpected unrelated recall,
+missing usage, model drift, and cap overrun fail the audit protocol.
+
+The worker checked for `KAGGLE_API_TOKEN`, `KLOOP_MODEL`, `KLOOP_API_KEY`,
+`OPENAI_API_KEY`, and `KLOOP_API_URL` on 2026-11-04: none was configured, and
+the Kaggle CLI was unavailable. Thus **no real provider endpoint was audited**
+and no live inference was performed. The full local suite passes 46/46 tests.

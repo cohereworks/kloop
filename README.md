@@ -11,7 +11,7 @@ A standard-library Python harness for the four-condition continuation-feedback e
 From this directory (Python 3.10+):
 
 ```sh
-python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial
+python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial test_provider_isolation_audit
 python pilot.py generate --seed 1337 --count 24 --out tasks.json
 python pilot.py run --tasks tasks.json --out runs --agent "python /absolute/path/to/baseline_agent.py" --max-turns 6
 ```
@@ -156,6 +156,10 @@ unrevealed 256-bit key before inference and `preference_private_trial.py` to
 score all paired arms through the trusted HTTP model channel. Each arm gets an
 opaque task ID, not a shared identifier. See [STRATA.md](STRATA.md) for the
 workflow, trust limitations, and reproducibility instructions.
+`provider_isolation_audit.py` offers a synthetic canary test for cross-request
+memory on the selected model endpoint. An exact canary recovery is evidence of
+leakage; a clean result is explicitly inconclusive and does not certify the
+provider's internal state isolation.
 
 ## Kaggle environment
 
