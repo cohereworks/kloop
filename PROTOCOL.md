@@ -43,6 +43,11 @@ user's private goal cannot be inferred from public observations. Rich feedback
 in this stratum *does* disclose preference information, so its all-`K` versus
 rich contrast is not a clean measure of guidance or state quality. It must be
 analyzed separately, and public synthetic tasks are not private holdouts.
+The distinct `preference_private_trial.py` route seals a 256-bit evaluator
+secret in a precommitted private manifest, binds both task and runner code
+hashes, and exposes unique opaque identifiers to each arm. It uses only the
+reviewed in-process HTTP adapter, not a local agent subprocess. Session or
+provider-level cross-call memory is **not** proven absent.
 
 ## Hypotheses to test with a real model
 

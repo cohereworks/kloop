@@ -75,6 +75,16 @@ imported dependencies or a formally proved confidentiality guarantee. The
 live CLI pins the endpoint/decoder configuration once and detects drift in
 provider-reported model identity across turns.
 
+For the private-preference stratum there is a distinct
+`preference_holdout.py`/`preference_private_trial.py` pair. Its public
+commitment also binds the private-preference runner source hash; the model sees
+arm-specific pseudonymous IDs and no preference secret. The rich-feedback
+channel *supplies new target information*, unlike the guidance-only rich
+feedback of the closed-specification and discovery strata. Consequently H4/H5
+cannot be interpreted as the same state/guidance causal effects on preferences.
+This stratum needs its own precommitted estimands and power design. A provider
+with cross-call memory is still an uncontrolled potential contamination channel.
+
 ## Analysis and audit
 
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
