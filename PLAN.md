@@ -32,6 +32,9 @@ Status: **mechanics verified; real-model hypothesis untested**.
       stateful positive control and explicit inconclusive-negative reporting.
 - [x] Add deterministic transient-probe fault injection, paired recovery/false-
       public-success trace auditing, and an archived four-arm negative control.
+- [x] Add independently replayable GF(11) evidence/rank certificates and
+      conservative explicit-ledger observation-fidelity checks, with adversarial
+      probes/claims and per-turn archived proof evidence.
 
 ## Next, in order
 
@@ -50,10 +53,12 @@ Status: **mechanics verified; real-model hypothesis untested**.
    isolation and request cross-correlation, and complete host/module audit
    before confirmatory inference. Negative canary results are inconclusive.
 5. **Measure capability and drift**. The discovery-stratum transient-error
-   retry and false-public-success *instrumentation* now exists. Run it against
-   a live model, then add independently scored state-quality measures, cost,
-   evidence/relevance certificates, and a broader error taxonomy. Never treat
-   synthetic baseline recovery as model fault tolerance.
+   retry and false-public-success instrumentation plus independently scored
+   finite-field evidence relevance and *limited* ledger fidelity now exist.
+   Run them against a live model, then add semantic state-quality measures,
+   resource-matched cost, a broader error taxonomy, and evidence certificates
+   suitable for non-toy tasks. Neither rank nor ledger formatting certifies
+   model robustness or general-purpose reasoning.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 
 ## Interpretive boundaries

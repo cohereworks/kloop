@@ -17,4 +17,4 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Unit and integration tests
-        run: python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_faults test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial test_provider_isolation_audit
+        run: python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_faults test_evidence_audit test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial test_provider_isolation_audit

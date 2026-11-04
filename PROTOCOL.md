@@ -44,6 +44,12 @@ allowances stay unchanged. Recovery and false-public-success are audited by
 `analyze_recovery.py` on paired traces; the deterministic calibration does not
 establish live-model resilience. Error behavior and state quality remain
 secondary, exploratory metrics until a separate trial design is frozen.
+The optional `evidence_audit.py` computes rank over the declared finite-field
+hypothesis space and the number of public hypotheses still compatible with
+observations. Rank gain measures *algebraic information* rather than whether
+an action was useful in an arbitrary environment. Explicit-ledger claims are
+certified only when they refer to observable coordinates or values; free-form
+prose and implicit-state histories are not given a fabricated quality score.
 
 The [private-preference stratum](STRATA.md) tests a different regime: the
 user's private goal cannot be inferred from public observations. Rich feedback

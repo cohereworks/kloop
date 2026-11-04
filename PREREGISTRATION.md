@@ -99,6 +99,12 @@ confirmatory estimands; the injection schedule, error taxonomy, sample size,
 decision rule, and cost treatment must be committed before live model testing.
 The private-preference stratum is excluded because its `public_pass` means
 commitment, not observation consistency.
+The separate `evidence_audit.py` adds exploratory rank-gain, hypothesis-count,
+underidentified-submission, observation-consistency, and explicit-ledger
+reference-fidelity measures. All are deterministic under the discovery
+stratum's **known** finite-field hypothesis class; they are not proxies for
+unrestricted relevance, semantic state quality, or causal state persistence.
+Fix relevance rules and ledger claim grammar before an independent live trial.
 
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
 directory of `task/condition/trace.json` files:
