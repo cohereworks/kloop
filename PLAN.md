@@ -30,6 +30,8 @@ Status: **mechanics verified; real-model hypothesis untested**.
       measured-token budgets, and model-identity checks.
 - [x] Add an independent model-endpoint canary audit, including a deliberately
       stateful positive control and explicit inconclusive-negative reporting.
+- [x] Add deterministic transient-probe fault injection, paired recovery/false-
+      public-success trace auditing, and an archived four-arm negative control.
 
 ## Next, in order
 
@@ -47,7 +49,11 @@ Status: **mechanics verified; real-model hypothesis untested**.
    canary against the actual chosen endpoint, evaluate provider/session
    isolation and request cross-correlation, and complete host/module audit
    before confirmatory inference. Negative canary results are inconclusive.
-5. **Measure capability and drift**. Add recovery after injected errors, false-success rates, state-quality measures, cost, and independent evidence/relevance certificates.
+5. **Measure capability and drift**. The discovery-stratum transient-error
+   retry and false-public-success *instrumentation* now exists. Run it against
+   a live model, then add independently scored state-quality measures, cost,
+   evidence/relevance certificates, and a broader error taxonomy. Never treat
+   synthetic baseline recovery as model fault tolerance.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 
 ## Interpretive boundaries

@@ -66,9 +66,10 @@ def rich_feedback(observations):
     return "Review whether the observations identify every coefficient before submitting."
 
 
-def request_for(task, condition, turn, observations, ledger, history, remaining):
+def request_for(task, condition, turn, observations, ledger, history, remaining,
+                last_tool_error=None):
     feedback, state = condition
-    return {
+    request = {
         "schema": SCHEMA, "condition": {"feedback": feedback, "state": state},
         "turn": turn,
         "task": {"id": task["id"], "family": task["family"],
@@ -82,6 +83,11 @@ def request_for(task, condition, turn, observations, ledger, history, remaining)
         "ledger": ledger if state == "explicit" else None,
         "history": history[-5:] if state == "implicit" else [],
     }
+    # Both state modes need the same error evidence. In explicit mode the
+    # history is intentionally absent, and ledgers are agent-controlled.
+    if last_tool_error is not None:
+        request["last_tool_error"] = copy.deepcopy(last_tool_error)
+    return request
 
 
 def validate_response(response, condition):
@@ -123,16 +129,23 @@ def invoke_agent(command, request, cwd, timeout):
 
 
 def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
-            max_total_tokens=None):
+            max_total_tokens=None, inject_probe_failure_at=None):
+    if (inject_probe_failure_at is not None and
+            (type(inject_probe_failure_at) is not int or
+             not 1 <= inject_probe_failure_at <= PROBE_BUDGET)):
+        raise ValueError("Fault injection probe attempt must be in 1..3")
     observations = copy.deepcopy(task["initial"])
     seen = {(row["x"], row["y"]) for row in observations}
     ledger, history, trace, error = None, [], [], None
     submitted = None
     tokens = []
     budget_exhausted = False
+    probe_attempts, injected_faults = 0, 0
+    pending_tool_error = None
     for turn in range(1, max_turns + 1):
         request = request_for(task, condition, turn, observations, ledger,
-                              history, max_probes)
+                              history, max_probes, pending_tool_error)
+        pending_tool_error = None
         try:
             raw = validate_response(adapter(request), condition)
             measured = (raw.get("metrics") or {}).get("total_tokens")
@@ -145,12 +158,22 @@ def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
                 point = (action["x"], action["y"])
                 if max_probes <= 0 or point in seen:
                     raise ValueError("Probe budget exhausted or duplicate probe")
-                max_probes -= 1
-                seen.add(point)
-                observation = {"x": point[0], "y": point[1],
-                               "value": evaluate(task["_target"], *point)}
-                observations.append(observation)
-                feedback = {"observation": observation}
+                probe_attempts += 1
+                if probe_attempts == inject_probe_failure_at:
+                    # A failed environmental call consumes a turn, but neither
+                    # discloses a target value nor spends a successful probe.
+                    pending_tool_error = {"kind": "transient_probe_failure",
+                                          "retryable": True,
+                                          "x": point[0], "y": point[1]}
+                    feedback = {"tool_error": pending_tool_error}
+                    injected_faults += 1
+                else:
+                    max_probes -= 1
+                    seen.add(point)
+                    observation = {"x": point[0], "y": point[1],
+                                   "value": evaluate(task["_target"], *point)}
+                    observations.append(observation)
+                    feedback = {"observation": observation}
             else:
                 submitted = action["coefficients"]
                 feedback = {"submitted": True}
@@ -180,6 +203,8 @@ def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
             "hidden_pass": hidden_pass, "public_pass": public_pass,
             "error": error, "turns": len(trace),
             "probes": len(observations) - len(task["initial"]),
+            "probe_attempts": probe_attempts,
+            "injected_faults": injected_faults,
             "submitted": submitted is not None,
             "total_tokens": sum(tokens) if len(tokens) == sum("response" in row for row in trace)
             else None,
@@ -195,11 +220,16 @@ def main(argv=None):
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--max-turns", type=int, default=6)
     parser.add_argument("--max-total-tokens", type=int)
+    parser.add_argument("--inject-probe-failure-at", type=int,
+                        help="Inject one retryable error on this probe attempt (1..3)")
     parser.add_argument("--arm-seed", type=int, default=20261103)
     args = parser.parse_args(argv)
     if not 1 <= args.max_turns <= 100 or (args.max_total_tokens is not None and
                                          args.max_total_tokens < 1):
         parser.error("Invalid resource limits")
+    if (args.inject_probe_failure_at is not None and
+            not 1 <= args.inject_probe_failure_at <= PROBE_BUDGET):
+        parser.error("Fault injection probe attempt must be in 1..3")
     command = shlex.split(args.agent)
     if not command:
         parser.error("Agent command must not be empty")
@@ -219,13 +249,15 @@ def main(argv=None):
                 return response
 
             run = run_one(task, condition, subprocess_adapter, args.max_turns,
-                          max_total_tokens=args.max_total_tokens)
+                          max_total_tokens=args.max_total_tokens,
+                          inject_probe_failure_at=args.inject_probe_failure_at)
             runs.append(run)
             write_json(run_dir / "trace.json", run)
     summary = {"schema": SCHEMA, "seed": args.seed, "task_count": args.count,
                "generated_tasks_sha256": hashlib.sha256(canonical(data).encode()).hexdigest(),
                "max_turns": args.max_turns, "arm_seed": args.arm_seed,
                "max_total_tokens": args.max_total_tokens,
+               "inject_probe_failure_at": args.inject_probe_failure_at,
                "execution_schedule": {task: [f"{a}_{b}" for a, b in order]
                                       for task, order in schedule.items()},
                "conditions": {f"{a}_{b}": {

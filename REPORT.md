@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **46 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, and endpoint-memory canary controls
+- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **52 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, and trace-replay fault-recovery tests
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -57,6 +57,43 @@ the complete negative-control traces are archived in
 `reports/discovery-calibration-traces.zip` and reproducible using
 `discovery_pilot.py`/`discovery_baseline_agent.py`. Token usage is unknown for
 this non-model baseline. None of these results are evidence of LLM autonomy.
+
+## Transient-probe recovery calibration (no live model)
+
+The deterministic discovery baseline was run on the same 12 tasks and four
+arms with and without one synthetic failure on the first probe attempt:
+`seed=1337`, `arm_seed=20261103`, `max_turns=6`.
+
+| Per-arm metric | No-fault control | Single injected failure |
+|---|---:|---:|
+| Hidden-test completions | 12/12 | 12/12 |
+| Successful observations | 2/run | 2/run |
+| Total turns | 3/run | 4/run |
+| Retry same coordinate next turn | N/A | 12/12 |
+| False public successes | 0 | 0 |
+
+All 48 faulted runs successfully retried the failed coordinate on the next
+turn; none consumed the probe allowance or exposed a target observation at
+the failure point. The mean turn overhead was precisely one. `analyze_recovery.py`
+replays observation and budget changes, validates fault delivery, checks
+complete four-arm pairs, and counts hidden failures behind apparent public
+success. A deliberately premature-submission test verifies that an
+observation-consistent but hidden-wrong answer is not counted as recovery.
+
+- Complete control and faulted trace trees:
+  `reports/discovery-fault-calibration-traces.zip`
+- ZIP SHA-256:
+  `8143225641dc299ba936180eab78223872fe1bbf5de7fb0aebeb1feeb71d4ee2`
+- Audited analysis: `reports/discovery-fault-calibration-analysis.json`
+- Faulted trace-tree evidence SHA-256:
+  `cd4dd0a51c7642101785fc1339765d6433b8a7f633a47db02d72db60edee90fd`
+- No-fault control trace-tree evidence SHA-256:
+  `0ec0980ab0fd5d3c552abd4b0e0ab1be73b9bbf42a51059dcce16e0cefa13ce3`
+
+This is a **protocol negative control** for one retryable failure type. It
+cannot establish language-model resilience, nor transfer directly to
+non-retryable tool errors, incorrect observations, or independent state
+quality. No provider inference was executed.
 
 ## Retrospective paired-analysis smoke check
 

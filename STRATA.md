@@ -51,6 +51,37 @@ For authorized hosted inference with an OpenAI-compatible endpoint, substitute
 configuration as the expression-repair adapter. Set a measured
 `--max-total-tokens` cap. No live model has been run through this stratum.
 
+### Transient-tool recovery diagnostic
+
+The discovery runner can inject exactly one synthetic, retryable failure on a
+selected probe attempt, default disabled. This consumes one turn but **no**
+observation or successful-probe budget. The next request receives a structured
+`last_tool_error` in *both* state modes; `K` remains `K`, and the rich human
+channel does not deliver the error. The usual implicit history also records it.
+No hidden coefficient is disclosed by the failed probe.
+
+```sh
+python discovery_pilot.py --seed 1337 --count 12 \
+  --agent "python /absolute/path/to/discovery_baseline_agent.py" \
+  --out discovery-control --max-turns 6 --arm-seed 20261103
+python discovery_pilot.py --seed 1337 --count 12 \
+  --agent "python /absolute/path/to/discovery_baseline_agent.py" \
+  --out discovery-faulted --max-turns 6 --arm-seed 20261103 \
+  --inject-probe-failure-at 1
+python analyze_recovery.py discovery-faulted --control discovery-control \
+  --expected-tasks 12 --out discovery-recovery-analysis.json
+```
+
+The auditor checks the four-arm pairs, replayed evidence/probe-budget changes,
+fault delivery, and the relation between each failure and subsequent
+same-coordinate retries. It separately counts *false public success*:
+submissions consistent with observed examples but wrong on hidden cases.
+It rejects preference traces, where `public_pass` only means committing an
+option. Its comparison to no-fault controls is descriptive. It does not prove
+that a retry was appropriate for any arbitrary external error, nor that a
+language model can recover. The synthetic trace archive and evidence digest
+are recorded in [REPORT.md](REPORT.md).
+
 ## Private-preference pilot
 
 Eight publicly identical alternatives are indexed `0..7`; the evaluator holds

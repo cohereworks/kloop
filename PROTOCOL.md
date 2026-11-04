@@ -37,6 +37,13 @@ A separate [discoverable-uncertainty stratum](STRATA.md) now tests whether
 agents can elect to obtain additional environmental evidence through probes.
 It is separately scored; results must not be pooled into the original pilot's
 preregistered-candidate contrasts without an explicit stratified design.
+Fault injection in this stratum simulates a retryable environmental probe
+failure, never an additional human review. The error is delivered on the next
+request to both state modes as `last_tool_error`, while observations and probe
+allowances stay unchanged. Recovery and false-public-success are audited by
+`analyze_recovery.py` on paired traces; the deterministic calibration does not
+establish live-model resilience. Error behavior and state quality remain
+secondary, exploratory metrics until a separate trial design is frozen.
 
 The [private-preference stratum](STRATA.md) tests a different regime: the
 user's private goal cannot be inferred from public observations. Rich feedback
