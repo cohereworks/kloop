@@ -28,6 +28,8 @@ Status: **mechanics verified; real-model hypothesis untested**.
 - [x] Add a trusted HTTP-only private-preference holdout runner with a
       256-bit committed secret, code-hash binding, arm-specific opaque IDs,
       measured-token budgets, and model-identity checks.
+- [x] Add an independent model-endpoint canary audit, including a deliberately
+      stateful positive control and explicit inconclusive-negative reporting.
 
 ## Next, in order
 
@@ -40,10 +42,11 @@ Status: **mechanics verified; real-model hypothesis untested**.
    uses the reviewed direct HTTP adapter and keeps hidden cases evaluator-side.
    Arbitrary local subprocess adapters remain unsandboxed by the legacy runner;
    do not use them for private confirmatory data without OS confinement.
-4. **Audit the private-preference trust boundary**. The trusted runner exists
-   ([STRATA.md](STRATA.md)); validate provider/session isolation and request
-   cross-correlation, plus full host/module audit, before any confirmatory
-   inference. The public-seed calibration remains ineligible as a holdout.
+4. **Audit the private-preference trust boundary**. The trusted runner and
+   cross-request-memory canary audit exist ([STRATA.md](STRATA.md)); run the
+   canary against the actual chosen endpoint, evaluate provider/session
+   isolation and request cross-correlation, and complete host/module audit
+   before confirmatory inference. Negative canary results are inconclusive.
 5. **Measure capability and drift**. Add recovery after injected errors, false-success rates, state-quality measures, cost, and independent evidence/relevance certificates.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 
