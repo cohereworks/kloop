@@ -11,7 +11,7 @@ A standard-library Python harness for the four-condition continuation-feedback e
 From this directory (Python 3.10+):
 
 ```sh
-python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_api_agent test_preference_pilot test_preference_api_agent
+python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial
 python pilot.py generate --seed 1337 --count 24 --out tasks.json
 python pilot.py run --tasks tasks.json --out runs --agent "python /absolute/path/to/baseline_agent.py" --max-turns 6
 ```
@@ -151,6 +151,11 @@ reasoning, whereas four informed proposals plus a final guess attain **5/8**.
 The deterministic negative control, API adapter, reproducibility commands,
 and limits of the public calibration are documented in [STRATA.md](STRATA.md).
 The third stratum is **not** included in the current Kaggle exploratory task.
+For confidential model evaluations, use `preference_holdout.py` to commit an
+unrevealed 256-bit key before inference and `preference_private_trial.py` to
+score all paired arms through the trusted HTTP model channel. Each arm gets an
+opaque task ID, not a shared identifier. See [STRATA.md](STRATA.md) for the
+workflow, trust limitations, and reproducibility instructions.
 
 ## Kaggle environment
 

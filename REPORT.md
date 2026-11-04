@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **36 passing tests**, including mock HTTP, paired analysis, noninterference, and four-arm subprocess checks
+- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **41 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, and private-preference trusted-runner checks
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -96,3 +96,20 @@ preference holdout. The private-preference feedback advantage represents
 **new target information**, not increased reasoning quality. The existing H3–H5
 analyzer can process these traces as a software smoke check, but those
 hypotheses must not be interpreted as the same causal estimands here.
+
+## Trusted private-preference holdout (no live model)
+
+`preference_holdout.py` now creates a 256-bit secret and a public SHA-256
+manifest commitment binding both the preference generator and the trusted
+runner code. `preference_private_trial.py` uses HMAC domain separation for
+pseudorandom favorites and per-arm opaque model-facing IDs, with balanced arm
+order, task-interleaved dispatch, evaluator-side scoring, and measured token
+caps. The live entrypoint pins the direct HTTP model/decoder configuration and
+detects provider-reported model identity drift.
+
+Five new tests validate commitment tampering, stale code, secret exclusion
+from all model-facing requests and saved traces, distinct arm IDs, interleaved
+dispatch, baseline scoring, non-overwriting output directories, and CLI model
+identity pinning. The full local suite passes **41/41 tests**. These are
+synthetic/mocked checks; no private manifest has been established for a live
+model trial, and provider-side hidden state or logging remains unverified.

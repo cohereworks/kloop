@@ -84,14 +84,50 @@ The trace archive is `reports/preference-calibration-traces.zip`. The `public_pa
 field here means the agent committed an option, **not** that the hidden
 preference was satisfied; `hidden_pass` alone measures success.
 
-To try a hosted model, substitute `preference_api_agent.py` and supply the
-same `KLOOP_*` endpoint configuration as the other adapters, with a measured
-`--max-total-tokens` cap. **The seeded generator and its algorithm are public.**
-An agent with access to the repository or seed could reconstruct calibration
-targets and invalidate the information limit. This runner is suitable for
-protocol smoke testing, not confirmatory private-preference experiments. A
-future trusted private-target runner must keep the preference seed and target
-mapping inaccessible to the model and to any executable it controls.
+To try a hosted model, use the **trusted private-preference route** below,
+with the same `KLOOP_*` endpoint configuration as the other adapters and a
+measured `--max-total-tokens` cap. **The public calibration generator and its
+seed are reconstructable.** Never use `preference_pilot.py --seed` as a
+confidential holdout for a code-aware model.
+
+### Trusted private-preference holdout
+
+```sh
+python preference_holdout.py create \
+  --private preference-holdouts/manifest.json \
+  --commitment preference-holdout-commitment.json \
+  --count N --repetitions R
+python preference_holdout.py verify \
+  --private preference-holdouts/manifest.json \
+  --commitment preference-holdout-commitment.json
+
+# Commit the public commitment to GitHub BEFORE inference; never the private file.
+python preference_private_trial.py \
+  --private preference-holdouts/manifest.json \
+  --commitment preference-holdout-commitment.json \
+  --out preference-private-runs --arm-seed 20261103 \
+  --max-turns 5 --max-total-tokens TOKEN_CAP
+python analyze_trial.py preference-private-runs --expected-tasks N_TIMES_R
+```
+
+Replace `N`, `R`, `TOKEN_CAP`, and `N_TIMES_R` with the independently chosen
+task count, repetitions, measured cap, and their product. The uncommitted
+manifest holds a 256-bit random secret. HMAC derives each favorite and an
+unrelated opaque model-facing ID for every task/arm. The public commitment
+binds the manifest, `preference_pilot.py`, and `preference_private_trial.py`.
+The trusted process keeps all favorites evaluator-side; each model call goes
+directly through the shared HTTP adapter using `preference_api_agent`'s
+instructions. Arms are interleaved across tasks rather than run back-to-back;
+the exact dispatch order is recorded. No arbitrary agent subprocess runs next
+to the private targets.
+
+This closes the obvious public-seed leak and removes shared task IDs from
+model-facing requests, while interleaving reduces trivial timing correlation.
+It is **not** a formal secrecy proof: the host, imported Python code, HTTP
+provider, and its logging or hidden cross-request memory remain trusted.
+Reusing one provider account can still introduce cross-arm contamination.
+Treat any live run as exploratory until model/session isolation, true
+independent sampling, preregistration, and budgets are verified externally.
 
 ## Limits and future comparisons
 
@@ -104,3 +140,7 @@ mapping inaccessible to the model and to any executable it controls.
 - The private-preference stratum deliberately contains information available
   only from the holder. Its all-`K` identification limit is an experimental
   boundary, not evidence of bad reasoning or deficient state management.
+- The same private favorite is held across paired arms. Its answer is never
+  supplied to a request, but a provider that shares hidden state between
+  separate calls could still contaminate arms. An independent provider/session
+  isolation check is required before interpreting paired outcomes.

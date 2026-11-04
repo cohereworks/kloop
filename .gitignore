@@ -15,6 +15,8 @@ trial-analysis.json
 private-runs/
 discovery-runs/
 preference-runs/
+preference-holdouts/
+preference-private-runs/
 *.zip
 !reports/calibration-traces.zip
 !reports/discovery-calibration-traces.zip
