@@ -40,7 +40,7 @@ jobs:
         run: python -m pip install kaggle
       - name: Build and compile standalone task
         run: |
-          python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial
+          python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial test_provider_isolation_audit
           python build_kaggle_task.py
           python -m py_compile dist/kloop_kaggle_benchmark.py
       - name: Inspect available inference quota
