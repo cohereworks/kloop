@@ -138,6 +138,11 @@ task, initial evidence is deliberately underdetermined. Its four-arm control
 plane, deterministic baseline, and hosted-model adapter are documented in
 [STRATA.md](STRATA.md). The discovery trials are separate from the original
 calibration and must not be pooled with it without a stratified analysis plan.
+The optional `--inject-probe-failure-at` exercises a retryable environmental
+tool error without consuming evidence or probe budget; `analyze_recovery.py`
+audits same-coordinate retry, hidden recovery, excess turns versus an unfailed
+paired control, and public/hidden mismatches. These are descriptive diagnostics
+and the bundled deterministic baseline is not a model robustness test.
 
 ## Private preferences stratum
 

@@ -91,6 +91,15 @@ traces and the model/endpoint settings for independent review.
 
 ## Analysis and audit
 
+The separate exploratory discovery diagnostic `analyze_recovery.py` adds
+trace-replayed retry and hidden-recovery rates after a single synthetic
+retryable probe failure, false-public-success counts, and optional per-arm
+turn deltas against a matched no-fault control. These are **not** registered
+confirmatory estimands; the injection schedule, error taxonomy, sample size,
+decision rule, and cost treatment must be committed before live model testing.
+The private-preference stratum is excluded because its `public_pass` means
+commitment, not observation consistency.
+
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
 directory of `task/condition/trace.json` files:
 
