@@ -39,6 +39,10 @@ Status: **mechanics verified; real-model hypothesis untested**.
       prove entailment against only visible observations, distinguish guesses,
       contradictions, and missing claims, and archive a 12-task four-arm
       deterministic positive control with normal and injected-fault traces.
+- [x] Audit the original discovery design's cumulative-observation redundancy;
+      add a separately labeled evidence-window/state-handoff stress diagnostic,
+      state-blind ablation, one-message implicit self-serialization control,
+      replay auditing, and a six-scenario 12-task calibration archive.
 
 ## Next, in order
 
@@ -64,6 +68,11 @@ Status: **mechanics verified; real-model hypothesis untested**.
    taxonomy, and evidence certificates suitable for non-toy tasks. Neither
    toy-class entailment nor ledger formatting certifies model robustness or
    general-purpose reasoning.
+   The retention diagnostic demonstrates a key design constraint: repeated
+   cumulative observations make prior state unnecessary for *information*
+   recovery, while implicit history can itself serve as recursively encoded
+   state. Freeze evidence visibility, state-channel capacities, token budgets,
+   and treatment equivalence before using this dimension in live inference.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 
 ## Interpretive boundaries

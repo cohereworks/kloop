@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **59 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, and finite-field evidence/ledger-fidelity adversarial tests
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **72 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, and retention-projection tests
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -180,7 +180,66 @@ language state, or a causal effect of explicit state.
 - `reports/discovery-semantic-recovery-summary.json` (paired replay audit)
 
 The archived ZIPs passed `unzip -tq`; the full local Python test suite passed
-**65/65** on 2026-11-05. GitHub CI is required separately before merge.
+**65/65** at the PR #13 checkpoint on 2026-11-05. GitHub CI passed before merge.
+
+## State-retention necessity diagnostic (no live model)
+
+The original discovery runner delivers the **full cumulative observation set**
+on every turn. It is therefore possible to recover all coefficients from the
+current request alone, with no reference to the previous ledger or history.
+This is a limitation of its ability to measure memory *necessity*, not a bug
+in the existing benchmark. The following separately labeled diagnostic checks
+whether the harness can create and audit a state-dependency boundary.
+
+All six scenarios use 12 identical seeded tasks, four paired arms each, seed
+`1337`, arm seed `20261103`, two successful probe observations per task, and
+an evaluator that retains the full evidence. The projection only changes the
+**model-visible** observation set and available state channel. “Latest” means
+two initial observations on turn one, then only observations added since the
+previous request. A retryable error does not disclose an observation.
+
+| Model-facing scenario | K-explicit | K-implicit | Rich-explicit | Rich-implicit |
+|---|---:|---:|---:|---:|
+| Cumulative, state-blind control | 12/12 | 12/12 | 12/12 | 12/12 |
+| Cumulative, state-carry control, history 0 | 12/12 | 12/12 | 12/12 | 12/12 |
+| Latest, state-blind control | 0/12 | 0/12 | 0/12 | 0/12 |
+| Latest, state-carry control, history 1 | 12/12 | 12/12 | 12/12 | 12/12 |
+| Latest, state-carry control, history 0 | 12/12 | 0/12 | 12/12 | 0/12 |
+| Latest, state-carry control, history 1, fault at probe 1 | 12/12 | 12/12 | 12/12 | 12/12 |
+
+The controls choose the same probe actions and differ only in whether they
+read previously returned state. The carrying control serializes observed
+coordinate/value records either into the explicit `ledger.established` list
+or into its latest `message` (`STATE:` followed by JSON). One retained implicit
+message is enough to recursively preserve the observations through this
+three-turn task. The state-blind control zero-fills unavailable values; no
+task's target is read by the adapter. The fault control retries on the next
+turn and completes in four turns. The independent analyzer replays every
+observable window and previous-state handoff and verifies paired trace digests.
+
+**Interpretation:** The cumulative protocol cannot make state retention
+necessary for information recovery. The history-zero experiment deliberately
+withholds information from implicit arms, so its 12/12 versus 0/12 gap is a
+successful *positive control for the information channel*, **not** evidence
+that explicit state is intrinsically better. Conversely, implicit message
+recirculation can emulate state; the intervention needs an information- and
+token-budget-matched design before a live causal comparison.
+
+- Full raw request/action/feedback traces for all six scenarios:
+  `reports/discovery-retention-calibration-traces.zip` (SHA-256
+  `6edc633b5c63b61dc6e18da7e8b12fb856052ce165edd43b4888d2325a536a66`).
+- Independent replay and scenario aggregate:
+  `reports/discovery-retention-calibration-analysis.json` (SHA-256
+  `82c760cff8e9256538003117e76183ee44838024b9edfd507dd81b8dcb87258f`).
+- Reproduce with `discovery_retention.py --seed 1337 --count 12
+  --arm-seed 20261103`, setting `--view`, `--history-window`, and
+  `--inject-probe-failure-at 1` per row, and selecting either
+  `discovery_retention_control.py` or `discovery_retention_blind_control.py`
+  via `--agent`. Then run `analyze_retention.py ROOT --out analysis.json`.
+
+The archive passes ZIP integrity validation and the local full suite passes
+**72/72** tests. This diagnostic does not modify the original model prompts,
+published pilot task schema, or earlier calibration artifacts.
 
 ## Retrospective paired-analysis smoke check
 

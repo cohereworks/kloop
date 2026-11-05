@@ -148,6 +148,55 @@ paired calibration, run the same `discovery_pilot.py` commands above with
 certificates, and summary digests are archived in `reports/` and documented in
 [REPORT.md](REPORT.md). No hosted inference occurred.
 
+### State-retention information-flow stress diagnostic (separate schema)
+
+The original `kloop-discovery-v1` request contains **all accumulated** oracle
+observations each turn. Once rank is four, those equations are sufficient for
+exact coefficient recovery even if prior ledger/history are ignored. This
+cannot establish the necessity of persistent state for recovering evidence.
+Computational caching may still help a resource-bounded model; that is a
+different, as-yet-unmeasured hypothesis.
+
+`discovery_retention.py` introduces the explicitly separate schema
+`kloop-discovery-retention-v1`. A model-facing request projection exposes:
+
+- `--view cumulative`: the original complete observations;
+- `--view latest`: all initial observations on turn one, then only observations
+  newly returned by the oracle since the preceding request; an injected failed
+  probe yields an empty observation list until its successful retry;
+- `--history-window 0..5`: in implicit arms only, the number of most recent
+  action/message/feedback records available; explicit arms receive their
+  previous ledger. The evaluator **always** retains the full evidence set.
+
+Two deterministic controls share the same actions: `discovery_retention_control.py`
+retains observed coordinate/value pairs in either an explicit ledger or its
+most recent assistant `message` (`STATE:` JSON). That latter message is echoed
+through implicit history, enabling self-serialization without a typed ledger.
+`discovery_retention_blind_control.py` ignores both incoming memory channels.
+
+```sh
+python discovery_retention.py --seed 1337 --count 12 --arm-seed 20261103 \
+  --agent "python /absolute/path/to/discovery_retention_control.py" \
+  --view latest --history-window 1 --out latest-onehistory
+python discovery_retention.py --seed 1337 --count 12 --arm-seed 20261103 \
+  --agent "python /absolute/path/to/discovery_retention_blind_control.py" \
+  --view cumulative --history-window 0 --out cumulative-blind
+```
+
+`analyze_retention.py` checks complete four-arm pairing, all model-visible
+observation windows, matching prior ledger/history handoffs, probe/observation
+correspondence, and canonical trace-tree SHA-256 digests. The six configurations
+and their hashes are in [REPORT.md](REPORT.md). The ordinary discovery runner
+and its prompts retain their original behavior (`request_projection=None`).
+
+**Causal boundary:** This stress test deliberately changes how much
+information each condition can access. Its outcomes cannot be interpreted as
+the effect of a structured ledger, of K-only feedback, or of model competence.
+It establishes that the harness can make retained state consequential and
+that implicit messages can be a functionally equivalent memory channel in
+this small task. Future live trials must precommit information budgets,
+channel constraints and resource-matched evaluation separately.
+
 ```sh
 python evidence_audit.py discovery-faulted --expected-tasks 12 \
   --out discovery-evidence-detail.json

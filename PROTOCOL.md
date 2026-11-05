@@ -57,6 +57,15 @@ underdetermined, even if accidentally correct. Missing claims are unscored;
 this optional field does not alter the original agent prompts. The
 deterministic positive-control calibration is not a confirmatory model trial.
 
+An independent `kloop-discovery-retention-v1` stress diagnostic deliberately
+limits observations visible each turn and optionally suppresses implicit
+history. It detects a boundary in the *original* protocol: repeating all
+accumulated observations makes the coefficient task solvable without retained
+state. A one-message implicit history can also carry a recursively serialized
+state. The diagnostic's asymmetrical information windows are **not** one of
+the preregistered four-arm interventions and must never be pooled with their
+effects or used as evidence that a typed ledger causes better performance.
+
 The [private-preference stratum](STRATA.md) tests a different regime: the
 user's private goal cannot be inferred from public observations. Rich feedback
 in this stratum *does* disclose preference information, so its all-`K` versus
