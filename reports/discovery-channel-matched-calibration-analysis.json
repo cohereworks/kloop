@@ -1,0 +1,205 @@
+{
+  "limitations": "Exact public payload and observation equality is established within each feedback pair; this is not equal model tokenization, inference cost, latency, representation processing cost or a live causal treatment effect. Public deterministic controls use a fixed greedy prefix state compressor.",
+  "scenario_count": 6,
+  "scenarios": {
+    "budget12": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "k_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        }
+      },
+      "injected_fault_at": null,
+      "matched_information_turn_pairs": 72,
+      "mean_explicit_minus_implicit_request_wire_bytes": -8.0,
+      "runs_sha256": "f0e3d0a1c77ab30a7bb5107409bc3898940893195d23751ec2d76079fbfd5881",
+      "state_budget_bytes": 12
+    },
+    "budget20": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "k_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        }
+      },
+      "injected_fault_at": null,
+      "matched_information_turn_pairs": 72,
+      "mean_explicit_minus_implicit_request_wire_bytes": -8.0,
+      "runs_sha256": "acd79e95f24683c71ce0d2eb23dc0c3342da3cb2677494e8db7897ee9756b641",
+      "state_budget_bytes": 20
+    },
+    "budget27": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "k_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 0
+        }
+      },
+      "injected_fault_at": null,
+      "matched_information_turn_pairs": 72,
+      "mean_explicit_minus_implicit_request_wire_bytes": -8.0,
+      "runs_sha256": "e60937259fa29b488f47051b9e8de16404c33d93e348c34cb039c15b7bf46ec1",
+      "state_budget_bytes": 27
+    },
+    "budget35": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 10
+        },
+        "k_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 10
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 10
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 10
+        }
+      },
+      "injected_fault_at": null,
+      "matched_information_turn_pairs": 72,
+      "mean_explicit_minus_implicit_request_wire_bytes": -8.0,
+      "runs_sha256": "df781de6c4f0be4d73f7f0d322c6311797164e929024d1dd59e7c7d555027455",
+      "state_budget_bytes": 35
+    },
+    "budget48": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "mean_turns": 3.0,
+          "n": 12,
+          "successes": 12
+        }
+      },
+      "injected_fault_at": null,
+      "matched_information_turn_pairs": 72,
+      "mean_explicit_minus_implicit_request_wire_bytes": -8.0,
+      "runs_sha256": "316e8ab179ca8a5fd21323d9a317f994ba6466aa585ad0558c4bcb0e434d3912",
+      "state_budget_bytes": 48
+    },
+    "budget48_fault": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "mean_turns": 4.0,
+          "n": 12,
+          "successes": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "mean_turns": 4.0,
+          "n": 12,
+          "successes": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "mean_turns": 4.0,
+          "n": 12,
+          "successes": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "mean_turns": 4.0,
+          "n": 12,
+          "successes": 12
+        }
+      },
+      "injected_fault_at": 1,
+      "matched_information_turn_pairs": 96,
+      "mean_explicit_minus_implicit_request_wire_bytes": -9.0,
+      "runs_sha256": "4138f8a0d7be413789a1d499e722f7ae8e1bf1a720b27927a84da195fc7250a1",
+      "state_budget_bytes": 48
+    }
+  },
+  "schema": "kloop-discovery-channel-parity-audit-v1"
+}
