@@ -43,6 +43,10 @@ Status: **mechanics verified; real-model hypothesis untested**.
       add a separately labeled evidence-window/state-handoff stress diagnostic,
       state-blind ablation, one-message implicit self-serialization control,
       replay auditing, and a six-scenario 12-task calibration archive.
+- [x] Match the **canonical semantic state payload** across explicit ledger and
+      implicit message channels under identical byte limits; enforce canonical
+      encoding, observational support, no side-channel handoff, paired parity,
+      and archive a six-budget/fault 288-run deterministic calibration.
 
 ## Next, in order
 
@@ -73,6 +77,10 @@ Status: **mechanics verified; real-model hypothesis untested**.
    recovery, while implicit history can itself serve as recursively encoded
    state. Freeze evidence visibility, state-channel capacities, token budgets,
    and treatment equivalence before using this dimension in live inference.
+   A first information-matched instrument control now exists, but its measured
+   request-wire overhead differs by channel and no token/latency/model-cost
+   parity is established. The next live treatment must freeze a common prompt,
+   equal measured token budgets, and independently chosen holdout tasks.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 
 ## Interpretive boundaries

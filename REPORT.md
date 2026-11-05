@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **72 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, and retention-projection tests
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **78 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, and channel-parity/tampering tests
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -237,9 +237,66 @@ token-budget-matched design before a live causal comparison.
   `discovery_retention_control.py` or `discovery_retention_blind_control.py`
   via `--agent`. Then run `analyze_retention.py ROOT --out analysis.json`.
 
-The archive passes ZIP integrity validation and the local full suite passes
-**72/72** tests. This diagnostic does not modify the original model prompts,
+The archive passes ZIP integrity validation and the local full suite passed
+**72/72** tests at the PR #14 checkpoint. This diagnostic does not modify the original model prompts,
 published pilot task schema, or earlier calibration artifacts.
+
+## Capacity-matched explicit/implicit state control (no live model)
+
+The following instrument calibration removes the major asymmetry diagnosed
+above: each state channel receives **exactly the same canonical public-fact
+payload** (sorted unique triples) under the same UTF-8 byte ceiling. The host
+projects only `ledger.carry` for explicit state or the most recent implicit
+`message`'s `CARRY:` JSON, never additional prior messages, ledger annotations
+or feedback records. The first request includes the original two observations;
+subsequent requests include only the newly returned observation, if any.
+
+Six configurations use seed `1337`, arm seed `20261103`, 12 identical tasks
+and four paired arms per configuration. The deterministic controller emits the
+same response bytes for both carriers. A separate replay auditor certifies
+each turn's exact incoming payload, observed evidence, environment feedback,
+action and response equivalence within K-only and rich-feedback pairs.
+
+| Canonical fact budget | Explicit per K/rich arm | Implicit per K/rich arm | Matched turn pairs |
+|---|---:|---:|---:|
+| 12 bytes | 0/12 | 0/12 | 72/72 |
+| 20 bytes | 0/12 | 0/12 | 72/72 |
+| 27 bytes | 0/12 | 0/12 | 72/72 |
+| 35 bytes | 10/12 | 10/12 | 72/72 |
+| 48 bytes | 12/12 | 12/12 | 72/72 |
+| 48 bytes, retryable failure at probe attempt 1 | 12/12 | 12/12 | 96/96 |
+
+The 35-byte partial success rate reflects two tasks with values requiring
+an extra digit in the fixed JSON representation. The controller uses a stable
+**greedy prefix** of observed facts, not an optimal compression strategy;
+these success thresholds are therefore properties of the chosen codec and
+control, not theoretical information bounds or model performance. All
+scenarios satisfy semantic payload parity, including the tool-failure retry.
+
+The auditor also measures the remaining *request-envelope* asymmetry:
+explicit requests average **8 fewer UTF-8 bytes** than implicit requests
+without a fault (9 fewer with a fault). Response bytes are identical because
+both controls return both carrier fields. No tokenizer-based or measured
+inference-cost equivalence has been established; a future live study must
+freeze common prompts, provider/model settings, token budgets, and a private
+evaluation before drawing treatment conclusions.
+
+- Full model-visible requests, responses and feedback:
+  `reports/discovery-channel-matched-calibration-traces.zip` (SHA-256
+  `0d650dc75d2be21d3faf5f8e061f9f7a5fdbc9f8d0cba892ed8aea3fd6810fc7`).
+- Independent paired proof and per-scenario trace digests:
+  `reports/discovery-channel-matched-calibration-analysis.json` (SHA-256
+  `a3a39b754ef818cc483d207c7ce23a04168f34b517752f3593e6420ece8a3c17`).
+- Reproduction: for state budgets `12`, `20`, `27`, `35`, `48`, execute
+  `discovery_channel_match.py --seed 1337 --arm-seed 20261103 --count 12
+  --state-bytes N --agent "python /absolute/path/to/discovery_channel_control.py"
+  --out DIR`; repeat 48 bytes with `--inject-probe-failure-at 1`, then
+  `analyze_channel_match.py ROOT --out analysis.json` on the six output
+  directories.
+
+The ZIP passed integrity validation; local Python tests passed **78/78**.
+This separate schema does not alter any earlier four-arm model prompt, test
+stratum, or historical calibration report.
 
 ## Retrospective paired-analysis smoke check
 

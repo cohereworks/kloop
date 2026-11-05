@@ -116,6 +116,12 @@ model-facing evidence visibility and implicit-history capacity, deliberately
 changing what information is recoverable. A live study cannot treat that
 as a balanced ledger-versus-no-ledger treatment without a new frozen causal
 design, matched information access, and independent confirmatory tasks.
+The subsequent matched-channel deterministic control demonstrates exact
+equality of canonical state contents and outgoing responses under fixed byte
+ceilings. This is **not** an empirical comparison of language models or a
+replacement preregistration: transport overhead remains unequal, and a future
+trial requires common prompts, model/version pinning, token-accounted budgets,
+randomized independent holdouts and a frozen estimand before inference.
 
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
 directory of `task/condition/trace.json` files:

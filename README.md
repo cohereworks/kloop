@@ -170,6 +170,16 @@ an independent disclosure/handoff replay audit are in [REPORT.md](REPORT.md).
 Do not pool these asymmetric information conditions with the original four-arm
 trial or interpret them as a measured benefit of structured state.
 
+`discovery_channel_match.py` adds a further separately versioned control:
+both channels transmit **exactly the same canonical public-fact payload**,
+subject to the same UTF-8 byte ceiling. The runner projects only the explicit
+ledger's `carry` or the latest implicit message's `CARRY:` content back to the
+agent. An independent paired auditor verifies identical information, actions,
+and feedback, while measuring the remaining JSON-wire-size asymmetry. Budget
+thresholds, fault recovery, full traces and limitations are in [STRATA.md](STRATA.md)
+and [REPORT.md](REPORT.md). It remains deterministic instrument calibration,
+not a resource-matched live-model trial.
+
 ## Private preferences stratum
 
 `preference_pilot.py` implements a third, deliberately distinct four-arm
