@@ -197,6 +197,46 @@ that implicit messages can be a functionally equivalent memory channel in
 this small task. Future live trials must precommit information budgets,
 channel constraints and resource-matched evaluation separately.
 
+#### Capacity-matched semantic state channels (another separate schema)
+
+`discovery_channel_match.py` / `discovery_channel_codec.py` establish an
+**information-equivalent** version of the retention diagnostic under
+`kloop-discovery-channel-matched-v1`. The public state payload is canonical
+JSON `{"facts":[[x,y,value],...]}`, with sorted unique, integer-typed,
+previously observed triples. Both arms carry the **identical UTF-8 payload**
+under the same `--state-bytes` limit. The host permits only one carrier back:
+
+| Explicit request | Implicit request |
+|---|---|
+| `ledger: {"carry": CANONICAL_JSON}` | `history: [{"message":"CARRY:" + CANONICAL_JSON}]` |
+| `history: []` | `ledger: null` |
+
+Both arms return the same response shape and bytes, containing both equivalent
+carriers; only one is accessible on the next request. The host strips all
+other previous-state fields, including the prior action and feedback history;
+the current environmental observation and `last_tool_error` remain equally
+visible. The response validator requires matching carriers and canonical
+bounded payloads; the independent replay auditor checks observational support,
+window projections and exact state/action/outcome parity within each feedback
+condition. Ordinary discovery prompts and runner defaults are unchanged.
+
+```sh
+python discovery_channel_match.py --seed 1337 --count 12 \
+  --arm-seed 20261103 --state-bytes 48 \
+  --agent "python /absolute/path/to/discovery_channel_control.py" \
+  --out budget48
+python analyze_channel_match.py /path/to/multi-budget-parent \
+  --out matched-analysis.json
+```
+
+The deterministic control greedily retains a prefix of observed facts in its
+fixed canonical format; it does not optimally compress them. This makes the
+observed budget threshold a **codec/control-specific result**. Exact semantic
+information parity is not byte parity of the *request envelope*, which differs
+by the carrier wrapper, nor model token, computation, or latency parity. No
+hosted-model inference or causal comparison was performed. Six scenarios and
+their complete evidence appear in [REPORT.md](REPORT.md).
+
 ```sh
 python evidence_audit.py discovery-faulted --expected-tasks 12 \
   --out discovery-evidence-detail.json

@@ -66,6 +66,14 @@ state. The diagnostic's asymmetrical information windows are **not** one of
 the preregistered four-arm interventions and must never be pooled with their
 effects or used as evidence that a typed ledger causes better performance.
 
+A separate `kloop-discovery-channel-matched-v1` calibration repairs the
+information-access asymmetry *for the deterministic control only* by carrying
+the same canonical facts under the same UTF-8 byte ceiling through either
+an explicit ledger or one implicit message. It certifies paired observational
+and payload equivalence, but request envelopes differ and no equality of
+tokenization or inference cost is established. It cannot be reclassified as
+the preregistered hypothesis test.
+
 The [private-preference stratum](STRATA.md) tests a different regime: the
 user's private goal cannot be inferred from public observations. Rich feedback
 in this stratum *does* disclose preference information, so its all-`K` versus
