@@ -23,3 +23,5 @@ preference-private-runs/
 !reports/preference-calibration-traces.zip
 !reports/discovery-fault-calibration-traces.zip
 !reports/discovery-evidence-certificates.zip
+!reports/discovery-semantic-calibration-traces.zip
+!reports/discovery-semantic-calibration-certificates.zip

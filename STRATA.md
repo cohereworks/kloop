@@ -109,6 +109,45 @@ Free-form `falsified`, `unresolved`, `verification`, and reasoning quality are
 **not** semantically certified. Implicit-state ledger metrics are **null (N/A)**,
 not zero: there is no explicit ledger intervention to score in those arms.
 
+#### Optional typed coefficient-claim certificate (auditor v2)
+
+For experimental use, an explicit ledger may additionally contain:
+
+```json
+"inferences": [
+  {"coefficient": "a", "value": 7},
+  {"coefficient": "d", "value": 3}
+]
+```
+
+The exact claim grammar is a JSON array of objects with **only** `coefficient`
+(`a`, `b`, `c`, or `d`) and `value` (integer `0..10`, excluding booleans).
+For the visible linear equations `Aθ=b` over `GF(11)`, a claim `θᵢ=v` is:
+
+- **Entailed** iff the unit vector `eᵢ` belongs to the row span of `A` and
+  appending `[eᵢ,v]` preserves augmented rank.
+- **Contradicted** iff `eᵢ` is identifiable but the supplied value conflicts
+  with `Aθ=b`.
+- **Underdetermined** iff `eᵢ` is not identifiable, regardless of whether
+  the supplied value matches the undisclosed target.
+
+Duplicate and malformed claims receive their own classifications. Inconsistent
+observations and invalid claim-list shape are explicitly unscorable. An absent
+`inferences` property is **unscored, not false**; an explicitly empty array is
+scored with zero claims. Identifiable-coefficient coverage is null when no
+coefficient can be identified. Per-turn proof detail and aggregate rates are
+included in `kloop-discovery-evidence-audit-v2` outputs. Existing v1 audits
+remain immutable, and the original model prompts do **not** request this
+optional field; comparisons need a separately frozen treatment protocol.
+
+The deterministic `discovery_semantic_control.py` computes only from public
+observations and serves as an instrument positive control. To reproduce the
+paired calibration, run the same `discovery_pilot.py` commands above with
+`--agent "python /absolute/path/to/discovery_semantic_control.py"`, then run
+`evidence_audit.py` against both outputs. The complete source traces,
+certificates, and summary digests are archived in `reports/` and documented in
+[REPORT.md](REPORT.md). No hosted inference occurred.
+
 ```sh
 python evidence_audit.py discovery-faulted --expected-tasks 12 \
   --out discovery-evidence-detail.json

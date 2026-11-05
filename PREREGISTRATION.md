@@ -104,7 +104,13 @@ underidentified-submission, observation-consistency, and explicit-ledger
 reference-fidelity measures. All are deterministic under the discovery
 stratum's **known** finite-field hypothesis class; they are not proxies for
 unrestricted relevance, semantic state quality, or causal state persistence.
-Fix relevance rules and ledger claim grammar before an independent live trial.
+The discovery auditor v2 has now fixed an **optional exploratory** typed
+coefficient-claim grammar in [STRATA.md](STRATA.md). It independently checks
+entailment against visible finite-field equations, with absent claims unscored
+and implicit arms N/A. The original model prompts do not request these claims.
+A future controlled live treatment must freeze the new prompt, field format,
+scoring inclusion criteria, primary estimand, and budget **before inference**;
+the synthetic positive control cannot retroactively preregister that trial.
 
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
 directory of `task/condition/trace.json` files:
