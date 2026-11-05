@@ -129,7 +129,8 @@ def invoke_agent(command, request, cwd, timeout):
 
 
 def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
-            max_total_tokens=None, inject_probe_failure_at=None):
+            max_total_tokens=None, inject_probe_failure_at=None,
+            request_projection=None):
     if (inject_probe_failure_at is not None and
             (type(inject_probe_failure_at) is not int or
              not 1 <= inject_probe_failure_at <= PROBE_BUDGET)):
@@ -145,6 +146,11 @@ def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
     for turn in range(1, max_turns + 1):
         request = request_for(task, condition, turn, observations, ledger,
                               history, max_probes, pending_tool_error)
+        # Optional diagnostic boundary: transform the model-facing request,
+        # never the evaluator's accumulated observations or hidden target.
+        # The default protocol passes the unmodified cumulative request.
+        if request_projection is not None:
+            request = request_projection(request)
         pending_tool_error = None
         try:
             raw = validate_response(adapter(request), condition)
