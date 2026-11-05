@@ -156,6 +156,20 @@ comparable ledger score. See
 [STRATA.md](STRATA.md) and [REPORT.md](REPORT.md) for the proof semantics and
 archived certificates.
 
+### State-retention necessity diagnostic
+
+The original discovery task repeats **all observations on every request**.
+Consequently, preserving a ledger or message history is not necessary to
+recover its coefficients, although it may help compute or organize them.
+`discovery_retention.py` is a separate, explicitly non-confirmatory diagnostic
+that exposes only new observations and varies access to previous messages.
+State-blind and state-carrying deterministic controls demonstrate both the
+information-loss boundary and that one recursively updated *implicit* message
+can preserve the same public facts as an explicit ledger. Archived traces and
+an independent disclosure/handoff replay audit are in [REPORT.md](REPORT.md).
+Do not pool these asymmetric information conditions with the original four-arm
+trial or interpret them as a measured benefit of structured state.
+
 ## Private preferences stratum
 
 `preference_pilot.py` implements a third, deliberately distinct four-arm

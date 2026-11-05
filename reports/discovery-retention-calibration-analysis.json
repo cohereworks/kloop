@@ -1,0 +1,229 @@
+{
+  "limitations": "Public deterministic positive and ablation controls; not model inference, not a preregistered treatment comparison. Removing history or evidence changes information availability across arms. A one-message implicit history may recursively encode a full state, so ledger presence is not synonymous with memory.",
+  "n_scenarios": 6,
+  "scenarios": {
+    "cumulative_blind": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        }
+      },
+      "history_window": 0,
+      "injected_fault_at": null,
+      "runs_sha256": "e17244fa7dfe543385c76d3ad2a42638a84d9fef9b7bb22d6b7c621f242ebf35",
+      "verified_request_count": 144,
+      "view": "cumulative"
+    },
+    "cumulative_nohistory": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        }
+      },
+      "history_window": 0,
+      "injected_fault_at": null,
+      "runs_sha256": "e17244fa7dfe543385c76d3ad2a42638a84d9fef9b7bb22d6b7c621f242ebf35",
+      "verified_request_count": 144,
+      "view": "cumulative"
+    },
+    "latest_blind": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 0,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 0,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 0,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 0,
+          "mean_turns": 3.0,
+          "n": 12
+        }
+      },
+      "history_window": 1,
+      "injected_fault_at": null,
+      "runs_sha256": "d6d1541eaa0e0f9e2f7dc17005b7a115b0c9555683cc3dc66f15cfe2dc72958b",
+      "verified_request_count": 144,
+      "view": "latest"
+    },
+    "latest_fault": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "faulted_runs": 12,
+          "hidden_successes": 12,
+          "mean_turns": 4.0,
+          "n": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "faulted_runs": 12,
+          "hidden_successes": 12,
+          "mean_turns": 4.0,
+          "n": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "faulted_runs": 12,
+          "hidden_successes": 12,
+          "mean_turns": 4.0,
+          "n": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "faulted_runs": 12,
+          "hidden_successes": 12,
+          "mean_turns": 4.0,
+          "n": 12
+        }
+      },
+      "history_window": 1,
+      "injected_fault_at": 1,
+      "runs_sha256": "99ef9442a8faf4a98000714cd09767e7821d6f989611e9a69bd770cd6b51398b",
+      "verified_request_count": 192,
+      "view": "latest"
+    },
+    "latest_nohistory": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 0,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 0,
+          "mean_turns": 3.0,
+          "n": 12
+        }
+      },
+      "history_window": 0,
+      "injected_fault_at": null,
+      "runs_sha256": "69deef9d24f99be74759a670edebae1c68b5b9eb4b1de1ebcd564acfb60157cf",
+      "verified_request_count": 144,
+      "view": "latest"
+    },
+    "latest_onehistory": {
+      "by_arm": {
+        "k_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "k_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_explicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        },
+        "rich_implicit": {
+          "errors": 0,
+          "faulted_runs": 0,
+          "hidden_successes": 12,
+          "mean_turns": 3.0,
+          "n": 12
+        }
+      },
+      "history_window": 1,
+      "injected_fault_at": null,
+      "runs_sha256": "cf261145a99d8c513f0c676df1140f12930c82d1cf8cbd065bcfcdcc3e2c1050",
+      "verified_request_count": 144,
+      "view": "latest"
+    }
+  },
+  "schema": "kloop-discovery-retention-analysis-v1"
+}

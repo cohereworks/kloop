@@ -111,6 +111,11 @@ and implicit arms N/A. The original model prompts do not request these claims.
 A future controlled live treatment must freeze the new prompt, field format,
 scoring inclusion criteria, primary estimand, and budget **before inference**;
 the synthetic positive control cannot retroactively preregister that trial.
+The later retention stress diagnostic is also exploratory. It manipulates
+model-facing evidence visibility and implicit-history capacity, deliberately
+changing what information is recoverable. A live study cannot treat that
+as a balanced ledger-versus-no-ledger treatment without a new frozen causal
+design, matched information access, and independent confirmatory tasks.
 
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
 directory of `task/condition/trace.json` files:
