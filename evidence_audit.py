@@ -16,7 +16,7 @@ from pathlib import Path
 
 from analyze_recovery import audit_run
 from analyze_trial import ARMS, load_runs, pair_runs
-from discovery_pilot import MODULUS, SCHEMA
+from discovery_pilot import COEFFICIENTS, MODULUS, SCHEMA
 from pilot import canonical
 
 
@@ -93,9 +93,78 @@ def parse_established_claim(claim):
     return None
 
 
+def inference_certificate(ledger, observations):
+    """Prove or refute typed coefficient claims from the visible equations.
+
+    A guessed value is not entailed merely because it happens to be correct:
+    the coefficient must be identifiable across *every* compatible hypothesis.
+    Optional claims are unscored when absent, never treated as false.
+    """
+    def unscored(status, count=None):
+        return {"status": status, "declared_claims": count,
+                "entailed": 0, "contradicted": 0, "underdetermined": 0,
+                "malformed": 0, "duplicates": 0,
+                "identifiable_coefficients": None,
+                "entailed_coefficient_coverage": None, "claims": []}
+
+    if not isinstance(ledger, dict) or "inferences" not in ledger:
+        return unscored("absent")
+    claims = ledger["inferences"]
+    if not isinstance(claims, list):
+        return unscored("malformed_shape")
+    rows = []
+    for obs in observations:
+        if (not isinstance(obs, dict) or
+                any(type(obs.get(field)) is not int for field in ("x", "y", "value"))):
+            raise ValueError("Invalid public observation for inference certification")
+        x, y = obs["x"], obs["y"]
+        rows.append([x, y, x * y, 1, obs["value"]])
+    coefficients = [row[:4] for row in rows]
+    rank, _ = matrix_rank(coefficients)
+    augmented_rank, _ = matrix_rank(rows)
+    if rank != augmented_rank:
+        return unscored("inconsistent_evidence", len(claims))
+
+    units = {name: [int(i == index) for i in range(4)]
+             for index, name in enumerate(COEFFICIENTS)}
+    identifiable = {name for name, unit in units.items()
+                    if matrix_rank(coefficients + [unit])[0] == rank}
+    counters = {key: 0 for key in
+                ("entailed", "contradicted", "underdetermined", "malformed", "duplicates")}
+    seen, entailed_coefficients, details = set(), set(), []
+    for claim in claims:
+        if (not isinstance(claim, dict) or set(claim) != {"coefficient", "value"} or
+                claim.get("coefficient") not in COEFFICIENTS or
+                type(claim.get("value")) is not int or
+                not 0 <= claim["value"] < MODULUS):
+            classification = "malformed"
+        else:
+            key = (claim["coefficient"], claim["value"])
+            if key in seen:
+                classification = "duplicates"
+            else:
+                seen.add(key)
+                if claim["coefficient"] not in identifiable:
+                    classification = "underdetermined"
+                elif matrix_rank(rows + [units[claim["coefficient"]] +
+                                 [claim["value"]]])[0] == rank:
+                    classification = "entailed"
+                    entailed_coefficients.add(claim["coefficient"])
+                else:
+                    classification = "contradicted"
+        counters[classification] += 1
+        details.append({"claim": claim, "classification": classification})
+    return {"status": "scored", "declared_claims": len(claims),
+            **counters, "identifiable_coefficients": sorted(identifiable),
+            "entailed_coefficient_coverage": (len(entailed_coefficients) / len(identifiable)
+                                               if identifiable else None),
+            "claims": details}
+
+
 def ledger_certificate(ledger, observations, action):
     """Certify only established coordinate references and chosen next action."""
     known = {(row["x"], row["y"]): row["value"] for row in observations}
+    inference = inference_certificate(ledger, observations)
     claims = ledger.get("established") if isinstance(ledger, dict) else None
     if not isinstance(claims, list):
         return {"shape_valid": False, "claim_count": None,
@@ -104,6 +173,7 @@ def ledger_certificate(ledger, observations, action):
                 "unsupported_references": 0, "contradicted_values": 0,
                 "uncertifiable_claims": None, "observation_reference_coverage": 0.0,
                 "claim_certification_rate": None,
+                "inference_certification": inference,
                 "next_action_alignment": (ledger.get("next_action") == action.get("type")
                                           if isinstance(ledger, dict) else False)}
     covered = set()
@@ -135,6 +205,7 @@ def ledger_certificate(ledger, observations, action):
             "observation_reference_coverage": (len(covered) / len(known)
                                                if known else None),
             "claim_certification_rate": (verified / len(claims) if claims else None),
+            "inference_certification": inference,
             "next_action_alignment": ledger.get("next_action") == action.get("type")}
 
 
@@ -188,6 +259,24 @@ def certify_run(run):
             "turn_certificates": turns}
 
 
+def summarize_inferences(ledger_turns):
+    records = [cert["inference_certification"] for cert in ledger_turns]
+    coverage = [item["entailed_coefficient_coverage"] for item in records
+                if item["entailed_coefficient_coverage"] is not None]
+    return {"declared_turns": sum(item["status"] == "scored" for item in records),
+            "absent_turns": sum(item["status"] == "absent" for item in records),
+            "unscorable_turns": sum(item["status"] in
+                                    ("malformed_shape", "inconsistent_evidence")
+                                    for item in records),
+            "entailed": sum(item["entailed"] for item in records),
+            "contradicted": sum(item["contradicted"] for item in records),
+            "underdetermined": sum(item["underdetermined"] for item in records),
+            "malformed": sum(item["malformed"] for item in records),
+            "duplicates": sum(item["duplicates"] for item in records),
+            "mean_entailed_coefficient_coverage":
+                sum(coverage) / len(coverage) if coverage else None}
+
+
 def analyze(runs):
     paired = pair_runs(runs)
     certificates = [certify_run(group[arm])
@@ -229,17 +318,19 @@ def analyze(runs):
                         for c in ledger_turns) / len(ledger_turns),
                 "next_action_alignment_rate": sum(c["next_action_alignment"]
                                                   for c in ledger_turns) / len(ledger_turns),
+                "semantic_inferences": summarize_inferences(ledger_turns),
             } if ledger_turns else None),
         }
-    return {"schema": "kloop-discovery-evidence-audit-v1",
+    return {"schema": "kloop-discovery-evidence-audit-v2",
             "stratum": SCHEMA, "n_paired_tasks": len(paired),
             "by_arm": by_arm, "certificates": certificates,
             "limitations": ("Linear rank proves distinguishability only inside the fixed "
-                            "public hypothesis class GF(11). Ledger checks certify only "
-                            "recognized coordinate/value references and action labels, "
-                            "not free-form reasoning, unresolved/falsified assertions, "
-                            "causal state utility, or observational truth. Null ledger "
-                            "scores in implicit arms mean not applicable, not failure.")}
+                            "public hypothesis class GF(11). Ledger checks certify "
+                            "recognized coordinate/value references, optional typed "
+                            "coefficient inferences, and action labels; not free-form "
+                            "reasoning, unresolved/falsified assertions, causal state "
+                            "utility, or observational truth. Absent inference claims "
+                            "are unscored, not incorrect. Implicit ledgers are N/A.")}
 
 
 def main(argv=None):

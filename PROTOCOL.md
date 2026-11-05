@@ -50,6 +50,12 @@ observations. Rank gain measures *algebraic information* rather than whether
 an action was useful in an arbitrary environment. Explicit-ledger claims are
 certified only when they refer to observable coordinates or values; free-form
 prose and implicit-state histories are not given a fabricated quality score.
+Auditor v2 separately accepts optional typed `ledger.inferences` coefficient
+claims in explicit-state arms: it proves entailment or contradiction from the
+visible GF(11) equations and marks values for unidentified coefficients as
+underdetermined, even if accidentally correct. Missing claims are unscored;
+this optional field does not alter the original agent prompts. The
+deterministic positive-control calibration is not a confirmatory model trial.
 
 The [private-preference stratum](STRATA.md) tests a different regime: the
 user's private goal cannot be inferred from public observations. Rich feedback

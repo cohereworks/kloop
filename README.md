@@ -11,7 +11,7 @@ A standard-library Python harness for the four-condition continuation-feedback e
 From this directory (Python 3.10+):
 
 ```sh
-python -m unittest -v test_pilot test_api_agent test_kaggle_task test_analyze_trial test_holdout_commitment test_private_trial test_discovery_pilot test_discovery_api_agent test_preference_pilot test_preference_api_agent test_preference_private_trial test_provider_isolation_audit
+python -m unittest discover -p 'test_*.py' -v
 python pilot.py generate --seed 1337 --count 24 --out tasks.json
 python pilot.py run --tasks tasks.json --out runs --agent "python /absolute/path/to/baseline_agent.py" --max-turns 6
 ```
@@ -145,8 +145,14 @@ paired control, and public/hidden mismatches. These are descriptive diagnostics
 and the bundled deterministic baseline is not a model robustness test.
 `evidence_audit.py` independently certifies linear information gain from probes
 over `GF(11)` and conservatively checks explicit ledgers for observation
-references and incorrect values. Unverifiable natural-language assertions are
-reported as such; implicit arms have no comparable ledger score. See
+references and incorrect values. Its optional typed `ledger.inferences` field
+adds proof-based coefficient-claim classification: entailed, contradicted, or
+underdetermined using only visible equations. A separate
+`discovery_semantic_control.py` deterministic positive control and archived
+paired normal/faulted traces exercise this measurement. Missing claims are
+unscored, and no model prompt is retroactively modified. Unverifiable
+natural-language assertions are reported as such; implicit arms have no
+comparable ledger score. See
 [STRATA.md](STRATA.md) and [REPORT.md](REPORT.md) for the proof semantics and
 archived certificates.
 

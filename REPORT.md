@@ -134,6 +134,54 @@ This audit proves exact rank facts in the **toy specified hypothesis class**.
 It does not validate an arbitrary observation against a hidden ground truth,
 judge free-form assertions, or establish any advantage from explicit state.
 
+## Optional typed-inference positive-control calibration (no live model)
+
+The v2 evidence auditor classifies optional explicit-ledger coefficient claims
+against the already visible GF(11) equations. A new deterministic control,
+`discovery_semantic_control.py`, extends the original baseline by emitting
+exactly those coefficients established by the available observations. It reads
+no hidden target. The original baseline and hosted-model prompts are unchanged.
+
+Command parameters for each trace tree: `discovery_pilot.py --seed 1337
+--count 12 --max-turns 6 --arm-seed 20261103`, with `--agent "python
+/absolute/path/to/discovery_semantic_control.py"`; the faulted tree adds
+`--inject-probe-failure-at 1`. Both have 12 tasks in each of the four arms.
+`evidence_audit.py --expected-tasks 12` generated the certificate archives and
+aggregate-only JSON summaries. `analyze_recovery.py` checked the paired fault
+recovery separately. All are exploratory synthetic calibration runs.
+
+| Metric per explicit-state arm | Control | Faulted |
+|---|---:|---:|
+| Scored ledger turns | 36 | 48 |
+| Entailed typed coefficient claims | 108 | 132 |
+| Contradicted / underdetermined / malformed / duplicate | 0 | 0 |
+| Mean coverage of identifiable coefficients | 100% | 100% |
+| Informative completed probes | 24/24 | 24/24 |
+| Recovered transient tool failures | N/A | 12/12 |
+| Extra turns vs. control | N/A | 1 per task |
+
+Implicit arms have no ledger/inference score (**N/A**, not zero). In the
+faulted regime, the repeated evidence after a failed probe yields the same
+entailed inferences on the retry turn; it explains the higher count. The
+control verifies that the instrument accepts genuinely justified coefficient
+claims. The adversarial tests separately verify that correct guesses about
+unidentified coefficients earn **no** entailment credit, and that contradictory
+claims are rejected. This says nothing about live-model performance, natural-
+language state, or a causal effect of explicit state.
+
+- `reports/discovery-semantic-calibration-traces.zip` (SHA-256
+  `03981daa347a7c765729715f7c7ba84baa9b61cedb53b0df115baff37fa0ac31`)
+- `reports/discovery-semantic-calibration-certificates.zip` (SHA-256
+  `62cb8e3c5e2c40748151880c209a6403af952e33beae135f4b99955aa0b545ea`)
+- `reports/discovery-semantic-control-summary.json` (source evidence SHA-256
+  `f024e8319188a236d48b3fb66616254f9a526aceda4fa6d13ef1e3a151b5afac`)
+- `reports/discovery-semantic-faulted-summary.json` (source evidence SHA-256
+  `0f2ea692f1161f6a0a57a3a5ba228c8612c42124e5b0d5d0af021b7434608020`)
+- `reports/discovery-semantic-recovery-summary.json` (paired replay audit)
+
+The archived ZIPs passed `unzip -tq`; the full local Python test suite passed
+**65/65** on 2026-11-05. GitHub CI is required separately before merge.
+
 ## Retrospective paired-analysis smoke check
 
 The subsequent `analyze_trial.py` implementation was also exercised against
