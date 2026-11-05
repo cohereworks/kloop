@@ -143,6 +143,12 @@ tool error without consuming evidence or probe budget; `analyze_recovery.py`
 audits same-coordinate retry, hidden recovery, excess turns versus an unfailed
 paired control, and public/hidden mismatches. These are descriptive diagnostics
 and the bundled deterministic baseline is not a model robustness test.
+`evidence_audit.py` independently certifies linear information gain from probes
+over `GF(11)` and conservatively checks explicit ledgers for observation
+references and incorrect values. Unverifiable natural-language assertions are
+reported as such; implicit arms have no comparable ledger score. See
+[STRATA.md](STRATA.md) and [REPORT.md](REPORT.md) for the proof semantics and
+archived certificates.
 
 ## Private preferences stratum
 

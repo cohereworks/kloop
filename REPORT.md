@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **52 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, and trace-replay fault-recovery tests
+- Initial calibration had **10 passing tests**; the expanded three-stratum suite now has **59 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, and finite-field evidence/ledger-fidelity adversarial tests
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -94,6 +94,45 @@ This is a **protocol negative control** for one retryable failure type. It
 cannot establish language-model resilience, nor transfer directly to
 non-retryable tool errors, incorrect observations, or independent state
 quality. No provider inference was executed.
+
+## Independent evidence/ledger-fidelity calibration (no live model)
+
+`evidence_audit.py` replayed both archived 12-task, four-arm discovery
+regimes and derived per-turn certificates *without* consulting hidden targets
+or agent explanations. The initial two observations give a coefficient rank of
+`2`, leaving `11² = 121` compatible functions. The two baseline probes
+each add an independent equation: the hypothesis counts descend `121 → 11 → 1`.
+
+| Per-arm metric | Control | Injected-fault regime |
+|---|---:|---:|
+| Informative completed probes | 24/24 | 24/24 |
+| Redundant completed probes | 0 | 0 |
+| Underidentified submissions | 0 | 0 |
+| Inconsistent observation sets | 0 | 0 |
+| Explicit ledger observation-reference coverage | 100% | 100% |
+| Explicit ledger **value** claims verified | **0** | **0** |
+
+The last row is important: the negative-control ledger remembers which
+coordinates are observed, not their numeric values. Thus perfect *reference*
+coverage is **not** a certificate of high-quality reasoning or a complete
+state representation. Ledger metrics for implicit arms are N/A, never zero.
+In tests, the independent scorer detects redundant `(2,0)` probes,
+underidentified public-passing guesses, contradicted numerical claims,
+unobserved/duplicate references, and incompatible evidence. Free-form claims
+remain explicitly uncertifiable.
+
+- Aggregate reports: `reports/discovery-evidence-control-summary.json` and
+  `reports/discovery-evidence-faulted-summary.json`
+- Full per-turn rank/pivot/hypothesis/ledger certificates:
+  `reports/discovery-evidence-certificates.zip`
+- Certificate ZIP SHA-256:
+  `83476267633ffb9346be96ae950d0d151062bfb4425a21ed9baadc9baaac0d91`
+- Control/fault source trace-tree SHA-256 values are the same as the
+  recovery calibration above; both summaries bind their respective source.
+
+This audit proves exact rank facts in the **toy specified hypothesis class**.
+It does not validate an arbitrary observation against a hidden ground truth,
+judge free-form assertions, or establish any advantage from explicit state.
 
 ## Retrospective paired-analysis smoke check
 

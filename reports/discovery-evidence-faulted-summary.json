@@ -1,0 +1,72 @@
+{
+  "by_arm": {
+    "k_explicit": {
+      "inconsistent_evidence_turns": 0,
+      "ledger_fidelity": {
+        "contradicted_values": 0,
+        "duplicate_references": 0,
+        "invalid_established_shapes": 0,
+        "mean_observation_reference_coverage": 1.0,
+        "next_action_alignment_rate": 1.0,
+        "scored_turns": 48,
+        "uncertifiable_claims": 0,
+        "unsupported_references": 0,
+        "verified_references": 132,
+        "verified_values": 0
+      },
+      "n": 12,
+      "probe_relevance_rate": 1.0,
+      "redundant_probes": 0,
+      "relevant_probes": 24,
+      "successful_probes": 24,
+      "underidentified_submissions": 0
+    },
+    "k_implicit": {
+      "inconsistent_evidence_turns": 0,
+      "ledger_fidelity": null,
+      "n": 12,
+      "probe_relevance_rate": 1.0,
+      "redundant_probes": 0,
+      "relevant_probes": 24,
+      "successful_probes": 24,
+      "underidentified_submissions": 0
+    },
+    "rich_explicit": {
+      "inconsistent_evidence_turns": 0,
+      "ledger_fidelity": {
+        "contradicted_values": 0,
+        "duplicate_references": 0,
+        "invalid_established_shapes": 0,
+        "mean_observation_reference_coverage": 1.0,
+        "next_action_alignment_rate": 1.0,
+        "scored_turns": 48,
+        "uncertifiable_claims": 0,
+        "unsupported_references": 0,
+        "verified_references": 132,
+        "verified_values": 0
+      },
+      "n": 12,
+      "probe_relevance_rate": 1.0,
+      "redundant_probes": 0,
+      "relevant_probes": 24,
+      "successful_probes": 24,
+      "underidentified_submissions": 0
+    },
+    "rich_implicit": {
+      "inconsistent_evidence_turns": 0,
+      "ledger_fidelity": null,
+      "n": 12,
+      "probe_relevance_rate": 1.0,
+      "redundant_probes": 0,
+      "relevant_probes": 24,
+      "successful_probes": 24,
+      "underidentified_submissions": 0
+    }
+  },
+  "certificate_detail": "omitted; rerun without --aggregate-only",
+  "evidence_sha256": "cd4dd0a51c7642101785fc1339765d6433b8a7f633a47db02d72db60edee90fd",
+  "limitations": "Linear rank proves distinguishability only inside the fixed public hypothesis class GF(11). Ledger checks certify only recognized coordinate/value references and action labels, not free-form reasoning, unresolved/falsified assertions, causal state utility, or observational truth. Null ledger scores in implicit arms mean not applicable, not failure.",
+  "n_paired_tasks": 12,
+  "schema": "kloop-discovery-evidence-audit-v1",
+  "stratum": "kloop-discovery-v1"
+}

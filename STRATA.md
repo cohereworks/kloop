@@ -82,6 +82,47 @@ that a retry was appropriate for any arbitrary external error, nor that a
 language model can recover. The synthetic trace archive and evidence digest
 are recorded in [REPORT.md](REPORT.md).
 
+### Independent evidence and ledger-fidelity certificates
+
+`evidence_audit.py` derives algebraic proof obligations from each *visible*
+observation, independently of the agent's interpretation. For the public
+bilinear hypothesis class, each `(x,y)` observation contributes the linear row
+`[x, y, x*y, 1]` over `GF(11)`. Gaussian elimination computes its coefficient
+rank `r` and the augmented rank using observed values. When consistent, the
+number of compatible hypotheses is exactly `11^(4-r)`; inconsistent evidence
+is reported with **zero** compatible hypotheses, never silently reconciled.
+
+For each completed probe, rank gain `1` is new independent information, while
+rank gain `0` identifies a redundant probe. Failed probes supply no observation
+and are excluded from the successful-probe relevance denominator. Submitting
+at rank less than `4` is flagged as underidentified even if the guess happens
+to pass. Rank/relevance is evaluated for all four arms.
+
+Explicit-state ledger fidelity is deliberately narrower than "state quality":
+the auditor recognizes only `established` references of form `"x,y"`,
+`"x,y=value"`, or typed `{ "x": int, "y": int, "value": int }` (value optional).
+It certifies references against *already visible* observations and reports
+coverage, contradicted values, unsupported references, duplicate claims, and
+uncertifiable prose separately. It also checks the ledger's `next_action`
+label against the submitted action, which measures self-consistency only.
+Free-form `falsified`, `unresolved`, `verification`, and reasoning quality are
+**not** semantically certified. Implicit-state ledger metrics are **null (N/A)**,
+not zero: there is no explicit ledger intervention to score in those arms.
+
+```sh
+python evidence_audit.py discovery-faulted --expected-tasks 12 \
+  --out discovery-evidence-detail.json
+python evidence_audit.py discovery-faulted --expected-tasks 12 \
+  --aggregate-only --out discovery-evidence-summary.json
+```
+
+The auditor rejects malformed/non-discovery traces and uses the independent
+trace replay checks from `analyze_recovery.py`. Per-turn certificates include
+rank, augmented rank, pivot positions, hypothesis count, and a visible-row
+matrix SHA-256. These are **public-hypothesis-class certificates**, not
+proofs of observational truth, general-purpose relevance, or causal benefit
+from explicit state. Calibration artifacts and hashes are in [REPORT.md](REPORT.md).
+
 ## Private-preference pilot
 
 Eight publicly identical alternatives are indexed `0..7`; the evaluator holds
