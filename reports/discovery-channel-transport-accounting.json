@@ -1,0 +1,1059 @@
+{
+  "combined": {
+    "explicit_minus_implicit": {
+      "adapter_user_content_utf8": {
+        "max": 0,
+        "mean": -8.210526315789474,
+        "min": -12,
+        "sum": -3744
+      },
+      "canonical_request_utf8": {
+        "max": 0,
+        "mean": -8.210526315789474,
+        "min": -12,
+        "sum": -3744
+      },
+      "serialized_http_body_utf8": {
+        "max": 0,
+        "mean": -8.210526315789474,
+        "min": -12,
+        "sum": -3744
+      }
+    },
+    "matched_turn_pairs": 456
+  },
+  "limitations": "Reference serialized HTTP body bytes are not API token counts, inference cost or actual HTTP traffic. The fixed reference model label and instruction text are illustrative. Channel-specific delta values depend on the frozen serializer and request schema; there was no hosted-model trial.",
+  "reference_framing": {
+    "developer_instructions_sha256": "83becb55078019ec558a18469191f02fa2bb0776701da31e6dfaff455548bc28",
+    "http_headers_included": false,
+    "params": {
+      "max_completion_tokens": 1600,
+      "model": "MODEL_NOT_SELECTED",
+      "response_format": {
+        "type": "json_object"
+      }
+    },
+    "provider_tokens_measured": null,
+    "real_model_requests": 0,
+    "request_serializer": "api_agent.request_body"
+  },
+  "scenario_count": 6,
+  "scenarios": {
+    "budget12": {
+      "by_feedback": {
+        "k": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 516,
+                  "mean": 510.3888888888889,
+                  "min": 508,
+                  "sum": 18374
+                },
+                "canonical_request_utf8": {
+                  "max": 468,
+                  "mean": 465.72222222222223,
+                  "min": 465,
+                  "sum": 16766
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1768,
+                  "mean": 1763.7222222222222,
+                  "min": 1762,
+                  "sum": 63494
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 520,
+                  "mean": 518.3888888888889,
+                  "min": 515,
+                  "sum": 18662
+                },
+                "canonical_request_utf8": {
+                  "max": 477,
+                  "mean": 473.72222222222223,
+                  "min": 467,
+                  "sum": 17054
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1774,
+                  "mean": 1771.7222222222222,
+                  "min": 1767,
+                  "sum": 63782
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        },
+        "rich": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 587,
+                  "mean": 583.0555555555555,
+                  "min": 581,
+                  "sum": 20990
+                },
+                "canonical_request_utf8": {
+                  "max": 544,
+                  "mean": 538.3888888888889,
+                  "min": 533,
+                  "sum": 19382
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1841,
+                  "mean": 1836.388888888889,
+                  "min": 1833,
+                  "sum": 66110
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 599,
+                  "mean": 591.0555555555555,
+                  "min": 581,
+                  "sum": 21278
+                },
+                "canonical_request_utf8": {
+                  "max": 556,
+                  "mean": 546.3888888888889,
+                  "min": 533,
+                  "sum": 19670
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1853,
+                  "mean": 1844.388888888889,
+                  "min": 1833,
+                  "sum": 66398
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        }
+      },
+      "combined": {
+        "explicit_minus_implicit": {
+          "adapter_user_content_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "canonical_request_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "serialized_http_body_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          }
+        },
+        "matched_turn_pairs": 72
+      }
+    },
+    "budget20": {
+      "by_feedback": {
+        "k": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 516,
+                  "mean": 515.1666666666666,
+                  "min": 515,
+                  "sum": 18546
+                },
+                "canonical_request_utf8": {
+                  "max": 473,
+                  "mean": 470.5,
+                  "min": 467,
+                  "sum": 16938
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1770,
+                  "mean": 1768.5,
+                  "min": 1767,
+                  "sum": 63666
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 528,
+                  "mean": 523.1666666666666,
+                  "min": 515,
+                  "sum": 18834
+                },
+                "canonical_request_utf8": {
+                  "max": 485,
+                  "mean": 478.5,
+                  "min": 467,
+                  "sum": 17226
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1782,
+                  "mean": 1776.5,
+                  "min": 1767,
+                  "sum": 63954
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        },
+        "rich": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 595,
+                  "mean": 587.8333333333334,
+                  "min": 581,
+                  "sum": 21162
+                },
+                "canonical_request_utf8": {
+                  "max": 552,
+                  "mean": 543.1666666666666,
+                  "min": 533,
+                  "sum": 19554
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1849,
+                  "mean": 1841.1666666666667,
+                  "min": 1833,
+                  "sum": 66282
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 607,
+                  "mean": 595.8333333333334,
+                  "min": 581,
+                  "sum": 21450
+                },
+                "canonical_request_utf8": {
+                  "max": 564,
+                  "mean": 551.1666666666666,
+                  "min": 533,
+                  "sum": 19842
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1861,
+                  "mean": 1849.1666666666667,
+                  "min": 1833,
+                  "sum": 66570
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        }
+      },
+      "combined": {
+        "explicit_minus_implicit": {
+          "adapter_user_content_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "canonical_request_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "serialized_http_body_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          }
+        },
+        "matched_turn_pairs": 72
+      }
+    },
+    "budget27": {
+      "by_feedback": {
+        "k": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 523,
+                  "mean": 519.6111111111111,
+                  "min": 515,
+                  "sum": 18706
+                },
+                "canonical_request_utf8": {
+                  "max": 480,
+                  "mean": 474.94444444444446,
+                  "min": 467,
+                  "sum": 17098
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1777,
+                  "mean": 1772.9444444444443,
+                  "min": 1767,
+                  "sum": 63826
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 535,
+                  "mean": 527.6111111111111,
+                  "min": 515,
+                  "sum": 18994
+                },
+                "canonical_request_utf8": {
+                  "max": 492,
+                  "mean": 482.94444444444446,
+                  "min": 467,
+                  "sum": 17386
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1789,
+                  "mean": 1780.9444444444443,
+                  "min": 1767,
+                  "sum": 64114
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        },
+        "rich": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 602,
+                  "mean": 592.2777777777778,
+                  "min": 581,
+                  "sum": 21322
+                },
+                "canonical_request_utf8": {
+                  "max": 559,
+                  "mean": 547.6111111111111,
+                  "min": 533,
+                  "sum": 19714
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1856,
+                  "mean": 1845.611111111111,
+                  "min": 1833,
+                  "sum": 66442
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 614,
+                  "mean": 600.2777777777778,
+                  "min": 581,
+                  "sum": 21610
+                },
+                "canonical_request_utf8": {
+                  "max": 571,
+                  "mean": 555.6111111111111,
+                  "min": 533,
+                  "sum": 20002
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1868,
+                  "mean": 1853.611111111111,
+                  "min": 1833,
+                  "sum": 66730
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        }
+      },
+      "combined": {
+        "explicit_minus_implicit": {
+          "adapter_user_content_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "canonical_request_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "serialized_http_body_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          }
+        },
+        "matched_turn_pairs": 72
+      }
+    },
+    "budget35": {
+      "by_feedback": {
+        "k": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 531,
+                  "mean": 522.7222222222222,
+                  "min": 515,
+                  "sum": 18818
+                },
+                "canonical_request_utf8": {
+                  "max": 488,
+                  "mean": 478.05555555555554,
+                  "min": 467,
+                  "sum": 17210
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1785,
+                  "mean": 1776.0555555555557,
+                  "min": 1767,
+                  "sum": 63938
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 543,
+                  "mean": 530.7222222222222,
+                  "min": 515,
+                  "sum": 19106
+                },
+                "canonical_request_utf8": {
+                  "max": 500,
+                  "mean": 486.05555555555554,
+                  "min": 467,
+                  "sum": 17498
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1797,
+                  "mean": 1784.0555555555557,
+                  "min": 1767,
+                  "sum": 64226
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        },
+        "rich": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 610,
+                  "mean": 595.3888888888889,
+                  "min": 581,
+                  "sum": 21434
+                },
+                "canonical_request_utf8": {
+                  "max": 567,
+                  "mean": 550.7222222222222,
+                  "min": 533,
+                  "sum": 19826
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1864,
+                  "mean": 1848.7222222222222,
+                  "min": 1833,
+                  "sum": 66554
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 622,
+                  "mean": 603.3888888888889,
+                  "min": 581,
+                  "sum": 21722
+                },
+                "canonical_request_utf8": {
+                  "max": 579,
+                  "mean": 558.7222222222222,
+                  "min": 533,
+                  "sum": 20114
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1876,
+                  "mean": 1856.7222222222222,
+                  "min": 1833,
+                  "sum": 66842
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        }
+      },
+      "combined": {
+        "explicit_minus_implicit": {
+          "adapter_user_content_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "canonical_request_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "serialized_http_body_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          }
+        },
+        "matched_turn_pairs": 72
+      }
+    },
+    "budget48": {
+      "by_feedback": {
+        "k": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 532,
+                  "mean": 523.1666666666666,
+                  "min": 515,
+                  "sum": 18834
+                },
+                "canonical_request_utf8": {
+                  "max": 489,
+                  "mean": 478.5,
+                  "min": 467,
+                  "sum": 17226
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1786,
+                  "mean": 1776.5,
+                  "min": 1767,
+                  "sum": 63954
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 544,
+                  "mean": 531.1666666666666,
+                  "min": 515,
+                  "sum": 19122
+                },
+                "canonical_request_utf8": {
+                  "max": 501,
+                  "mean": 486.5,
+                  "min": 467,
+                  "sum": 17514
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1798,
+                  "mean": 1784.5,
+                  "min": 1767,
+                  "sum": 64242
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        },
+        "rich": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 611,
+                  "mean": 595.8333333333334,
+                  "min": 581,
+                  "sum": 21450
+                },
+                "canonical_request_utf8": {
+                  "max": 568,
+                  "mean": 551.1666666666666,
+                  "min": 533,
+                  "sum": 19842
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1865,
+                  "mean": 1849.1666666666667,
+                  "min": 1833,
+                  "sum": 66570
+                }
+              },
+              "request_count": 36
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 623,
+                  "mean": 603.8333333333334,
+                  "min": 581,
+                  "sum": 21738
+                },
+                "canonical_request_utf8": {
+                  "max": 580,
+                  "mean": 559.1666666666666,
+                  "min": 533,
+                  "sum": 20130
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1877,
+                  "mean": 1857.1666666666667,
+                  "min": 1833,
+                  "sum": 66858
+                }
+              },
+              "request_count": 36
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -8.0,
+              "min": -12,
+              "sum": -288
+            }
+          },
+          "matched_turn_pairs": 36
+        }
+      },
+      "combined": {
+        "explicit_minus_implicit": {
+          "adapter_user_content_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "canonical_request_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          },
+          "serialized_http_body_utf8": {
+            "max": 0,
+            "mean": -8.0,
+            "min": -12,
+            "sum": -576
+          }
+        },
+        "matched_turn_pairs": 72
+      }
+    },
+    "budget48_fault": {
+      "by_feedback": {
+        "k": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 587,
+                  "mean": 538.9166666666666,
+                  "min": 515,
+                  "sum": 25868
+                },
+                "canonical_request_utf8": {
+                  "max": 540,
+                  "mean": 493.6666666666667,
+                  "min": 467,
+                  "sum": 23696
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1847,
+                  "mean": 1793.9166666666667,
+                  "min": 1767,
+                  "sum": 86108
+                }
+              },
+              "request_count": 48
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 599,
+                  "mean": 547.9166666666666,
+                  "min": 515,
+                  "sum": 26300
+                },
+                "canonical_request_utf8": {
+                  "max": 552,
+                  "mean": 502.6666666666667,
+                  "min": 467,
+                  "sum": 24128
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1859,
+                  "mean": 1802.9166666666667,
+                  "min": 1767,
+                  "sum": 86540
+                }
+              },
+              "request_count": 48
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -9.0,
+              "min": -12,
+              "sum": -432
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -9.0,
+              "min": -12,
+              "sum": -432
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -9.0,
+              "min": -12,
+              "sum": -432
+            }
+          },
+          "matched_turn_pairs": 48
+        },
+        "rich": {
+          "by_state": {
+            "explicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 653,
+                  "mean": 609.9166666666666,
+                  "min": 581,
+                  "sum": 29276
+                },
+                "canonical_request_utf8": {
+                  "max": 606,
+                  "mean": 564.6666666666666,
+                  "min": 533,
+                  "sum": 27104
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1913,
+                  "mean": 1864.9166666666667,
+                  "min": 1833,
+                  "sum": 89516
+                }
+              },
+              "request_count": 48
+            },
+            "implicit": {
+              "bytes": {
+                "adapter_user_content_utf8": {
+                  "max": 665,
+                  "mean": 618.9166666666666,
+                  "min": 581,
+                  "sum": 29708
+                },
+                "canonical_request_utf8": {
+                  "max": 618,
+                  "mean": 573.6666666666666,
+                  "min": 533,
+                  "sum": 27536
+                },
+                "serialized_http_body_utf8": {
+                  "max": 1925,
+                  "mean": 1873.9166666666667,
+                  "min": 1833,
+                  "sum": 89948
+                }
+              },
+              "request_count": 48
+            }
+          },
+          "explicit_minus_implicit": {
+            "adapter_user_content_utf8": {
+              "max": 0,
+              "mean": -9.0,
+              "min": -12,
+              "sum": -432
+            },
+            "canonical_request_utf8": {
+              "max": 0,
+              "mean": -9.0,
+              "min": -12,
+              "sum": -432
+            },
+            "serialized_http_body_utf8": {
+              "max": 0,
+              "mean": -9.0,
+              "min": -12,
+              "sum": -432
+            }
+          },
+          "matched_turn_pairs": 48
+        }
+      },
+      "combined": {
+        "explicit_minus_implicit": {
+          "adapter_user_content_utf8": {
+            "max": 0,
+            "mean": -9.0,
+            "min": -12,
+            "sum": -864
+          },
+          "canonical_request_utf8": {
+            "max": 0,
+            "mean": -9.0,
+            "min": -12,
+            "sum": -864
+          },
+          "serialized_http_body_utf8": {
+            "max": 0,
+            "mean": -9.0,
+            "min": -12,
+            "sum": -864
+          }
+        },
+        "matched_turn_pairs": 96
+      }
+    }
+  },
+  "schema": "kloop-channel-transport-accounting-v1",
+  "source_archive_sha256": "0d650dc75d2be21d3faf5f8e061f9f7a5fdbc9f8d0cba892ed8aea3fd6810fc7"
+}

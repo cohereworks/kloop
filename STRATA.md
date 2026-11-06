@@ -237,6 +237,40 @@ by the carrier wrapper, nor model token, computation, or latency parity. No
 hosted-model inference or causal comparison was performed. Six scenarios and
 their complete evidence appear in [REPORT.md](REPORT.md).
 
+#### Offline transport accounting (no inference)
+
+The matched-channel auditor uses `canonical(request)` for its byte proxy.
+The HTTP adapter actually embeds a sorted, Unicode-preserving JSON user
+message inside a second JSON object, including fixed developer instructions,
+model identifier, decoder settings, and a completion-token cap. Thus canonical
+request bytes **are not** the serialized model-request-body bytes. The new
+`api_agent.request_body()` is the shared serializer for both real requests and
+offline accounting, eliminating a second approximation of that serialization.
+
+```sh
+python transport_accounting.py \
+  reports/discovery-channel-matched-calibration-traces.zip \
+  --out /tmp/kloop-transport-accounting.json
+```
+
+The offline auditor first replays the complete paired proof, checks its source
+digests, and refuses malformed ZIP paths. It reports three separate byte
+layers and absolute per-arm measurements. In this exact matched-channel
+schema, the arm-specific wrapper has no additional escaping asymmetry:
+**explicit-minus-implicit byte differences are identical across all three
+layers**, even though absolute serialized request bodies are much larger than
+canonical requests. The reference model name, developer instructions, and
+decoder parameters are documented in the report; actual live settings may
+differ. Provider token counts, model computation, latency, HTTP headers and
+transport compression are not measured by this audit.
+
+Separately, the direct HTTP adapter refuses internally contradictory or
+partially reported provider token counts and requires the provider envelope
+to identify a model. Its `usage_provenance` label means **provider-reported
+and locally consistency-checked**, not independently verified usage. An
+arbitrary model-controlled subprocess can still fabricate metrics and must
+not be treated as an authenticated metering source.
+
 ```sh
 python evidence_audit.py discovery-faulted --expected-tasks 12 \
   --out discovery-evidence-detail.json

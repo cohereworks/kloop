@@ -58,19 +58,44 @@ def configuration():
     return url, key, params, integer_env("KLOOP_HTTP_TIMEOUT", 60)
 
 
+def request_body(request, params, instructions=INSTRUCTIONS):
+    """Exact UTF-8 JSON HTTP body used by this adapter (before HTTP headers)."""
+    payload = {**params, "messages": [
+        {"role": "developer", "content": instructions},
+        {"role": "user", "content": json.dumps(request, sort_keys=True,
+                                               ensure_ascii=False)},
+    ]}
+    return json.dumps(payload).encode("utf-8")
+
+
+def provider_usage(envelope):
+    """Validate provider *reported* counts; this is not an external audit."""
+    usage = envelope.get("usage")
+    if usage is None:
+        return {"prompt_tokens": None, "completion_tokens": None,
+                "total_tokens": None}
+    if not isinstance(usage, dict):
+        raise ValueError("Provider usage must be an object")
+    fields = ("prompt_tokens", "completion_tokens", "total_tokens")
+    values = [usage.get(name) for name in fields]
+    if all(value is None for value in values):
+        return dict(zip(fields, values))
+    if any(type(value) is not int or value < 0 for value in values):
+        raise ValueError("Provider usage requires three nonnegative integer counts")
+    if values[0] + values[1] != values[2]:
+        raise ValueError("Provider usage total disagrees with component counts")
+    return dict(zip(fields, values))
+
+
 def call_model(request, *, resolved_config=None, instructions=INSTRUCTIONS):
     # Private trials pin the full endpoint/decoder configuration at startup.
     url, key, params, timeout = (configuration() if resolved_config is None
                                  else resolved_config)
-    payload = {**params, "messages": [
-        {"role": "developer", "content": instructions},
-        {"role": "user", "content": json.dumps(request, sort_keys=True, ensure_ascii=False)},
-    ]}
     headers = {"Content-Type": "application/json"}
     if key:
         headers["Authorization"] = f"Bearer {key}"
     http_request = urllib.request.Request(
-        url, data=json.dumps(payload).encode("utf-8"),
+        url, data=request_body(request, params, instructions),
         headers=headers, method="POST")
     try:
         with urllib.request.urlopen(http_request, timeout=timeout) as reply:
@@ -90,14 +115,16 @@ def call_model(request, *, resolved_config=None, instructions=INSTRUCTIONS):
     result = json.loads(content)
     if not isinstance(result, dict):
         raise RuntimeError("Model must return a JSON object")
-    usage = envelope.get("usage") or {}
+    reported_model = envelope.get("model")
+    if not isinstance(reported_model, str) or not reported_model:
+        raise ValueError("Provider model identity missing")
+    usage = provider_usage(envelope)
     result["metrics"] = {
         "provider_response_id": envelope.get("id"),
-        "model": envelope.get("model", params["model"]),
+        "model": reported_model,
         "finish_reason": choice.get("finish_reason"),
-        "prompt_tokens": usage.get("prompt_tokens"),
-        "completion_tokens": usage.get("completion_tokens"),
-        "total_tokens": usage.get("total_tokens"),
+        **usage,
+        "usage_provenance": "provider_response_envelope_unverified",
         "requested_max_completion_tokens": params["max_completion_tokens"],
         "requested_seed": params.get("seed"),
         "requested_temperature": params.get("temperature"),

@@ -36,6 +36,14 @@ Optional adapter settings: `KLOOP_MAX_COMPLETION_TOKENS` (default 1600), `KLOOP_
 
 The runner's `--max-total-tokens` enforces a measured per-task/condition cap when usage is reported. A final API call can overshoot the cap; such an outcome is not scored as a success. For a real trial, use the same chosen model and adapter settings in all four arms, and keep API and test data accessible only to the trusted runner and adapter. A separate mock HTTP integration test exercises the entire request/response path without billable inference.
 
+The HTTP adapter now validates that the provider envelope identifies a model
+and that any reported prompt/completion/total token counts are nonnegative
+integers satisfying `prompt + completion = total`. Incomplete or contradictory
+counts fail the request. Missing counts remain unknown and cannot satisfy a
+token-capped run. `usage_provenance=provider_response_envelope_unverified`
+means the adapter copied and checked the **provider's assertion**, not that
+token consumption was independently measured or cryptographically attested.
+
 The local runner also accepts `--arm-order balanced --arm-seed INTEGER` to
 randomize arm execution in complete four-task blocks. Every arm occupies each
 position once per block; the selected schedule is saved in the summary.
@@ -179,6 +187,23 @@ and feedback, while measuring the remaining JSON-wire-size asymmetry. Budget
 thresholds, fault recovery, full traces and limitations are in [STRATA.md](STRATA.md)
 and [REPORT.md](REPORT.md). It remains deterministic instrument calibration,
 not a resource-matched live-model trial.
+
+`transport_accounting.py` independently verifies the archived matched-channel
+traces, then passes their requests through the exact `api_agent` JSON body
+serializer offline. It reports both absolute request bytes and matched
+explicit-minus-implicit differences for canonical JSON, adapter user-message
+content, and full serialized request body (excluding HTTP headers). Run:
+
+```sh
+python transport_accounting.py \
+  reports/discovery-channel-matched-calibration-traces.zip \
+  --out /tmp/kloop-transport-accounting.json
+```
+
+The reference model label, completion cap, and developer prompt are fixed
+illustrative settings, **not a selected endpoint**. No provider token usage is
+estimated from bytes. See the archived result in
+`reports/discovery-channel-transport-accounting.json`.
 
 ## Private preferences stratum
 

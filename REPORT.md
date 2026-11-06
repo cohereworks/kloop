@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **78 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, and channel-parity/tampering tests
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **86 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, and transport-metering tests
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -297,6 +297,51 @@ evaluation before drawing treatment conclusions.
 The ZIP passed integrity validation; local Python tests passed **78/78**.
 This separate schema does not alter any earlier four-arm model prompt, test
 stratum, or historical calibration report.
+
+## Reference HTTP serialization accounting (offline only)
+
+`transport_accounting.py` replays the same immutable six-scenario archive
+through the **actual JSON body encoder used by `api_agent.py`**, under a fixed
+reference model label, cap, JSON mode, and discovery developer instructions.
+Its independent prerequisite auditor rechecks complete four-arm pairs,
+archived SHA-256 digests, evidence windows and carrier correctness before
+accounting for request bytes. It performs **zero** model inference calls.
+
+All 456 state-channel matched turn pairs (across 288 runs) were audited.
+The resulting explicit-minus-implicit differences were identical at all
+three serialization layers: canonical request, adapter's serialized user
+content, and complete JSON HTTP body. The pooled difference was **−3,744
+bytes**, or **−8.2105 bytes per turn**, ranging from −12 to 0. This equality
+is specific to these request wrappers and their escaping behavior, not a
+general equivalence guarantee.
+
+Absolute body size is substantially larger. For the 48-byte, no-fault
+scenario's K-only arms (36 requests each), the reference adapter yielded:
+
+| Bytes per request (mean) | Explicit | Implicit |
+|---|---:|---:|
+| Canonical public request | 478.5 | 486.5 |
+| Adapter user-message content | 523.17 | 531.17 |
+| Full reference JSON HTTP body, excluding headers | 1,776.5 | 1,784.5 |
+
+This reference framing includes the long developer instruction string; it
+is not a selected model endpoint or a record of requests sent over HTTP.
+The precise tokenizer, actual inference budget, network overhead, latency,
+and provider-side computation remain **unmeasured**. In particular, an
+8-byte request-body difference cannot be converted into eight tokens.
+
+The independently replayable output is
+`reports/discovery-channel-transport-accounting.json` (SHA-256
+`b646099a94baf69cfdf81a20b7ccc1f71263e7eb2d8f44731a1e26e2b94f836d`).
+It records per-scenario/per-feedback absolute sizes, paired deltas, serializer
+and developer-instructions identity, reference settings, and source ZIP hash.
+
+The HTTP adapter's provider usage fields were also hardened: missing model
+identification, negative/bool/partial token counts, or a non-additive total
+now fail. These checks detect malformed **provider assertions**, not dishonest
+metering by the provider itself. Synthetic subprocess adapters retain an
+untrusted `metrics` channel; a private trial must use the trusted direct HTTP
+entrypoint with measured token caps. Local test suite: **86/86**.
 
 ## Retrospective paired-analysis smoke check
 
