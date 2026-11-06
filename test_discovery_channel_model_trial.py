@@ -22,6 +22,8 @@ class ChannelProviderStub(BaseHTTPRequestHandler):
     requests = []
     reported_tokens = 30
     drift_after = None
+    bad_content_at = None
+    missing_usage_at = None
 
     def do_POST(self):
         body = self.rfile.read(int(self.headers["Content-Length"]))
@@ -33,12 +35,16 @@ class ChannelProviderStub(BaseHTTPRequestHandler):
         answer["metrics"] = {"total_tokens": -9999, "model": "fake"}
         identity = ("drifted" if self.drift_after is not None and
                     len(self.requests) > self.drift_after else envelope["model"])
+        content = ("INVALID_MODEL_JSON"
+                   if len(self.requests) == self.bad_content_at
+                   else json.dumps(answer))
         reply = {"id": f"stub-{len(self.requests)}", "model": identity,
                  "choices": [{"finish_reason": "stop", "message": {
-                     "content": json.dumps(answer)}}],
-                 "usage": {"prompt_tokens": self.reported_tokens - 10,
-                           "completion_tokens": 10,
-                           "total_tokens": self.reported_tokens}}
+                     "content": content}}],
+                 "usage": (None if len(self.requests) == self.missing_usage_at
+                           else {"prompt_tokens": self.reported_tokens - 10,
+                                 "completion_tokens": 10,
+                                 "total_tokens": self.reported_tokens})}
         data = json.dumps(reply).encode()
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
@@ -66,6 +72,8 @@ class ChannelHostedTrialTests(unittest.TestCase):
         ChannelProviderStub.requests = []
         ChannelProviderStub.reported_tokens = 30
         ChannelProviderStub.drift_after = None
+        ChannelProviderStub.bad_content_at = None
+        ChannelProviderStub.missing_usage_at = None
         server = ThreadingHTTPServer(("127.0.0.1", 0), ChannelProviderStub)
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -127,6 +135,134 @@ class ChannelHostedTrialTests(unittest.TestCase):
             self.assertIsNone(one["within_budget"])
             replay = analyze(Path(tmp) / "missing")
             self.assertEqual(replay["unmetered_error_runs"], 4)
+
+    def test_invalid_carrier_and_action_keep_billed_usage(self):
+        def broken_carrier(request):
+            result = respond(request)
+            result["message"] = "MISMATCHED"
+            result["metrics"] = {"total_tokens": 41, "model": "mock"}
+            return result
+
+        def broken_action(request):
+            result = respond(request)
+            result["action"] = {"type": "submit", "coefficients": {"a": 99}}
+            result["metrics"] = {"total_tokens": 41, "model": "mock"}
+            return result
+
+        with tempfile.TemporaryDirectory() as tmp:
+            for name, adapter in (("carrier", broken_carrier),
+                                  ("action", broken_action)):
+                with self.subTest(name=name):
+                    out = Path(tmp) / name
+                    summary = run_trial(out, adapter, seed=1337, arm_seed=3,
+                                        count=1, state_bytes=48, max_total_tokens=40)
+                    self.assertTrue(all(v["usage_complete"] and v["over_budget"] == 1
+                                        and v["protocol_errors"] == 1
+                                        for v in summary["by_arm"].values()))
+                    result = analyze(out)
+                    self.assertEqual(result["metered_error_calls"], 4)
+                    self.assertEqual(result["unmetered_error_runs"], 0)
+
+    def test_malformed_model_json_retains_metered_call_and_independent_replay(self):
+        ChannelProviderStub.requests = []
+        ChannelProviderStub.reported_tokens = 30
+        ChannelProviderStub.drift_after = None
+        ChannelProviderStub.bad_content_at = 1
+        ChannelProviderStub.missing_usage_at = None
+        server = ThreadingHTTPServer(("127.0.0.1", 0), ChannelProviderStub)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        config = (f"http://127.0.0.1:{server.server_port}/", None,
+                  {"model": "mock-constant", "max_completion_tokens": 128}, 5)
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                out = Path(tmp) / "malformed"
+                result = run_trial(out, lambda req: call_channel_model(
+                    req, resolved_config=config), seed=1337, arm_seed=3,
+                    count=1, state_bytes=48, max_total_tokens=100)
+                failed = [r for r in out.glob("*/*/trace.json")
+                          if json.loads(r.read_text())["error"] is not None]
+                self.assertEqual(len(failed), 1)
+                record = json.loads(failed[0].read_text())
+                self.assertEqual(record["total_tokens"], 30)
+                self.assertTrue(record["within_budget"])
+                self.assertEqual(record["trace"][0]["error_metrics"]["total_tokens"], 30)
+                self.assertNotIn("INVALID_MODEL_JSON", failed[0].read_text())
+                self.assertTrue(all(v["usage_complete"] for v in result["by_arm"].values()))
+                replay = analyze(out)
+                self.assertEqual(replay["metered_error_calls"], 1)
+                self.assertEqual(replay["unmetered_error_runs"], 0)
+        finally:
+            ChannelProviderStub.bad_content_at = None
+            ChannelProviderStub.missing_usage_at = None
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
+
+    def test_malformed_json_without_usage_remains_unknown_cost(self):
+        ChannelProviderStub.requests = []
+        ChannelProviderStub.reported_tokens = 30
+        ChannelProviderStub.drift_after = None
+        ChannelProviderStub.bad_content_at = 1
+        ChannelProviderStub.missing_usage_at = 1
+        server = ThreadingHTTPServer(("127.0.0.1", 0), ChannelProviderStub)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        config = (f"http://127.0.0.1:{server.server_port}/", None,
+                  {"model": "mock-constant", "max_completion_tokens": 128}, 5)
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                out = Path(tmp) / "unmetered"
+                run_trial(out, lambda req: call_channel_model(
+                    req, resolved_config=config), seed=1337, arm_seed=3,
+                    count=1, state_bytes=48, max_total_tokens=100)
+                record = json.loads(next(p for p in out.glob("*/*/trace.json")
+                                         if json.loads(p.read_text())["error"] is not None).read_text())
+                self.assertIsNone(record["total_tokens"])
+                self.assertIsNone(record["within_budget"])
+                self.assertIsNone(record["trace"][0]["error_metrics"]["total_tokens"])
+                replay = analyze(out)
+                self.assertEqual(replay["metered_error_calls"], 0)
+                self.assertEqual(replay["unmetered_error_runs"], 1)
+        finally:
+            ChannelProviderStub.bad_content_at = None
+            ChannelProviderStub.missing_usage_at = None
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
+
+    def test_mixed_metered_and_unknown_cost_replays_lower_bound(self):
+        calls = [0]
+
+        def intermittent(request):
+            calls[0] += 1
+            if calls[0] % 2 == 0:
+                raise RuntimeError("Transport failed before response envelope")
+            return {**respond(request), "metrics": {"total_tokens": 30,
+                                                    "model": "mock"}}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "partial"
+            summary = run_trial(out, intermittent, seed=1337, arm_seed=5,
+                                count=1, state_bytes=48, max_total_tokens=100)
+            self.assertEqual(calls[0], 8)
+            self.assertTrue(all(v["provider_reported_token_lower_bound"] == 30
+                                and v["provider_reported_total_tokens"] is None
+                                and not v["usage_complete"]
+                                for v in summary["by_arm"].values()))
+            replay = analyze(out)
+            self.assertEqual(replay["unmetered_error_runs"], 4)
+            self.assertEqual(replay["metered_error_calls"], 0)
+            path = next(out.glob("*/*/trace.json"))
+            original = json.loads(path.read_text())
+            self.assertEqual(original["reported_token_lower_bound"], 30)
+            self.assertIsNone(original["total_tokens"])
+            self.assertIsNone(original["within_budget"])
+            altered = copy.deepcopy(original)
+            altered["reported_token_lower_bound"] = 0
+            path.write_text(json.dumps(altered))
+            with self.assertRaisesRegex(ValueError, "lower bound"):
+                analyze(out)
 
     def test_unsupported_carried_claim_is_not_credited_as_success(self):
         carry = encode_facts({(3, 3): 1})
@@ -195,6 +331,9 @@ class ChannelHostedTrialTests(unittest.TestCase):
                 self.assertEqual(abort["runs_recorded"], 1)
                 self.assertEqual(len(ChannelProviderStub.requests), 2)
                 self.assertFalse((out / "summary.json").exists())
+                affected = json.loads((out / abort["last_trace"]).read_text())
+                self.assertEqual(affected["total_tokens"], 60)
+                self.assertEqual(affected["trace"][-1]["error_metrics"]["total_tokens"], 30)
                 self.assertEqual(abort["model_metadata"]["requested_model"],
                                  "mock-constant")
                 self.assertNotIn("127.0.0.1:", abort["model_metadata"]["endpoint_origin"])

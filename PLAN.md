@@ -60,6 +60,13 @@ Status: **mechanics verified; real-model hypothesis untested**.
       reporting, and an independent outcome/usage/trace replay analyzer.
       Mock-test the complete request path, false metrics, over-budget calls,
       fabricated carry facts, identity drift, and tampered archives.
+- [x] Preserve validated provider-envelope token usage for **failed model
+      output** (invalid JSON, non-object JSON, invalid action/carrier and
+      provider model drift) without preserving potentially sensitive raw
+      content. Meter before response validation, archive `error_metrics`,
+      independently replay charged failures and over-budget disqualification.
+      Keep transport/envelope/missing-usage failures as unknown-cost events;
+      preserve known metered subtotals as separately audited lower bounds.
 
 ## Next, in order
 

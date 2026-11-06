@@ -8,7 +8,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
-from api_agent import call_model, configuration, provider_usage, request_body
+from api_agent import (ModelResponseError, call_model, configuration,
+                       provider_usage, request_body)
 from pilot import CONDITIONS, make_tasks, request_for, run_one
 
 
@@ -17,6 +18,7 @@ class ModelStub(BaseHTTPRequestHandler):
     bodies = []
     usage = {"prompt_tokens": 40, "completion_tokens": 11, "total_tokens": 51}
     reported_model = None
+    content_override = None
 
     def do_POST(self):
         length = int(self.headers["Content-Length"])
@@ -39,7 +41,9 @@ class ModelStub(BaseHTTPRequestHandler):
             "id": "stub-001", "model": (self.__class__.reported_model
                                          if self.__class__.reported_model is not None
                                          else payload["model"]),
-            "choices": [{"finish_reason": "stop", "message": {"content": json.dumps(answer)}}],
+            "choices": [{"finish_reason": "stop", "message": {
+                "content": (json.dumps(answer) if self.__class__.content_override is None
+                            else self.__class__.content_override)}}],
             "usage": self.__class__.usage,
         }
         body = json.dumps(response).encode()
@@ -70,6 +74,7 @@ class ApiAgentTests(unittest.TestCase):
         ModelStub.usage = {"prompt_tokens": 40, "completion_tokens": 11,
                            "total_tokens": 51}
         ModelStub.reported_model = None
+        ModelStub.content_override = None
         server = ThreadingHTTPServer(("127.0.0.1", 0), ModelStub)
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -161,6 +166,39 @@ class ApiAgentTests(unittest.TestCase):
             self.assertEqual(result["metrics"]["model"], "observed-other-model")
         finally:
             ModelStub.reported_model = None
+            ModelStub.content_override = None
+            ModelStub.usage = {"prompt_tokens": 40, "completion_tokens": 11,
+                               "total_tokens": 51}
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
+
+    def test_bad_model_json_preserves_provider_usage_without_exposing_content(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), ModelStub)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        config = (f"http://127.0.0.1:{server.server_port}/", None,
+                  {"model": "requested", "max_completion_tokens": 5}, 5)
+        try:
+            ModelStub.reported_model = None
+            ModelStub.content_override = "PRIVATE_INVALID_CONTENT {"
+            ModelStub.usage = {"prompt_tokens": 20, "completion_tokens": 9,
+                               "total_tokens": 29}
+            with self.assertRaises(ModelResponseError) as raised:
+                call_model({"candidate": {"var": "x"}}, resolved_config=config)
+            self.assertEqual(raised.exception.metrics["total_tokens"], 29)
+            self.assertEqual(raised.exception.metrics["model"], "requested")
+            self.assertNotIn("PRIVATE_INVALID_CONTENT", str(raised.exception))
+            ModelStub.content_override = '[]'
+            with self.assertRaisesRegex(ModelResponseError, "JSON object") as other:
+                call_model({"candidate": {"var": "x"}}, resolved_config=config)
+            self.assertEqual(other.exception.metrics["total_tokens"], 29)
+            ModelStub.usage = None
+            with self.assertRaises(ModelResponseError) as unknown:
+                call_model({"candidate": {"var": "x"}}, resolved_config=config)
+            self.assertIsNone(unknown.exception.metrics["total_tokens"])
+        finally:
+            ModelStub.content_override = None
             ModelStub.usage = {"prompt_tokens": 40, "completion_tokens": 11,
                                "total_tokens": 51}
             server.shutdown()

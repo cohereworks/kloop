@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **92 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **99 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -371,12 +371,38 @@ requests. They also test the CLI's actual direct HTTP transport path; on
 reported model drift, the CLI now stops after the first affected arm and
 preserves an `abort.json` plus partial traces without inventing a paired result.
 
-An incomplete/invalid response can still incur a provider charge. Because
-the current adapter only returns successfully parsed JSON, the evaluator
-cannot reliably account for all such costs; these runs report `total_tokens`
-and `within_budget` as **null**. This remains an explicit limitation for
-future live inference. No new private holdout, model endpoint, or model
-performance result was produced. The full local suite passes **92/92**.
+An invalid model response can still incur a provider charge. The subsequent
+metering-hardening pass now validates provider metadata **before** model JSON
+parsing and preserves it in `trace[].error_metrics` when content or action
+validation fails. The independent replay checks the added failure charge,
+total usage, budget decision and model provenance. HTTP/transport failures,
+unusable response envelopes and missing usage still report `total_tokens`
+and `within_budget` as **null**, because their billing remains unknowable.
+Even when one call has unknown usage, the `reported_token_lower_bound` still
+adds every metered response and error. The independent analyzer verifies this
+subtotal against the trace and its per-arm aggregation. If the subtotal exceeds
+the cap, the run is definitively over-budget; otherwise cap compliance remains
+unknown until every call is metered. These fields appear only on capped paths,
+preserving the archived deterministic uncapped calibration schema and hashes.
+This limitation persists for future live inference. No new private holdout, model endpoint, or model
+performance result was produced. The full local suite passes **99/99**.
+
+The new metering-failure tests used a local HTTP provider stub to distinguish:
+
+| Failure mode | Reported tokens retained? | Trial interpretation |
+|---|---|---|
+| Malformed model JSON with valid provider envelope | Yes | Protocol failure; usage charged |
+| Non-object model JSON with valid provider envelope | Yes | Protocol failure; usage charged |
+| Invalid action or carrier with valid reported usage | Yes | Protocol failure; usage charged |
+| Reported model-identity drift | Yes | Immediate abort; partial usage preserved |
+| Malformed model JSON with missing provider usage | No | Protocol failure; usage/budget unknown |
+| Valid metered response followed by unmetered transport error | Partial | Known usage lower bound preserved; total/budget unknown |
+
+The independent analyzer now reproduces token totals **including metered
+error turns** and rejects attempts to assign a complete budget verdict to
+unknown-cost errors. The HTTP adapter never saves the malformed content in
+these error events. Existing deterministic no-fault trace digests remain
+unchanged, and **no hosted-model inference** was performed.
 
 ## Retrospective paired-analysis smoke check
 

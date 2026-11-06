@@ -16,7 +16,7 @@ import shlex
 from pathlib import Path
 
 from discovery_channel_codec import EMPTY_PAYLOAD, PREFIX, decode_facts
-from discovery_pilot import CONDITIONS, invoke_agent, make_tasks, run_one
+from discovery_pilot import CONDITIONS, invoke_agent, make_tasks, run_one, validate_response
 from pilot import arm_schedule, canonical, write_json
 
 
@@ -73,13 +73,15 @@ def validate_carriers(response, max_bytes):
 
 def run_matched(task, condition, adapter, max_bytes, inject_probe_failure_at=None,
                 max_total_tokens=None, max_turns=6):
-    def checked(request):
-        return validate_carriers(adapter(request), max_bytes)
+    def checked_response(response, state):
+        validate_carriers(response, max_bytes)
+        return validate_response(response, state)
 
-    result = run_one(task, condition, checked, max_turns=max_turns,
+    result = run_one(task, condition, adapter, max_turns=max_turns,
                      inject_probe_failure_at=inject_probe_failure_at,
                      request_projection=matched_projection(max_bytes),
-                     max_total_tokens=max_total_tokens)
+                     max_total_tokens=max_total_tokens,
+                     response_validator=checked_response)
     result["schema"] = MATCHED_SCHEMA
     result["state_budget_bytes"] = max_bytes
     return result

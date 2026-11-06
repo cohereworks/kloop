@@ -19,6 +19,7 @@ import sys
 import time
 from pathlib import Path
 
+from api_agent import ModelResponseError
 from pilot import CONDITIONS, STATE_FIELDS, arm_schedule, canonical, write_json
 
 
@@ -130,7 +131,7 @@ def invoke_agent(command, request, cwd, timeout):
 
 def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
             max_total_tokens=None, inject_probe_failure_at=None,
-            request_projection=None):
+            request_projection=None, response_validator=validate_response):
     if (inject_probe_failure_at is not None and
             (type(inject_probe_failure_at) is not int or
              not 1 <= inject_probe_failure_at <= PROBE_BUDGET)):
@@ -139,7 +140,7 @@ def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
     seen = {(row["x"], row["y"]) for row in observations}
     ledger, history, trace, error = None, [], [], None
     submitted = None
-    tokens = []
+    usage_by_turn = []
     budget_exhausted = False
     probe_attempts, injected_faults = 0, 0
     pending_tool_error = None
@@ -152,13 +153,17 @@ def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
         if request_projection is not None:
             request = request_projection(request)
         pending_tool_error = None
+        measured, error_metrics = None, None
         try:
-            raw = validate_response(adapter(request), condition)
-            measured = (raw.get("metrics") or {}).get("total_tokens")
-            if type(measured) is int and measured >= 0:
-                tokens.append(measured)
+            raw = adapter(request)
+            error_metrics = raw.get("metrics") if isinstance(raw, dict) else None
+            candidate = (error_metrics or {}).get("total_tokens") if isinstance(
+                error_metrics, dict) else None
+            if type(candidate) is int and candidate >= 0:
+                measured = candidate
             elif max_total_tokens is not None:
                 raise ValueError("Measured token usage required under a token cap")
+            raw = response_validator(raw, condition)
             action = raw["action"]
             if action["type"] == "probe":
                 point = (action["x"], action["y"])
@@ -189,33 +194,57 @@ def run_one(task, condition, adapter, max_turns=6, max_probes=PROBE_BUDGET,
                             "message": raw.get("message", ""), "feedback": feedback})
             trace.append({"request": request, "response": raw,
                           "environment_feedback": feedback})
-            if max_total_tokens is not None and sum(tokens) >= max_total_tokens:
+            if (max_total_tokens is not None and
+                    sum(t for t in usage_by_turn if t is not None) +
+                    (measured or 0) >= max_total_tokens):
                 budget_exhausted = True
                 break
             if submitted is not None:
                 break
         except (ValueError, TypeError, KeyError, RuntimeError) as exc:
+            if isinstance(exc, ModelResponseError):
+                error_metrics = exc.metrics
+                candidate = error_metrics.get("total_tokens")
+                if type(candidate) is int and candidate >= 0:
+                    measured = candidate
             error = f"{type(exc).__name__}: {exc}"
-            trace.append({"request": request, "error": error})
+            event = {"request": request, "error": error}
+            if isinstance(error_metrics, dict):
+                event["error_metrics"] = error_metrics
+            trace.append(event)
+            if (max_total_tokens is not None and
+                    sum(t for t in usage_by_turn if t is not None) +
+                    (measured or 0) >= max_total_tokens):
+                budget_exhausted = True
             break
+        finally:
+            usage_by_turn.append(measured)
     public_pass = (submitted is not None and
                    all(evaluate(submitted, row["x"], row["y"]) == row["value"]
                        for row in observations))
-    within_budget = max_total_tokens is None or sum(tokens) <= max_total_tokens
+    fully_metered = bool(usage_by_turn) and all(v is not None for v in usage_by_turn)
+    reported_total = sum(v for v in usage_by_turn if v is not None)
+    within_budget = (True if max_total_tokens is None else
+                     False if reported_total > max_total_tokens else
+                     None if not fully_metered else True)
     hidden_pass = (error is None and public_pass and within_budget and
                    all(evaluate(submitted, x, y) == evaluate(task["_target"], x, y)
                        for x in DOMAIN for y in DOMAIN))
-    return {"task": task["id"], "condition": f"{condition[0]}_{condition[1]}",
+    result = {"task": task["id"], "condition": f"{condition[0]}_{condition[1]}",
             "hidden_pass": hidden_pass, "public_pass": public_pass,
             "error": error, "turns": len(trace),
             "probes": len(observations) - len(task["initial"]),
             "probe_attempts": probe_attempts,
             "injected_faults": injected_faults,
             "submitted": submitted is not None,
-            "total_tokens": sum(tokens) if len(tokens) == sum("response" in row for row in trace)
-            else None,
+            "total_tokens": reported_total if fully_metered else None,
             "within_budget": within_budget, "budget_exhausted": budget_exhausted,
             "trace": trace}
+    # Additive only on capped routes: historical uncapped trace digests and
+    # serialized deterministic calibrations retain their exact schema.
+    if max_total_tokens is not None:
+        result["reported_token_lower_bound"] = reported_total
+    return result
 
 
 def main(argv=None):

@@ -23,6 +23,18 @@ Do not claim public results prove hidden correctness. Repair the candidate incre
 """
 
 
+class ModelResponseError(RuntimeError):
+    """A completed provider reply with metering but unusable model content.
+
+    Exposes only provider response metadata, never raw model content. The
+    caller can meter the failed call without accepting an invalid action.
+    """
+
+    def __init__(self, message, metrics):
+        super().__init__(message)
+        self.metrics = metrics
+
+
 def integer_env(name, default):
     raw = os.environ.get(name)
     value = int(raw) if raw is not None else default
@@ -108,27 +120,37 @@ def call_model(request, *, resolved_config=None, instructions=INSTRUCTIONS):
     if len(raw) > 1_000_000:
         raise RuntimeError("Model endpoint response exceeds 1 MB")
     envelope = json.loads(raw)
-    choice = envelope["choices"][0]
-    content = choice["message"]["content"]
-    if not isinstance(content, str):
-        raise RuntimeError("Model message content must be a JSON string")
-    result = json.loads(content)
-    if not isinstance(result, dict):
-        raise RuntimeError("Model must return a JSON object")
+    if not isinstance(envelope, dict):
+        raise ValueError("Provider response envelope must be an object")
     reported_model = envelope.get("model")
     if not isinstance(reported_model, str) or not reported_model:
         raise ValueError("Provider model identity missing")
     usage = provider_usage(envelope)
-    result["metrics"] = {
+    choices = envelope.get("choices")
+    choice = (choices[0] if isinstance(choices, list) and choices and
+              isinstance(choices[0], dict) else None)
+    metrics = {
         "provider_response_id": envelope.get("id"),
         "model": reported_model,
-        "finish_reason": choice.get("finish_reason"),
+        "finish_reason": choice.get("finish_reason") if choice else None,
         **usage,
         "usage_provenance": "provider_response_envelope_unverified",
         "requested_max_completion_tokens": params["max_completion_tokens"],
         "requested_seed": params.get("seed"),
         "requested_temperature": params.get("temperature"),
     }
+    if not choice or not isinstance(choice.get("message"), dict):
+        raise ModelResponseError("Provider response has no usable message", metrics)
+    content = choice["message"].get("content")
+    if not isinstance(content, str):
+        raise ModelResponseError("Model message content must be a JSON string", metrics)
+    try:
+        result = json.loads(content)
+    except json.JSONDecodeError as exc:
+        raise ModelResponseError("Model content is not valid JSON", metrics) from exc
+    if not isinstance(result, dict):
+        raise ModelResponseError("Model must return a JSON object", metrics)
+    result["metrics"] = metrics
     return result
 
 

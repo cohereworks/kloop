@@ -303,9 +303,18 @@ with provider-envelope values. The new `discovery_channel_model_trial.py`
 executes through that in-process direct HTTP path, pins endpoint parameters,
 checks provider-reported model drift, enforces per-task/arm usage caps,
 randomizes/balances arm order, and records per-arm public traces without
-reference coefficients. Failed calls can consume tokens without a parsed
-response: their total usage and budget compliance are marked **unknown**,
-not zero or verified within budget. Reported model-identity drift is a stop
+reference coefficients. The HTTP adapter extracts provider metrics before
+parsing the model's JSON content. Its metered error exception, and the
+evaluator's metering-before-carrier-validation path, preserve valid provider
+usage in `trace[].error_metrics` even for malformed model JSON, invalid
+actions or fabricated carrier syntax. The arm is still a protocol failure,
+but the incurred call is charged against its cap. Transport/HTTP failures,
+incomplete envelopes and missing provider usage remain **unknown-cost**,
+not zero or verified within budget. For capped trials,
+`reported_token_lower_bound` records known call costs even when the complete
+total cannot be recovered; it cannot certify compliance with the cap, but
+exceeding the cap certifies noncompliance. Per-arm aggregates retain the same
+bound without treating unknown costs as zero. Reported model-identity drift is a stop
 condition: the runner preserves partial traces and an `abort.json`, then
 terminates without a completed paired-trial summary.
 
@@ -320,7 +329,8 @@ python analyze_channel_hosted.py exploratory-channel-runs \
 
 The independent analyzer regenerates tasks from the recorded replay seed,
 checks four-arm completeness, all run digests, per-run observation/claim
-provenance, independently rescored outcomes and reported token totals. A
+provenance, independently rescored outcomes, reported token totals, and
+the known-usage lower bound, including `error_metrics` from failed model calls. A
 malformed or unsupported carried claim disqualifies the run. **Crucially, it
 does not require equal actions or outcomes between channels**, unlike the
 deterministic positive-control auditor. This route uses an exploratory
