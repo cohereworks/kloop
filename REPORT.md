@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **86 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, and transport-metering tests
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **92 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -342,6 +342,41 @@ now fail. These checks detect malformed **provider assertions**, not dishonest
 metering by the provider itself. Synthetic subprocess adapters retain an
 untrusted `metrics` channel; a private trial must use the trusted direct HTTP
 entrypoint with measured token caps. Local test suite: **86/86**.
+
+## Hosted matched-channel plumbing (mock HTTP only)
+
+The deterministic matched-channel response validator originally forbade the
+`metrics` field supplied by the real HTTP adapter. Therefore it could not
+consume provider-reported usage under a `--max-total-tokens` cap. The new
+validator accepts the independently added adapter metrics but still rejects
+other response fields and noncanonical/unsupported fact carriers.
+
+`discovery_channel_api_agent.py` now freezes a single explicit carrier
+protocol prompt for both state modes and both human-feedback channels.
+`discovery_channel_model_trial.py` executes each arm through the trusted
+in-process HTTP adapter with pinned parameters and random/balanced order;
+`analyze_channel_hosted.py` independently checks score, coverage, public
+fact entailment, usage and archived digests without requiring matched
+actions or scores across model runs.
+
+The complete test HTTP server returned deterministic control responses for
+four tasks × four arms × three calls = **48 calls**. All 16 runs completed,
+and the independent replay audited all 48 turns. The stub asserted 20 prompt
++ 10 completion = 30 tokens/call, or 90 tokens/run; the 100-token cap did not
+disqualify any successful run. This is a *stubbed provider measurement*, not
+real inference. Additional adversarial tests cover forged model-content
+metrics, missing usage, over-budget responses, fabricated carried facts,
+reported model identity drift, incorrect recorded totals and modified public
+requests. They also test the CLI's actual direct HTTP transport path; on
+reported model drift, the CLI now stops after the first affected arm and
+preserves an `abort.json` plus partial traces without inventing a paired result.
+
+An incomplete/invalid response can still incur a provider charge. Because
+the current adapter only returns successfully parsed JSON, the evaluator
+cannot reliably account for all such costs; these runs report `total_tokens`
+and `within_budget` as **null**. This remains an explicit limitation for
+future live inference. No new private holdout, model endpoint, or model
+performance result was produced. The full local suite passes **92/92**.
 
 ## Retrospective paired-analysis smoke check
 

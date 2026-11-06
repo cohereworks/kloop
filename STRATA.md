@@ -285,6 +285,49 @@ matrix SHA-256. These are **public-hypothesis-class certificates**, not
 proofs of observational truth, general-purpose relevance, or causal benefit
 from explicit state. Calibration artifacts and hashes are in [REPORT.md](REPORT.md).
 
+#### Matched-channel hosted exploratory adapter (new, no live run)
+
+The original `discovery_api_agent.py` prompt requested a free-form ledger and
+cannot satisfy the matched-channel `CARRY:` schema. A separately versioned
+adapter, `discovery_channel_api_agent.py`, now supplies a common static prompt
+for *all four arms*. It explicitly specifies both representations and requires
+a canonical, capacity-bounded public-fact JSON string in two matching output
+carriers. Only the appropriate carrier is projected into the next request.
+This intentionally changes the model prompt: it is a new **exploratory**
+intervention, not a retroactive extension of the original pilot.
+
+`validate_carriers()` permits only the three model-authored response fields
+(`action`, `message`, `ledger`) plus an optional adapter-owned `metrics` object.
+The trusted `api_agent.call_model()` overwrites any model-authored `metrics`
+with provider-envelope values. The new `discovery_channel_model_trial.py`
+executes through that in-process direct HTTP path, pins endpoint parameters,
+checks provider-reported model drift, enforces per-task/arm usage caps,
+randomizes/balances arm order, and records per-arm public traces without
+reference coefficients. Failed calls can consume tokens without a parsed
+response: their total usage and budget compliance are marked **unknown**,
+not zero or verified within budget. Reported model-identity drift is a stop
+condition: the runner preserves partial traces and an `abort.json`, then
+terminates without a completed paired-trial summary.
+
+```sh
+# Requires KLOOP_MODEL and the relevant endpoint/API credentials.
+python discovery_channel_model_trial.py \
+  --out exploratory-channel-runs --count 4 --state-bytes 48 \
+  --max-turns 6 --max-total-tokens 6000
+python analyze_channel_hosted.py exploratory-channel-runs \
+  --out exploratory-channel-audit.json
+```
+
+The independent analyzer regenerates tasks from the recorded replay seed,
+checks four-arm completeness, all run digests, per-run observation/claim
+provenance, independently rescored outcomes and reported token totals. A
+malformed or unsupported carried claim disqualifies the run. **Crucially, it
+does not require equal actions or outcomes between channels**, unlike the
+deterministic positive-control auditor. This route uses an exploratory
+generator, not the committed private-holdout machinery. No provider-side
+session isolation, tokenizer equivalence, sample-size power, or confirmatory
+causal treatment is established. Current verification is mock HTTP only.
+
 ## Private-preference pilot
 
 Eight publicly identical alternatives are indexed `0..7`; the evaluator holds
