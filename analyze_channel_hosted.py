@@ -40,10 +40,8 @@ def replay_run(run, task, condition, max_tokens):
         proof = None
     if error_turns:
         if (not isinstance(run["error"], str) or
-                run["channel_audit"] is not None or
-                run["total_tokens"] is not None or
-                run["within_budget"] is not None or audit_error):
-            raise ValueError("Unmetered error or prefix audit discrepancy")
+                run["channel_audit"] is not None or audit_error):
+            raise ValueError("Error or prefix audit discrepancy")
     elif audit_error is not None:
         if (run["error"] != audit_error or run["channel_audit"] is not None):
             raise ValueError("Missing channel audit disqualification")
@@ -54,12 +52,25 @@ def replay_run(run, task, condition, max_tokens):
               for event in prefix]
     if any(type(value) is not int or value < 0 for value in tokens):
         raise ValueError("Unmetered successful response under token cap")
-    if not error_turns:
+    error_metrics = (trace[-1].get("error_metrics") if error_turns else None)
+    if error_turns:
+        error_usage = (error_metrics.get("total_tokens")
+                       if isinstance(error_metrics, dict) else None)
+        tokens.append(error_usage)
+    lower_bound = sum(value for value in tokens
+                      if type(value) is int and value >= 0)
+    if run.get("reported_token_lower_bound") != lower_bound:
+        raise ValueError("Reported token lower bound disagrees with calls")
+    metered = all(type(value) is int and value >= 0 for value in tokens)
+    if metered:
         total = sum(tokens)
         if (run["total_tokens"] != total or
                 run["within_budget"] != (total <= max_tokens) or
                 run["budget_exhausted"] != (total >= max_tokens)):
             raise ValueError("Recorded token-cap accounting mismatch")
+    elif (run["total_tokens"] is not None or
+          run["within_budget"] != (False if lower_bound > max_tokens else None)):
+        raise ValueError("Unknown-cost call incorrectly counted as metered")
 
     feedbacks = [event["environment_feedback"] for event in prefix]
     observed = task["initial"] + [feedback["observation"] for feedback in feedbacks
@@ -82,7 +93,8 @@ def replay_run(run, task, condition, max_tokens):
                                           == "probe" for event in prefix) or
             run["injected_faults"] != sum("tool_error" in x for x in feedbacks)):
         raise ValueError("Recorded environmental outcome/score mismatch")
-    return {"usage_complete": not error_turns,
+    return {"usage_complete": metered,
+            "metered_error_calls": int(bool(error_turns) and metered),
             "audited_turns": len(prefix), "error": run["error"]}
 
 
@@ -115,9 +127,10 @@ def analyze(root):
         observed_models = set()
         for run in runs:
             for event in run["trace"]:
-                if "response" not in event:
-                    continue
-                metrics = event["response"].get("metrics", {})
+                metrics = (event["response"].get("metrics", {})
+                           if "response" in event else event.get("error_metrics"))
+                if metrics is None:
+                    continue  # No authenticated provider envelope was parsed.
                 if (not isinstance(metrics.get("model"), str) or
                         not metrics["model"] or
                         metrics.get("usage_provenance") !=
@@ -140,6 +153,8 @@ def analyze(root):
                        "protocol_errors": sum(r["error"] is not None for r in selected),
                        "over_budget": sum(r["within_budget"] is False for r in selected),
                        "usage_complete": metered,
+                       "provider_reported_token_lower_bound": sum(
+                           r["reported_token_lower_bound"] for r in selected),
                        "provider_reported_total_tokens": (
                            sum(r["total_tokens"] for r in selected) if metered else None)}
     if by_arm != summary["by_arm"]:
@@ -148,10 +163,12 @@ def analyze(root):
             "trace_digest": digest, "paired_tasks": len(tasks["tasks"]),
             "runs_replayed": len(runs),
             "response_turns_audited": sum(x["audited_turns"] for x in checks),
+            "metered_error_calls": sum(x["metered_error_calls"] for x in checks),
             "unmetered_error_runs": sum(not x["usage_complete"] for x in checks),
             "by_arm": by_arm,
             "limitations": ("Provider tokens are asserted, not externally attested. "
-                            "A failed call may be billed without a parsed response. "
+                            "A transport/envelope failure may still be billed "
+                            "without recoverable usage. "
                             "No causal inference, held-out target or provider "
                             "state isolation is certified.")}
 

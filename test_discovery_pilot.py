@@ -74,6 +74,42 @@ class DiscoveryPilotTests(unittest.TestCase):
         self.assertIn("Measured token usage", unknown["error"])
         self.assertFalse(unknown["hidden_pass"])
 
+    def test_invalid_parsed_action_still_counts_successful_provider_meter(self):
+        task = make_tasks(11, 1)["tasks"][0]
+
+        def invalid(request):
+            raw = respond(request)
+            raw["action"] = {"type": "submit", "coefficients": {"a": -1}}
+            raw["metrics"] = {"total_tokens": 17}
+            return raw
+
+        failed = run_one(task, ("k", "implicit"), invalid, max_total_tokens=12)
+        self.assertFalse(failed["hidden_pass"])
+        self.assertTrue(failed["budget_exhausted"])
+        self.assertFalse(failed["within_budget"])
+        self.assertEqual(failed["total_tokens"], 17)
+        self.assertEqual(failed["trace"][0]["error_metrics"]["total_tokens"], 17)
+        self.assertNotIn("response", failed["trace"][0])
+
+    def test_partial_usage_retains_lower_bound_without_claiming_budget_parity(self):
+        task = make_tasks(11, 1)["tasks"][0]
+        calls = [0]
+
+        def partial(request):
+            calls[0] += 1
+            if calls[0] == 2:
+                raise RuntimeError("HTTP transport became unavailable")
+            return {**respond(request), "metrics": {"total_tokens": 30}}
+
+        run = run_one(task, ("k", "implicit"), partial, max_total_tokens=100)
+        self.assertEqual(run["reported_token_lower_bound"], 30)
+        self.assertIsNone(run["total_tokens"])
+        self.assertIsNone(run["within_budget"])
+        self.assertFalse(run["hidden_pass"])
+        self.assertEqual(len(run["trace"]), 2)
+        uncapped = run_one(task, ("k", "implicit"), respond)
+        self.assertNotIn("reported_token_lower_bound", uncapped)
+
     def test_cli_subprocess_and_trace_outputs(self):
         agent = Path(__file__).with_name("discovery_baseline_agent.py").resolve()
         with tempfile.TemporaryDirectory() as temp:

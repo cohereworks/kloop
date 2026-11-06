@@ -128,6 +128,14 @@ public-trace replay. It is not the `private_trial.py` committed holdout
 protocol and does not fix the missing preregistration or model/session
 isolation. Provider-reported token caps do not make two prompt representations
 equal in intrinsic token cost, especially when failed calls have unknown usage.
+The hosted matched-channel evaluator now retains provider-reported token
+usage from a successfully parsed envelope even if the model's JSON/action is
+invalid; failure after an HTTP or envelope error can still have unmeasured
+charges. A confirmatory design must specify treatment of unknown-cost calls
+before inference, rather than silently assuming they cost zero tokens. The
+exploratory evaluator reports a known provider-token lower bound separately
+from complete consumption, and certifies over-budget when that bound alone
+exceeds the cap; it never infers within-budget from an incomplete record.
 
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
 directory of `task/condition/trace.json` files:

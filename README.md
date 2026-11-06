@@ -234,9 +234,16 @@ carry claims, recomputes success from generated targets, enforces four-arm
 pairing and trace digests, and checks reported usage. **Do not** use
 `analyze_channel_match.py` for these data: unlike the deterministic positive
 control, hosted models may legitimately produce different actions and scores.
-Malformed/unparsed model responses can incur provider charges without
-recoverable token metrics; these runs are explicitly marked unmetered, not
-assigned zero cost. No hosted-model run has yet been performed.
+If an HTTP response includes valid provider metadata but its model content is
+malformed JSON or its action/carrier is invalid, the evaluator preserves the
+provider counts in `error_metrics` and charges that call to the arm's cap.
+An HTTP, transport, envelope, or missing-usage failure may still incur charges
+**without** recoverable counts; those runs report unknown total consumption and
+budget compliance, never zero cost. Capped traces and per-arm summaries retain
+`reported_token_lower_bound` / `provider_reported_token_lower_bound`: the sum
+of the calls actually metered, even when another call's cost is unknown. A
+known subtotal above the cap proves over-budget; a subtotal below the cap does
+not prove within-budget. No hosted-model run has yet been performed.
 Reported provider model-identity drift aborts immediately, preserving
 `abort.json` and completed partial traces but no misleading paired summary.
 

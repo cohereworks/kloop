@@ -48,12 +48,9 @@ def run_trial(out, adapter, *, seed, arm_seed, count, state_bytes,
                               inject_probe_failure_at=inject_probe_failure_at,
                               max_total_tokens=max_total_tokens,
                               max_turns=max_turns)
-            # A failed/invalid response may still have incurred a billed call.
-            # Since the base evaluator has no per-error response envelope,
-            # reported consumption is INCOMPLETE in that case, never zero.
+            # A completed provider envelope can meter even malformed model
+            # content. Network/HTTP/envelope failures still have unknown cost.
             if any("response" not in event for event in run["trace"]):
-                run["total_tokens"] = None
-                run["within_budget"] = None
                 run["channel_audit"] = None
             else:
                 try:
@@ -88,6 +85,8 @@ def run_trial(out, adapter, *, seed, arm_seed, count, state_bytes,
                         "protocol_errors": sum(r["error"] is not None for r in selected),
                         "over_budget": sum(r["within_budget"] is False for r in selected),
                         "usage_complete": metered,
+                        "provider_reported_token_lower_bound": sum(
+                            r["reported_token_lower_bound"] for r in selected),
                         "provider_reported_total_tokens": (
                             sum(r["total_tokens"] for r in selected)
                             if metered else None)}
@@ -104,8 +103,9 @@ def run_trial(out, adapter, *, seed, arm_seed, count, state_bytes,
                "by_arm": by_arm,
                "warning": ("Public exploratory generator; no private-holdout "
                            "or causal claim. Provider usage is unverified. "
-                           "Failed calls may incur tokens without a validated "
-                           "response; these runs report unknown usage.")}
+                           "Metered invalid model outputs retain usage; "
+                           "failed HTTP/envelope calls may incur unmeasured "
+                           "tokens and report unknown budget compliance.")}
     write_json(out / "summary.json", summary)
     return summary
 
@@ -126,6 +126,7 @@ def main(argv=None):
         parser.error("Output directory must be new or empty")
     try:
         from api_agent import configuration
+        from api_agent import ModelResponseError
         fixed_config = configuration()  # Pin parameters and credentials once.
         url, _key, params, timeout = fixed_config
         observed_model = [None]
@@ -136,7 +137,8 @@ def main(argv=None):
             if observed_model[0] is None:
                 observed_model[0] = identity
             elif observed_model[0] != identity:
-                raise RuntimeError("Provider model identity drifted during trial")
+                raise ModelResponseError("Provider model identity drifted during trial",
+                                         response["metrics"])
             return response
 
         endpoint = urlsplit(url)
