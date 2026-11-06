@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from api_agent import ModelResponseError
 from pilot import CONDITIONS
 from preference_baseline_agent import respond
 from preference_pilot import (OPTIONS, make_tasks, main, request_for,
@@ -66,6 +67,46 @@ class PreferencePilotTests(unittest.TestCase):
         unknown = run_one(task, ("k", "implicit"), respond,
                           max_total_tokens=25)
         self.assertIn("Measured token usage", unknown["error"])
+        self.assertIsNone(unknown["total_tokens"])
+        self.assertIsNone(unknown["within_budget"])
+
+    def test_invalid_preference_action_and_model_json_keep_reported_cost(self):
+        task = make_tasks(19, 1)["tasks"][0]
+
+        def bad_action(_):
+            return {"action": {"type": "commit", "option": 100},
+                    "metrics": {"total_tokens": 26}}
+
+        def bad_json(_):
+            raise ModelResponseError("Malformed model JSON",
+                                     {"total_tokens": 26, "model": "fixed"})
+
+        for adapter in (bad_action, bad_json):
+            run = run_one(task, ("k", "implicit"), adapter, max_total_tokens=25)
+            self.assertFalse(run["hidden_pass"])
+            self.assertEqual(run["total_tokens"], 26)
+            self.assertEqual(run["reported_token_lower_bound"], 26)
+            self.assertFalse(run["within_budget"])
+            self.assertTrue(run["budget_exhausted"])
+            self.assertEqual(run["trace"][0]["error_metrics"]["total_tokens"], 26)
+
+    def test_mixed_metered_and_transport_error_keeps_lower_bound(self):
+        task = make_tasks(19, 1)["tasks"][0]
+        calls = [0]
+
+        def intermittent(request):
+            calls[0] += 1
+            if calls[0] == 2:
+                raise RuntimeError("HTTP unavailable")
+            return {**respond(request), "metrics": {"total_tokens": 13}}
+
+        run = run_one(task, ("k", "implicit"), intermittent,
+                      max_total_tokens=100)
+        self.assertEqual(calls[0], 2)
+        self.assertEqual(run["reported_token_lower_bound"], 13)
+        self.assertIsNone(run["total_tokens"])
+        self.assertIsNone(run["within_budget"])
+        self.assertFalse(run["hidden_pass"])
 
     def test_cli_subprocess_four_arm_calibration(self):
         agent = Path(__file__).with_name("preference_baseline_agent.py").resolve()

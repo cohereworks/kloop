@@ -35,6 +35,10 @@ class ModelResponseError(RuntimeError):
         self.metrics = metrics
 
 
+class ProviderModelDriftError(ModelResponseError):
+    """The provider-reported model changed during one pinned trial."""
+
+
 def integer_env(name, default):
     raw = os.environ.get(name)
     value = int(raw) if raw is not None else default
