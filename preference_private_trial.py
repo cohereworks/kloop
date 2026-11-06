@@ -16,6 +16,7 @@ import random
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from api_agent import ModelResponseError, ProviderModelDriftError
 from holdout_commitment import canonical_bytes
 from pilot import CONDITIONS, arm_schedule, write_json
 from preference_holdout import code_hashes, verify
@@ -41,6 +42,33 @@ def arm_public_id(manifest, repetition, index, condition):
                          condition[0], condition[1])[:16].hex()
 
 
+def make_pinned_adapter(call, fixed_config, instructions):
+    """Pin the provider model even when its JSON content cannot be parsed."""
+    observed_model = [None]
+
+    def observe(metrics):
+        identity = metrics.get("model") if isinstance(metrics, dict) else None
+        if not isinstance(identity, str) or not identity:
+            raise RuntimeError("Provider did not identify the model")
+        if observed_model[0] is None:
+            observed_model[0] = identity
+        elif observed_model[0] != identity:
+            raise ProviderModelDriftError(
+                "Provider model identity drifted during trial", metrics)
+
+    def pinned(request):
+        try:
+            response = call(request, resolved_config=fixed_config,
+                            instructions=instructions)
+        except ModelResponseError as exc:
+            observe(exc.metrics)
+            raise
+        observe(response.get("metrics"))
+        return response
+
+    return pinned
+
+
 def run_private(manifest, public, out, adapter, *, arm_seed, max_turns,
                 max_total_tokens, model_metadata=None):
     verify(manifest, public)
@@ -59,6 +87,15 @@ def run_private(manifest, public, out, adapter, *, arm_seed, max_turns,
     runs = []
     dispatch_order = []
     dispatcher = random.Random(arm_seed)
+    drift_detected = [False]
+
+    def guarded_adapter(request):
+        try:
+            return adapter(request)
+        except ProviderModelDriftError:
+            drift_detected[0] = True
+            raise
+
     # Interleave tasks across arms. Opaque IDs alone do not prevent a stateful
     # provider from correlating four immediately adjacent arm runs.
     for position in range(len(CONDITIONS)):
@@ -74,7 +111,7 @@ def run_private(manifest, public, out, adapter, *, arm_seed, max_turns,
             # run_one constructs the agent-visible projection; never pass the
             # hidden_task object to the HTTP adapter directly.
             arm_task = {**hidden_task, "id": public_id}
-            record = run_one(arm_task, condition, adapter, max_turns,
+            record = run_one(arm_task, condition, guarded_adapter, max_turns,
                              max_total_tokens=max_total_tokens)
             record["task"] = task_id  # evaluator-side pairing only
             record["arm_public_id"] = public_id
@@ -82,6 +119,16 @@ def run_private(manifest, public, out, adapter, *, arm_seed, max_turns,
             run_dir = out / task_id / arm
             run_dir.mkdir(parents=True, exist_ok=True)
             write_json(run_dir / "trace.json", record)
+            if drift_detected[0]:
+                write_json(out / "abort.json", {
+                    "schema": SCHEMA,
+                    "reason": "provider_model_identity_drift",
+                    "runs_recorded": len(runs),
+                    "last_trace": str(Path(task_id) / arm / "trace.json"),
+                    "partial_runs_sha256": hashlib.sha256(
+                        canonical_bytes(runs)).hexdigest(),
+                    "warning": "Aborted before complete paired trial; no summary."})
+                raise RuntimeError("Provider model identity drifted; preference trial aborted")
 
     summary = {"schema": SCHEMA,
                "execution": "private-preference-trusted-http-adapter",
@@ -127,19 +174,7 @@ def main(argv=None):
         private = json.loads(args.private.read_text(encoding="utf-8"))
         public = json.loads(args.commitment.read_text(encoding="utf-8"))
         endpoint = urlsplit(url)
-        observed_model = [None]
-
-        def pinned_adapter(request):
-            response = call_model(request, resolved_config=fixed_config,
-                                  instructions=INSTRUCTIONS)
-            reported_model = response.get("metrics", {}).get("model")
-            if not isinstance(reported_model, str) or not reported_model:
-                raise RuntimeError("Provider did not identify the model")
-            if observed_model[0] is None:
-                observed_model[0] = reported_model
-            elif observed_model[0] != reported_model:
-                raise RuntimeError("Provider model identity drifted during trial")
-            return response
+        pinned_adapter = make_pinned_adapter(call_model, fixed_config, INSTRUCTIONS)
 
         summary = run_private(private, public, args.out, pinned_adapter,
                               arm_seed=args.arm_seed, max_turns=args.max_turns,
@@ -148,7 +183,8 @@ def main(argv=None):
                                               "endpoint_origin": f"{endpoint.scheme}://{endpoint.hostname}",
                                               "requested_parameters": params,
                                               "http_timeout": timeout})
-    except (ValueError, KeyError, TypeError, OSError, json.JSONDecodeError) as exc:
+    except (ValueError, KeyError, TypeError, OSError, RuntimeError,
+            json.JSONDecodeError) as exc:
         parser.error(str(exc))
     print(f"Completed {summary['paired_tasks']} paired private-preference tasks")
     return 0

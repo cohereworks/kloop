@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **99 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **109 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -476,3 +476,33 @@ The worker checked for `KAGGLE_API_TOKEN`, `KLOOP_MODEL`, `KLOOP_API_KEY`,
 `OPENAI_API_KEY`, and `KLOOP_API_URL` on 2026-11-04: none was configured, and
 the Kaggle CLI was unavailable. Thus **no real provider endpoint was audited**
 and no live inference was performed. The full local suite passes 46/46 tests.
+
+## Private-evaluator failure accounting and drift stop (mocked only)
+
+The PR #18 hosted-channel review identified a parallel defect in the older
+`pilot.py` expression evaluator and `preference_pilot.py`: response validation
+preceded token recording. A malformed response or transport error could leave
+the completed-call subtotal presented as the entire run's usage and, with a
+cap, incorrectly certify `within_budget=true`. This hardening pass now meters
+validated provider metadata before action/candidate acceptance, preserves it
+as `error_metrics` on failed capped turns, and reports
+`reported_token_lower_bound` independently of the complete `total_tokens`.
+Unknown-cost calls leave `total_tokens` and `within_budget` null unless the
+known lower bound *alone* proves an overrun. Failed responses cannot score
+hidden success even when their preceding candidate happened to pass.
+
+Both committed private evaluators now use a typed provider model-drift signal
+and stop after persisting the affected partial trace and `abort.json`; neither
+emits a misleading paired summary. Drift is recognized even when the
+model-authored content is invalid JSON but its provider envelope identifies
+the different model. The original uncapped deterministic paths retain their
+trace schema and their archived source evidence checks still pass. Because
+the code-hash-bound generator/evaluator files changed, any earlier private
+manifest must be recommitted before future inference.
+
+Ten new regression cases exercise invalid candidate/action metering, malformed
+model JSON usage, partial-cost transport failures, drift inside malformed
+content, immediate private-trial aborts, unknown-cost outcomes and uncapped
+schema stability. The complete local suite passes **109/109**. These are
+software and mock-adapter results only: no Kaggle token, real model inference,
+provider-isolation certification or new private-holdout result is claimed.

@@ -4,8 +4,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from api_agent import ModelResponseError, ProviderModelDriftError
 from holdout_commitment import commitment, make_manifest
-from private_trial import run_private, task_from_private_manifest
+from private_trial import make_pinned_adapter, run_private, task_from_private_manifest
 
 
 def manifest_for_test(count=4):
@@ -74,6 +75,74 @@ class PrivateTrialTests(unittest.TestCase):
                 run_private({**manifest, "seed": manifest["seed"] + 1}, public,
                             Path(directory) / "run", lambda _: {}, arm_seed=1,
                             max_turns=1, max_total_tokens=1)
+
+    def test_pinned_model_detects_drift_even_on_malformed_content(self):
+        identities = iter(("original", "different"))
+
+        def malformed(_request, *, resolved_config):
+            self.assertEqual(resolved_config, ("fixed",))
+            raise ModelResponseError("Malformed model JSON",
+                                     {"model": next(identities), "total_tokens": 17})
+
+        pinned = make_pinned_adapter(malformed, ("fixed",))
+        with self.assertRaises(ModelResponseError) as first:
+            pinned({"turn": 1})
+        self.assertNotIsInstance(first.exception, ProviderModelDriftError)
+        with self.assertRaisesRegex(ProviderModelDriftError, "identity drifted") as second:
+            pinned({"turn": 2})
+        self.assertEqual(second.exception.metrics["total_tokens"], 17)
+
+    def test_model_drift_aborts_private_trial_with_partial_trace(self):
+        manifest = manifest_for_test(count=1)
+        public = commitment(manifest)
+        calls = [0]
+
+        def drift(request):
+            calls[0] += 1
+            if calls[0] == 2:
+                raise ProviderModelDriftError("Provider model identity drifted during trial",
+                                              {"model": "different", "total_tokens": 25})
+            return {"candidate": request["candidate"], "metrics": {"total_tokens": 25},
+                    "ledger": {field: "unresolved" for field in (
+                        "objective", "established", "falsified", "unresolved",
+                        "next_action", "verification")}}
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "private"
+            with self.assertRaisesRegex(RuntimeError, "private trial aborted"):
+                run_private(manifest, public, root, drift, arm_seed=5,
+                            max_turns=2, max_total_tokens=100)
+            self.assertEqual(calls[0], 2)
+            self.assertFalse((root / "summary.json").exists())
+            abort = json.loads((root / "abort.json").read_text())
+            self.assertEqual(abort["reason"], "provider_model_identity_drift")
+            self.assertEqual(abort["runs_recorded"], 1)
+            record = json.loads((root / abort["last_trace"]).read_text())
+            self.assertEqual(record["total_tokens"], 50)
+            self.assertEqual(record["reported_token_lower_bound"], 50)
+            self.assertIn("different", json.dumps(record["trace"][-1]["error_metrics"]))
+            self.assertNotIn(manifest["nonce"], (root / "abort.json").read_text())
+
+    def test_unmetered_error_does_not_claim_private_budget_compliance(self):
+        manifest = manifest_for_test(count=1)
+        public = commitment(manifest)
+
+        def unavailable(_):
+            raise RuntimeError("HTTP endpoint unavailable")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "private"
+            summary = run_private(manifest, public, root, unavailable,
+                                  arm_seed=5, max_turns=1, max_total_tokens=100)
+            self.assertTrue(all(row["total_tokens"] is None
+                                for row in summary["conditions"].values()))
+            self.assertEqual(len(list(root.glob("*/*/trace.json"))), 4)
+            for path in root.glob("*/*/trace.json"):
+                record = json.loads(path.read_text())
+                self.assertIsNone(record["total_tokens"])
+                self.assertIsNone(record["within_budget"])
+                self.assertEqual(record["reported_token_lower_bound"], 0)
+                self.assertFalse(record["hidden_pass"])
 
 
 if __name__ == "__main__":

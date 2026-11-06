@@ -17,6 +17,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from api_agent import ModelResponseError
 from pilot import CONDITIONS, STATE_FIELDS, arm_schedule, canonical, write_json
 
 
@@ -90,13 +91,19 @@ def run_one(task, condition, adapter, max_turns=TURN_LIMIT,
     proposals_made, last_proposal, previous_response = 0, None, None
     ledger, history, trace, error, committed = None, [], [], None, None
     tokens = []
+    capped_usage = []
     budget_exhausted = False
     for turn in range(1, max_turns + 1):
         request = request_for(task, condition, turn, proposals_made,
                               last_proposal, previous_response, ledger, history)
+        measured, error_metrics = None, None
         try:
-            response = validate_response(adapter(request), condition)
-            measured = (response.get("metrics") or {}).get("total_tokens")
+            response = adapter(request)
+            error_metrics = (response.get("metrics")
+                             if isinstance(response, dict) else None)
+            measured = (error_metrics.get("total_tokens")
+                        if isinstance(error_metrics, dict) else None)
+            response = validate_response(response, condition)
             if type(measured) is int and measured >= 0:
                 tokens.append(measured)
             elif max_total_tokens is not None:
@@ -130,18 +137,43 @@ def run_one(task, condition, adapter, max_turns=TURN_LIMIT,
             if committed is not None:
                 break
         except (ValueError, TypeError, KeyError, RuntimeError) as exc:
+            if isinstance(exc, ModelResponseError):
+                error_metrics = exc.metrics
+                measured = (error_metrics.get("total_tokens")
+                            if isinstance(error_metrics, dict) else None)
             error = f"{type(exc).__name__}: {exc}"
-            trace.append({"request": request, "error": error})
+            event = {"request": request, "error": error}
+            if max_total_tokens is not None and isinstance(error_metrics, dict):
+                event["error_metrics"] = error_metrics
+            trace.append(event)
+            if (max_total_tokens is not None and
+                    sum(tokens) + (measured if type(measured) is int and
+                                   measured >= 0 else 0) >= max_total_tokens):
+                budget_exhausted = True
             break
-    within_budget = max_total_tokens is None or sum(tokens) <= max_total_tokens
-    hidden_pass = error is None and committed == task["_preference"] and within_budget
-    return {"task": task["id"], "condition": f"{condition[0]}_{condition[1]}",
+        finally:
+            if max_total_tokens is not None:
+                capped_usage.append(measured if type(measured) is int and measured >= 0
+                                    else None)
+    known_subtotal = sum(v for v in capped_usage if v is not None)
+    fully_metered = bool(capped_usage) and all(v is not None for v in capped_usage)
+    within_budget = (True if max_total_tokens is None else
+                     False if known_subtotal > max_total_tokens else
+                     None if not fully_metered else True)
+    hidden_pass = (error is None and committed == task["_preference"] and
+                   within_budget is True)
+    result = {"task": task["id"], "condition": f"{condition[0]}_{condition[1]}",
             "hidden_pass": hidden_pass, "public_pass": committed is not None,
             "error": error, "turns": len(trace),
             "proposals": proposals_made, "committed": committed is not None,
-            "total_tokens": sum(tokens) if len(tokens) == sum("response" in t for t in trace)
-            else None, "within_budget": within_budget,
+            "total_tokens": (known_subtotal if fully_metered else None)
+            if max_total_tokens is not None else
+            (sum(tokens) if len(tokens) == sum("response" in t for t in trace)
+             else None), "within_budget": within_budget,
             "budget_exhausted": budget_exhausted, "trace": trace}
+    if max_total_tokens is not None:
+        result["reported_token_lower_bound"] = known_subtotal
+    return result
 
 
 def invoke_agent(command, request, cwd, timeout):

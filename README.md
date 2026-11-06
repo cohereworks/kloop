@@ -116,7 +116,12 @@ fresh task streams without writing hidden targets, uses balanced arm order,
 and stores public-only traces. It never launches an arbitrary model-controlled
 subprocess next to the holdout. It pins the endpoint/decoder configuration at
 startup and treats changes in provider-reported model identity as protocol
-errors. Once model credentials and a preregistered
+errors. It now **aborts without a paired summary** on detected drift, including
+drift reported in a malformed model response, saving partial traces and
+`abort.json`. Under a token cap, metered invalid outputs are charged and
+unknown-cost calls cannot be certified within budget. The capped trace records
+`reported_token_lower_bound`; this subtotal proves an overrun only if it
+exceeds the cap. Once model credentials and a preregistered
 budget exist, invocation is:
 
 ```sh
@@ -262,7 +267,9 @@ The third stratum is **not** included in the current Kaggle exploratory task.
 For confidential model evaluations, use `preference_holdout.py` to commit an
 unrevealed 256-bit key before inference and `preference_private_trial.py` to
 score all paired arms through the trusted HTTP model channel. Each arm gets an
-opaque task ID, not a shared identifier. See [STRATA.md](STRATA.md) for the
+opaque task ID, not a shared identifier. This private runner also stops with
+`abort.json` on provider model-identity drift and preserves known token costs
+from invalid outputs without declaring unknown-cost calls free. See [STRATA.md](STRATA.md) for the
 workflow, trust limitations, and reproducibility instructions.
 `provider_isolation_audit.py` offers a synthetic canary test for cross-request
 memory on the selected model endpoint. An exact canary recovery is evidence of

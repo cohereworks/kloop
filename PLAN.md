@@ -67,6 +67,11 @@ Status: **mechanics verified; real-model hypothesis untested**.
       independently replay charged failures and over-budget disqualification.
       Keep transport/envelope/missing-usage failures as unknown-cost events;
       preserve known metered subtotals as separately audited lower bounds.
+- [x] Audit capped **private expression and preference holdout** error paths:
+      charge metered invalid model content/actions, distinguish complete token
+      totals from known lower bounds, disqualify unknown-cost runs from budget
+      certification, and abort immediately on typed provider-reported model
+      drift with partial trace evidence. Preserve uncapped calibration traces.
 
 ## Next, in order
 
@@ -76,7 +81,8 @@ Status: **mechanics verified; real-model hypothesis untested**.
    exist; sample size/power, repeats, model settings, inference budget, and
    private-holdout execution remain uncommitted. Do not reuse calibration data.
 3. **Audit and harden adapter isolation**. The new in-process private runner
-   uses the reviewed direct HTTP adapter and keeps hidden cases evaluator-side.
+   uses the reviewed direct HTTP adapter and keeps hidden cases evaluator-side;
+   the metering/identity failure paths are now tested and fail closed.
    Arbitrary local subprocess adapters remain unsandboxed by the legacy runner;
    do not use them for private confirmatory data without OS confinement.
 4. **Audit the private-preference trust boundary**. The trusted runner and

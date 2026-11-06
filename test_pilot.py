@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from api_agent import ModelResponseError
 from pilot import (CONDITIONS, aggregate, arm_schedule, evaluate, make_tasks,
                    request_for, results, run_one, validate_expr)
 
@@ -88,6 +89,61 @@ class PilotTests(unittest.TestCase):
         self.assertEqual(run["total_tokens"], 60)
         self.assertEqual(len(observed), 2)
         self.assertIsNone(run["error"])
+
+    def test_capped_invalid_content_preserves_metered_call(self):
+        task = make_tasks(88, 1)["tasks"][0]
+
+        def malformed(_):
+            raise ModelResponseError("Model content is not valid JSON",
+                                     {"model": "fixed", "total_tokens": 41})
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run = run_one(task, ("k", "implicit"), None, Path(tmp),
+                          2, 10, max_total_tokens=40, adapter=malformed)
+        self.assertIn("not valid JSON", run["error"])
+        self.assertEqual(run["total_tokens"], 41)
+        self.assertEqual(run["reported_token_lower_bound"], 41)
+        self.assertFalse(run["within_budget"])
+        self.assertTrue(run["budget_exhausted"])
+        self.assertFalse(run["hidden_pass"])
+        self.assertEqual(run["trace"][0]["error_metrics"]["model"], "fixed")
+
+    def test_capped_bad_candidate_charges_usage_before_validation(self):
+        task = make_tasks(88, 1)["tasks"][0]
+
+        def bad_candidate(_):
+            return {"candidate": {"const": 999}, "metrics": {"total_tokens": 12}}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run = run_one(task, ("k", "implicit"), None, Path(tmp),
+                          2, 10, max_total_tokens=100, adapter=bad_candidate)
+        self.assertIsNotNone(run["error"])
+        self.assertEqual(run["total_tokens"], 12)
+        self.assertEqual(run["reported_token_lower_bound"], 12)
+        self.assertTrue(run["within_budget"])
+        self.assertFalse(run["hidden_pass"])
+
+    def test_capped_partial_usage_is_not_a_complete_budget_verdict(self):
+        task = make_tasks(88, 1)["tasks"][0]
+        calls = [0]
+
+        def intermittent(request):
+            calls[0] += 1
+            if calls[0] == 2:
+                raise RuntimeError("HTTP transport unavailable")
+            return {"candidate": request["candidate"], "metrics": {"total_tokens": 30}}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run = run_one(task, ("k", "implicit"), None, Path(tmp),
+                          2, 10, max_total_tokens=100, adapter=intermittent)
+            uncapped = run_one(task, ("k", "implicit"), None, Path(tmp) / "uncapped",
+                               1, 10, adapter=lambda req: {"candidate": req["candidate"]})
+        self.assertEqual(calls[0], 2)
+        self.assertEqual(run["reported_token_lower_bound"], 30)
+        self.assertIsNone(run["total_tokens"])
+        self.assertIsNone(run["within_budget"])
+        self.assertFalse(run["hidden_pass"])
+        self.assertNotIn("reported_token_lower_bound", uncapped)
 
 
 if __name__ == "__main__":

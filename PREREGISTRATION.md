@@ -73,7 +73,13 @@ not start a model-controlled subprocess, and no hidden target file is created.
 This is a logical network boundary, **not** an OS sandbox for arbitrary
 imported dependencies or a formally proved confidentiality guarantee. The
 live CLI pins the endpoint/decoder configuration once and detects drift in
-provider-reported model identity across turns.
+provider-reported model identity across turns. A drift event now aborts the
+private trial before additional arms and preserves the partial record; it does
+not silently create a completed four-arm result. A valid provider usage
+envelope remains charged even when its model content or action fails
+validation. Missing usage leaves total consumption and cap compliance unknown;
+the recorded known-cost lower bound can only establish an overrun. Regenerate
+code-hash commitments after modifying the bound evaluator sources.
 
 For the private-preference stratum there is a distinct
 `preference_holdout.py`/`preference_private_trial.py` pair. Its public

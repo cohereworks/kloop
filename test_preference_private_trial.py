@@ -1,15 +1,19 @@
 import json
+import contextlib
+import io
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from api_agent import ModelResponseError, ProviderModelDriftError
 from holdout_commitment import write_new
 from pilot import CONDITIONS
 from preference_baseline_agent import respond
 from preference_holdout import (code_hashes, commitment, main as holdout_main,
                                make_manifest, verify)
-from preference_private_trial import (arm_public_id, main, run_private,
+from preference_private_trial import (arm_public_id, main, make_pinned_adapter,
+                                      run_private,
                                       task_from_private_manifest)
 
 
@@ -139,16 +143,60 @@ class PreferencePrivateTrialTests(unittest.TestCase):
 
             with patch("api_agent.configuration", return_value=config), \
                     patch("api_agent.call_model", side_effect=mock_model):
-                self.assertEqual(main(["--private", str(private),
-                                       "--commitment", str(public),
-                                       "--out", str(root / "run"),
-                                       "--arm-seed", "13",
-                                       "--max-total-tokens", "50"]), 0)
-            self.assertEqual(len(list((root / "run").glob("*/*/trace.json"))), 8)
-            self.assertGreater(len(calls), 1)
+                stderr = io.StringIO()
+                with contextlib.redirect_stderr(stderr), \
+                        self.assertRaises(SystemExit) as stopped:
+                    main(["--private", str(private),
+                          "--commitment", str(public),
+                          "--out", str(root / "run"),
+                          "--arm-seed", "13", "--max-total-tokens", "50"])
+                self.assertEqual(stopped.exception.code, 2)
+                self.assertIn("identity drifted", stderr.getvalue())
+            self.assertEqual(len(calls), 2)
             traces = list((root / "run").glob("*/*/trace.json"))
+            self.assertLessEqual(len(traces), 2)
             self.assertTrue(any("model identity drifted" in path.read_text()
                                 for path in traces))
+            abort = json.loads((root / "run" / "abort.json").read_text())
+            self.assertEqual(abort["reason"], "provider_model_identity_drift")
+            self.assertEqual(abort["runs_recorded"], len(traces))
+            self.assertFalse((root / "run" / "summary.json").exists())
+
+    def test_preference_model_drift_in_malformed_message_is_detected(self):
+        identities = iter(("original", "replacement"))
+
+        def malformed(_request, *, resolved_config, instructions):
+            self.assertEqual(resolved_config, "pinned")
+            self.assertEqual(instructions, "fixed instructions")
+            raise ModelResponseError("Invalid model JSON",
+                                     {"model": next(identities), "total_tokens": 10})
+
+        pinned = make_pinned_adapter(malformed, "pinned", "fixed instructions")
+        with self.assertRaises(ModelResponseError) as first:
+            pinned({})
+        self.assertNotIsInstance(first.exception, ProviderModelDriftError)
+        with self.assertRaises(ProviderModelDriftError) as second:
+            pinned({})
+        self.assertEqual(second.exception.metrics["total_tokens"], 10)
+
+    def test_preference_private_unknown_cost_has_no_budget_verdict(self):
+        manifest = make_manifest(count=1, repetitions=1)
+        public = commitment(manifest)
+
+        def unavailable(_):
+            raise RuntimeError("HTTP transport failure")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "preference"
+            summary = run_private(manifest, public, root, unavailable,
+                                  arm_seed=1, max_turns=1, max_total_tokens=100)
+            self.assertEqual(sum(row["tokens_reported"] for row in
+                                 summary["conditions"].values()), 0)
+            for path in root.glob("*/*/trace.json"):
+                record = json.loads(path.read_text())
+                self.assertIsNone(record["total_tokens"])
+                self.assertIsNone(record["within_budget"])
+                self.assertEqual(record["reported_token_lower_bound"], 0)
 
 
 if __name__ == "__main__":

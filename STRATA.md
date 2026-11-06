@@ -406,7 +406,19 @@ The trusted process keeps all favorites evaluator-side; each model call goes
 directly through the shared HTTP adapter using `preference_api_agent`'s
 instructions. Arms are interleaved across tasks rather than run back-to-back;
 the exact dispatch order is recorded. No arbitrary agent subprocess runs next
-to the private targets.
+to the private targets. The private expression and preference executors now
+meter valid provider envelopes *before* accepting response content, retaining
+`error_metrics` and a known-token lower bound on failed capped turns. Unknown
+HTTP/transport usage makes the complete token total and cap verdict unknown;
+exceeding the cap with the known subtotal alone proves an overrun. Both
+private executors detect provider-reported model drift even when a model
+message is malformed and stop with a partial trace plus `abort.json` instead
+of claiming a complete paired trial. The model receives only the explicit
+public request projection, but this is **not** OS isolation of arbitrary
+Python dependencies or proof of provider/session isolation. Source changes
+to `pilot.py`, `preference_pilot.py`, and `preference_private_trial.py` also
+invalidate old code-hash-bound holdout commitments; generate and commit new
+ones before any future confirmatory inference.
 
 This closes the obvious public-seed leak and removes shared task IDs from
 model-facing requests, while interleaving reduces trivial timing correlation.

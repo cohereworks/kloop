@@ -14,6 +14,8 @@ import sys
 import time
 from pathlib import Path
 
+from api_agent import ModelResponseError
+
 
 OPS = ("add", "sub", "mul", "min", "max")
 VARIABLES = ("x", "y")
@@ -235,19 +237,31 @@ def run_one(task, condition, command, workdir, max_turns, timeout,
     records = []
     error = None
     token_counts = []
+    capped_usage = []
     budget_exhausted = False
     for turn in range(1, max_turns + 1):
         req = request_for(task, condition, turn, candidate, ledger, history)
+        call_usage, error_metrics = None, None
         try:
             if adapter is None:
                 response, duration = invoke_agent(command, req, workdir, timeout)
             else:
                 start = time.monotonic()
-                response = validate_response(adapter(req), req)
+                response = adapter(req)
+                error_metrics = (response.get("metrics")
+                                 if isinstance(response, dict) else None)
+                candidate_count = (error_metrics.get("total_tokens")
+                                   if isinstance(error_metrics, dict) else None)
+                if type(candidate_count) is int and candidate_count >= 0:
+                    call_usage = candidate_count
+                response = validate_response(response, req)
                 duration = time.monotonic() - start
-            token_count = response.get("metrics", {}).get("total_tokens")
+            metrics = response.get("metrics")
+            token_count = (metrics.get("total_tokens")
+                           if isinstance(metrics, dict) else None)
             if type(token_count) is int and token_count >= 0:
                 token_counts.append(token_count)
+                call_usage = token_count
             elif max_total_tokens is not None:
                 raise RuntimeError("Token budget requires adapter metrics.total_tokens")
             candidate = response["candidate"]
@@ -266,21 +280,47 @@ def run_one(task, condition, command, workdir, max_turns, timeout,
             if public_pass:
                 break
         except (RuntimeError, ValueError, KeyError, TypeError) as exc:
+            if isinstance(exc, ModelResponseError):
+                error_metrics = exc.metrics if isinstance(exc.metrics, dict) else None
+                count = (error_metrics.get("total_tokens")
+                         if isinstance(error_metrics, dict) else None)
+                if type(count) is int and count >= 0:
+                    call_usage = count
             error = str(exc)
-            records.append({"request": req, "error": error})
+            event = {"request": req, "error": error}
+            if max_total_tokens is not None and isinstance(error_metrics, dict):
+                event["error_metrics"] = error_metrics
+            records.append(event)
+            if (max_total_tokens is not None and
+                    sum(token_counts) + (call_usage or 0) >= max_total_tokens):
+                budget_exhausted = True
             break
+        finally:
+            if max_total_tokens is not None:
+                capped_usage.append(call_usage)
     hidden_rows = results(candidate, task["_hidden"])
     final_public_pass = all(r["pass"] for r in results(candidate, task["public"]))
-    within_budget = max_total_tokens is None or sum(token_counts) <= max_total_tokens
-    return {
+    known_subtotal = sum(v for v in capped_usage if v is not None)
+    fully_metered = bool(capped_usage) and all(v is not None for v in capped_usage)
+    within_budget = (True if max_total_tokens is None else
+                     False if known_subtotal > max_total_tokens else
+                     None if not fully_metered else True)
+    result = {
         "task": task["id"], "condition": f"{condition[0]}_{condition[1]}",
         "turns": len(records), "public_pass": final_public_pass,
-        "hidden_pass": final_public_pass and all(r["pass"] for r in hidden_rows) and within_budget,
+        "hidden_pass": (error is None and final_public_pass and
+                        all(r["pass"] for r in hidden_rows) and within_budget is True),
         "hidden_failures": sum(not r["pass"] for r in hidden_rows),
         "error": error, "trace": records, "budget_exhausted": budget_exhausted,
         "within_budget": within_budget,
-        "total_tokens": sum(token_counts) if len(token_counts) == sum("response" in r for r in records) else None,
+        "total_tokens": (known_subtotal if fully_metered else None)
+        if max_total_tokens is not None else
+        (sum(token_counts) if len(token_counts) ==
+         sum("response" in r for r in records) else None),
     }
+    if max_total_tokens is not None:
+        result["reported_token_lower_bound"] = known_subtotal
+    return result
 
 
 def aggregate(runs):
