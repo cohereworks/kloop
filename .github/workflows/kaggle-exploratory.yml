@@ -45,6 +45,8 @@ jobs:
           python -m py_compile dist/kloop_kaggle_benchmark.py
       - name: Inspect available inference quota
         run: kaggle benchmarks quota
+      - name: List available benchmark models
+        run: kaggle benchmarks tasks models
       - name: Push exploratory task
         if: ${{ inputs.execute }}
         run: kaggle benchmarks tasks push kloop-pilot -f dist/kloop_kaggle_benchmark.py --wait 1800
