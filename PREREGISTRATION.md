@@ -58,8 +58,10 @@ python holdout_commitment.py verify \
 
 `N` and `R` are placeholders requiring an explicit power/cost decision. The
 private manifest contains a cryptographically random seed and 256-bit nonce;
-the public JSON contains their salted SHA-256 commitment and the generator's
-SHA-256. **Commit the public file to GitHub and record the immutable commit SHA
+the public v2 JSON contains their salted SHA-256 commitment plus the source
+hashes of the transitive local Python import closure rooted at the private
+runner and paired-analysis script (including generator, HTTP adapter, and
+commitment verifier). **Commit the public file to GitHub and record the immutable commit SHA
 before inference. Never commit the private file.** Reveal it after the run to
 verify the commitment and regenerate the task set. This script does not itself
 prove the *time* of commitment; GitHub commit history supplies that evidence.
@@ -80,11 +82,18 @@ envelope remains charged even when its model content or action fails
 validation. Missing usage leaves total consumption and cap compliance unknown;
 the recorded known-cost lower bound can only establish an overrun. Regenerate
 code-hash commitments after modifying the bound evaluator sources.
+The v1 manifests did not bind the full trusted local source closure and are
+not eligible for new confirmatory execution. The v2 scanner rejects dynamic
+imports, code execution, and local-package imports rather than assuming they
+are frozen. It does not bind the interpreter, stdlib, installed dependencies,
+configuration, or provider runtime; those remain separate provenance and
+isolation obligations.
 
 For the private-preference stratum there is a distinct
 `preference_holdout.py`/`preference_private_trial.py` pair. Its public
-commitment also binds the private-preference runner source hash; the model sees
-arm-specific pseudonymous IDs and no preference secret. The rich-feedback
+v2 commitment binds the private-preference runner, its transitive trusted
+local dependencies, and paired-analysis code. The model sees arm-specific
+pseudonymous IDs and no preference secret. The rich-feedback
 channel *supplies new target information*, unlike the guidance-only rich
 feedback of the closed-specification and discovery strata. Consequently H4/H5
 cannot be interpreted as the same state/guidance causal effects on preferences.

@@ -114,7 +114,14 @@ required operator decisions, and the explicit limits on inferential claims.
 HTTPS adapter. It validates the public commitment and generator hash, derives
 fresh task streams without writing hidden targets, uses balanced arm order,
 and stores public-only traces. It never launches an arbitrary model-controlled
-subprocess next to the holdout. It pins the endpoint/decoder configuration at
+subprocess next to the holdout. The v2 commitment also binds the transitive
+**statically imported local Python source closure** of the trusted runner and
+paired analyzer,
+including the HTTP adapter and commitment verifier; execution rejects a source
+mismatch before writing any run. Dynamic imports, local Python packages and
+dynamic code execution in that closure require explicit review and are rejected
+by the closure builder. It does not attest Python/stdlib, installed wheels or
+the live runtime process. The runner pins endpoint/decoder configuration at
 startup and treats changes in provider-reported model identity as protocol
 errors. It now **aborts without a paired summary** on detected drift, including
 drift reported in a malformed model response, saving partial traces and
@@ -269,7 +276,9 @@ unrevealed 256-bit key before inference and `preference_private_trial.py` to
 score all paired arms through the trusted HTTP model channel. Each arm gets an
 opaque task ID, not a shared identifier. This private runner also stops with
 `abort.json` on provider model-identity drift and preserves known token costs
-from invalid outputs without declaring unknown-cost calls free. See [STRATA.md](STRATA.md) for the
+from invalid outputs without declaring unknown-cost calls free. Its v2
+commitment binds the same transitive local-source and analyzer requirements.
+See [STRATA.md](STRATA.md) for the
 workflow, trust limitations, and reproducibility instructions.
 `provider_isolation_audit.py` offers a synthetic canary test for cross-request
 memory on the selected model endpoint. An exact canary recovery is evidence of

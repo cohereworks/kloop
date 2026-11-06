@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **109 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **116 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 
@@ -506,3 +506,34 @@ content, immediate private-trial aborts, unknown-cost outcomes and uncapped
 schema stability. The complete local suite passes **109/109**. These are
 software and mock-adapter results only: no Kaggle token, real model inference,
 provider-isolation certification or new private-holdout result is claimed.
+
+## Trusted local source-closure commitment (offline)
+
+The previous expression holdout manifest bound only `pilot.py`. The prior
+preference manifest bound `preference_pilot.py` and
+`preference_private_trial.py`. These incomplete sets excluded local modules
+that could alter request construction, provider metering, commitment checks,
+and scoring. A committed manifest could therefore match its published hash
+while running against modified trusted dependencies.
+
+The new v2 commitment formats derive SHA-256 fingerprints from the transitive
+**static local Python import graph**, rooted at each trusted private runner
+and `analyze_trial.py`. The expression set currently contains
+`api_agent.py`, `analyze_trial.py`, `holdout_commitment.py`, `pilot.py`,
+`private_trial.py`, and `trusted_sources.py`. The preference set additionally
+binds `preference_api_agent.py`, `preference_holdout.py`,
+`preference_pilot.py`, and `preference_private_trial.py` (with the shared
+modules in common). Both executors check local source digests **before**
+creating a trial output directory. The closure scanner rejects dynamic imports,
+dynamic code execution, relative imports, and local-package imports that
+would otherwise evade this flat-module graph; they require explicit design
+review if introduced. `analyze_trial.py` accepts v2 commitment metadata and
+continues to read historical v1 records for descriptive analysis.
+
+An independently reproducible closure test mutates a transitive dependency in
+a temporary project and observes an altered digest; inconsistent live-source
+fingerprints also fail before sending model requests. This does **not** attest
+the Python interpreter, standard library, external packages, environment,
+loaded bytecode, file immutability after checking, or provider-side state.
+Historical v1 commitments are insufficient for new confirmatory runs, and no
+new model inference is claimed. The local regression suite passes **116/116**.

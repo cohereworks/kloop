@@ -15,17 +15,17 @@ import secrets
 from pathlib import Path
 
 from holdout_commitment import canonical_bytes, write_new
+from trusted_sources import source_hashes as local_source_hashes
 
 
-SCHEMA = "kloop-preference-holdout-v1"
-PUBLIC_SCHEMA = "kloop-preference-holdout-commitment-v1"
-FILES = ("preference_pilot.py", "preference_private_trial.py")
+SCHEMA = "kloop-preference-holdout-v2"
+PUBLIC_SCHEMA = "kloop-preference-holdout-commitment-v2"
 
 
 def code_hashes():
-    root = Path(__file__).resolve().parent
-    return {f.replace(".py", "_sha256"): hashlib.sha256((root / f).read_bytes()).hexdigest()
-            for f in FILES}
+    return {f.replace(".py", "_sha256"): sha
+            for f, sha in local_source_hashes(
+                ("preference_private_trial", "analyze_trial")).items()}
 
 
 def make_manifest(*, count, repetitions):
@@ -46,12 +46,21 @@ def commitment(manifest):
             "manifest_sha256": hashlib.sha256(canonical_bytes(manifest)).hexdigest(),
             "task_count": manifest["task_count"],
             "repetitions": manifest["repetitions"],
-            **{key: manifest[key] for key in code_hashes()}}
+            **{key: value for key, value in manifest.items()
+               if key.endswith("_sha256")}}
 
 
 def verify(manifest, public):
     if commitment(manifest) != public:
         raise ValueError("Preference-holdout manifest does not match public commitment")
+    return True
+
+
+def verify_sources(manifest):
+    frozen = {key: value for key, value in manifest.items()
+              if key.endswith("_sha256")}
+    if frozen != code_hashes():
+        raise ValueError("Trusted preference source closure changed since commitment")
     return True
 
 
@@ -82,6 +91,7 @@ def main(argv=None):
             private = json.loads(args.private.read_text(encoding="utf-8"))
             public = json.loads(args.commitment.read_text(encoding="utf-8"))
             verify(private, public)
+            verify_sources(private)
             print("Preference-holdout commitment verified")
     except (ValueError, KeyError, OSError, json.JSONDecodeError) as exc:
         parser.error(str(exc))

@@ -16,7 +16,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from api_agent import ModelResponseError, ProviderModelDriftError
-from holdout_commitment import canonical_bytes, verify
+from holdout_commitment import canonical_bytes, verify, verify_sources
 from pilot import (SCHEMA, arm_schedule, canonical, make_tasks,
                    run_one, write_json, aggregate)
 
@@ -65,6 +65,7 @@ def run_private(manifest, public, out, adapter, *, arm_seed, max_turns,
                 max_total_tokens, model_metadata=None):
     """Run all paired arms with hidden cases held only by this trusted worker."""
     verify(manifest, public)
+    verify_sources(manifest)
     if not 1 <= max_turns <= 100 or not 1 <= max_total_tokens:
         raise ValueError("Positive bounded turns and measured-token cap required")
     local_pilot_sha = hashlib.sha256(Path(__file__).with_name("pilot.py").read_bytes()).hexdigest()
@@ -118,6 +119,7 @@ def run_private(manifest, public, out, adapter, *, arm_seed, max_turns,
         "execution": "private-trusted-http-adapter",
         "manifest_sha256": public["manifest_sha256"],
         "pilot_sha256": local_pilot_sha,
+        "source_sha256": manifest["source_sha256"],
         "generated_tasks_sha256": task_hash.hexdigest(),
         "paired_tasks": len(task_ids),
         "arm_order": "balanced", "arm_seed": arm_seed,

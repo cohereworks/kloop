@@ -1,4 +1,3 @@
-import hashlib
 import json
 import tempfile
 import unittest
@@ -10,8 +9,7 @@ from private_trial import make_pinned_adapter, run_private, task_from_private_ma
 
 
 def manifest_for_test(count=4):
-    digest = hashlib.sha256(Path(__file__).with_name("pilot.py").read_bytes()).hexdigest()
-    return make_manifest(count=count, repetitions=1, pilot_sha256=digest)
+    return make_manifest(count=count, repetitions=1)
 
 
 class PrivateTrialTests(unittest.TestCase):
@@ -67,7 +65,7 @@ class PrivateTrialTests(unittest.TestCase):
         manifest = manifest_for_test(count=1)
         public = commitment(manifest)
         with tempfile.TemporaryDirectory() as directory:
-            with self.assertRaisesRegex(ValueError, "Generator has changed"):
+            with self.assertRaisesRegex(ValueError, "source closure changed"):
                 bad = {**manifest, "pilot_sha256": "0" * 64}
                 run_private(bad, commitment(bad), Path(directory) / "run",
                             lambda _: {}, arm_seed=1, max_turns=1, max_total_tokens=1)
@@ -75,6 +73,12 @@ class PrivateTrialTests(unittest.TestCase):
                 run_private({**manifest, "seed": manifest["seed"] + 1}, public,
                             Path(directory) / "run", lambda _: {}, arm_seed=1,
                             max_turns=1, max_total_tokens=1)
+
+            altered = {**manifest, "source_sha256": {
+                **manifest["source_sha256"], "api_agent.py": "0" * 64}}
+            with self.assertRaisesRegex(ValueError, "source closure changed"):
+                run_private(altered, commitment(altered), Path(directory) / "run",
+                            lambda _: {}, arm_seed=1, max_turns=1, max_total_tokens=1)
 
     def test_pinned_model_detects_drift_even_on_malformed_content(self):
         identities = iter(("original", "different"))

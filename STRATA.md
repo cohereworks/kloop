@@ -401,7 +401,9 @@ Replace `N`, `R`, `TOKEN_CAP`, and `N_TIMES_R` with the independently chosen
 task count, repetitions, measured cap, and their product. The uncommitted
 manifest holds a 256-bit random secret. HMAC derives each favorite and an
 unrelated opaque model-facing ID for every task/arm. The public commitment
-binds the manifest, `preference_pilot.py`, and `preference_private_trial.py`.
+now uses the v2 source-freeze contract: the manifest's hash binds its secret,
+and published file digests bind the transitive statically imported local
+Python sources of the trusted evaluator and `analyze_trial.py`.
 The trusted process keeps all favorites evaluator-side; each model call goes
 directly through the shared HTTP adapter using `preference_api_agent`'s
 instructions. Arms are interleaved across tasks rather than run back-to-back;
@@ -415,10 +417,15 @@ private executors detect provider-reported model drift even when a model
 message is malformed and stop with a partial trace plus `abort.json` instead
 of claiming a complete paired trial. The model receives only the explicit
 public request projection, but this is **not** OS isolation of arbitrary
-Python dependencies or proof of provider/session isolation. Source changes
-to `pilot.py`, `preference_pilot.py`, and `preference_private_trial.py` also
-invalidate old code-hash-bound holdout commitments; generate and commit new
-ones before any future confirmatory inference.
+Python dependencies or proof of provider/session isolation. A complete v2
+manifest includes the local HTTP adapter, shared evaluator/commitment modules,
+and analyzer source fingerprints. The scanner explicitly rejects unmodeled
+dynamic imports or local Python packages rather than claiming completeness.
+Earlier v1 manifests bind only a subset of those sources: they remain
+historical records but cannot authorize new confirmatory inference. Generate
+and commit a v2 source-frozen holdout before running live trials. The runtime
+interpreter, installed packages, external service, loaded bytecode, and
+post-check file mutability remain outside this fingerprint's guarantee.
 
 This closes the obvious public-seed leak and removes shared task IDs from
 model-facing requests, while interleaving reduces trivial timing correlation.

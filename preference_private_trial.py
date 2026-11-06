@@ -19,7 +19,7 @@ from urllib.parse import urlsplit
 from api_agent import ModelResponseError, ProviderModelDriftError
 from holdout_commitment import canonical_bytes
 from pilot import CONDITIONS, arm_schedule, write_json
-from preference_holdout import code_hashes, verify
+from preference_holdout import code_hashes, verify, verify_sources
 from preference_pilot import OPTIONS, SCHEMA, TURN_LIMIT, run_one
 
 
@@ -72,8 +72,7 @@ def make_pinned_adapter(call, fixed_config, instructions):
 def run_private(manifest, public, out, adapter, *, arm_seed, max_turns,
                 max_total_tokens, model_metadata=None):
     verify(manifest, public)
-    if code_hashes() != {key: manifest[key] for key in code_hashes()}:
-        raise ValueError("Preference generator or runner changed since commitment")
+    verify_sources(manifest)
     if not 1 <= max_turns <= TURN_LIMIT or not 1 <= max_total_tokens:
         raise ValueError("Positive measured-token cap and turn limit 1..5 required")
     if out.exists() and any(out.iterdir()):

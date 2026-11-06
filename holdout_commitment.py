@@ -16,8 +16,15 @@ import os
 import secrets
 from pathlib import Path
 
+from trusted_sources import source_hashes as local_source_hashes
 
-SCHEMA = "kloop-holdout-v1"
+SCHEMA = "kloop-holdout-v2"
+PUBLIC_SCHEMA = "kloop-holdout-commitment-v2"
+
+
+def source_hashes():
+    """Bind execution and independent paired-analysis source entrypoints."""
+    return local_source_hashes(("private_trial", "analyze_trial"))
 
 
 def canonical_bytes(payload):
@@ -25,9 +32,10 @@ def canonical_bytes(payload):
                       ensure_ascii=True).encode("utf-8")
 
 
-def make_manifest(*, count, repetitions, pilot_sha256):
+def make_manifest(*, count, repetitions):
     if not 1 <= count <= 1000 or not 1 <= repetitions <= 100:
         raise ValueError("count 1..1000 and repetitions 1..100 required")
+    trusted = source_hashes()
     return {
         "schema": SCHEMA,
         "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -35,7 +43,8 @@ def make_manifest(*, count, repetitions, pilot_sha256):
         "nonce": secrets.token_hex(32),
         "task_count": count,
         "repetitions": repetitions,
-        "pilot_sha256": pilot_sha256,
+        "pilot_sha256": trusted["pilot.py"],
+        "source_sha256": trusted,
     }
 
 
@@ -43,18 +52,26 @@ def commitment(manifest):
     if manifest.get("schema") != SCHEMA:
         raise ValueError("Unsupported holdout manifest schema")
     return {
-        "schema": "kloop-holdout-commitment-v1",
+        "schema": PUBLIC_SCHEMA,
         "algorithm": "SHA-256 of canonical JSON (sorted compact keys)",
         "manifest_sha256": hashlib.sha256(canonical_bytes(manifest)).hexdigest(),
         "task_count": manifest["task_count"],
         "repetitions": manifest["repetitions"],
         "pilot_sha256": manifest["pilot_sha256"],
+        "source_sha256": manifest["source_sha256"],
     }
 
 
 def verify(manifest, public):
     if commitment(manifest) != public:
         raise ValueError("Holdout manifest does not match public commitment")
+    return True
+
+
+def verify_sources(manifest):
+    if (manifest.get("source_sha256") != source_hashes() or
+            manifest.get("pilot_sha256") != manifest["source_sha256"].get("pilot.py")):
+        raise ValueError("Trusted local source closure changed since commitment")
     return True
 
 
@@ -86,10 +103,7 @@ def main(argv=None):
                 raise ValueError("Private and public paths must differ")
             if args.private.exists() or args.commitment.exists():
                 raise ValueError("Refusing to overwrite an existing manifest/commitment")
-            pilot_file = Path(__file__).resolve().parent / "pilot.py"
-            pilot_sha = hashlib.sha256(pilot_file.read_bytes()).hexdigest()
-            manifest = make_manifest(count=args.count, repetitions=args.repetitions,
-                                     pilot_sha256=pilot_sha)
+            manifest = make_manifest(count=args.count, repetitions=args.repetitions)
             write_new(args.private, manifest, private=True)
             write_new(args.commitment, commitment(manifest))
             print(f"Private manifest: {args.private} (never commit)")
@@ -98,6 +112,7 @@ def main(argv=None):
             manifest = json.loads(args.private.read_text(encoding="utf-8"))
             public = json.loads(args.commitment.read_text(encoding="utf-8"))
             verify(manifest, public)
+            verify_sources(manifest)
             print("Holdout commitment verified")
     except (ValueError, KeyError, OSError, json.JSONDecodeError) as exc:
         parser.error(str(exc))

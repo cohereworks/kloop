@@ -105,6 +105,14 @@ class PairedAnalysisTests(unittest.TestCase):
                                    "--resamples", "1000", "--out", str(report_file)]), 0)
             report = json.loads(report_file.read_text())
             self.assertEqual(report["holdout_manifest_commitment_sha256"], "a" * 64)
+            public.write_text(json.dumps({"schema": "kloop-holdout-commitment-v2",
+                                          "task_count": 2, "repetitions": 1,
+                                          "manifest_sha256": "b" * 64}))
+            updated = root / "analysis-v2.json"
+            self.assertEqual(main([str(results), "--holdout-commitment", str(public),
+                                   "--resamples", "1000", "--out", str(updated)]), 0)
+            self.assertEqual(json.loads(updated.read_text())[
+                "holdout_manifest_commitment_sha256"], "b" * 64)
 
 
 if __name__ == "__main__":
