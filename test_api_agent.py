@@ -57,7 +57,90 @@ class ModelStub(BaseHTTPRequestHandler):
         pass
 
 
+class RedirectSink(BaseHTTPRequestHandler):
+    received_authorization = []
+
+    def do_GET(self):
+        self.__class__.received_authorization.append(self.headers.get("Authorization"))
+        self.send_response(200)
+        self.end_headers()
+
+    do_POST = do_GET
+
+    def log_message(self, *args):
+        pass
+
+
+class RedirectSource(BaseHTTPRequestHandler):
+    location = None
+
+    def do_POST(self):
+        self.send_response(302)
+        self.send_header("Location", self.__class__.location)
+        self.end_headers()
+
+    def log_message(self, *args):
+        pass
+
+
 class ApiAgentTests(unittest.TestCase):
+    def test_bearer_token_never_follows_endpoint_redirect(self):
+        """An HTTP 302 must not forward the credential to another origin."""
+        sink = ThreadingHTTPServer(("127.0.0.1", 0), RedirectSink)
+        source = ThreadingHTTPServer(("127.0.0.1", 0), RedirectSource)
+        threads = [threading.Thread(target=s.serve_forever, daemon=True)
+                   for s in (source, sink)]
+        RedirectSink.received_authorization = []
+        RedirectSource.location = f"http://127.0.0.1:{sink.server_port}/capture"
+        for thread in threads:
+            thread.start()
+        config = (f"http://127.0.0.1:{source.server_port}/model", "private-test-key",
+                  {"model": "test", "max_completion_tokens": 10}, 5)
+        try:
+            with self.assertRaisesRegex(RuntimeError, "HTTP 302"):
+                call_model({"message": "hello"}, resolved_config=config)
+            self.assertEqual(RedirectSink.received_authorization, [])
+        finally:
+            for server in (source, sink):
+                server.shutdown()
+                server.server_close()
+            for thread in threads:
+                thread.join(timeout=2)
+
+    def test_adapter_ignores_ambient_http_proxy(self):
+        """An inherited proxy must not intercept private trial requests."""
+        ModelStub.received = []
+        ModelStub.reported_model = None
+        ModelStub.content_override = None
+        ModelStub.usage = {"prompt_tokens": 2, "completion_tokens": 3,
+                           "total_tokens": 5}
+        target = ThreadingHTTPServer(("127.0.0.1", 0), ModelStub)
+        proxy = ThreadingHTTPServer(("127.0.0.1", 0), RedirectSink)
+        threads = [threading.Thread(target=s.serve_forever, daemon=True)
+                   for s in (target, proxy)]
+        RedirectSink.received_authorization = []
+        for thread in threads:
+            thread.start()
+        config = (f"http://127.0.0.1:{target.server_port}/model", "private-test-key",
+                  {"model": "test", "max_completion_tokens": 10}, 5)
+        try:
+            with patch.dict(os.environ, {
+                    "http_proxy": f"http://127.0.0.1:{proxy.server_port}",
+                    "HTTP_PROXY": f"http://127.0.0.1:{proxy.server_port}",
+                    "no_proxy": "", "NO_PROXY": ""}):
+                response = call_model({"candidate": {"var": "x"}}, resolved_config=config)
+            self.assertEqual(response["metrics"]["total_tokens"], 5)
+            self.assertEqual(len(ModelStub.received), 1)
+            self.assertEqual(RedirectSink.received_authorization, [])
+        finally:
+            ModelStub.usage = {"prompt_tokens": 40, "completion_tokens": 11,
+                               "total_tokens": 51}
+            for server in (target, proxy):
+                server.shutdown()
+                server.server_close()
+            for thread in threads:
+                thread.join(timeout=2)
+
     def test_model_required(self):
         with patch.dict(os.environ, {"KLOOP_MODEL": ""}):
             with self.assertRaisesRegex(ValueError, "KLOOP_MODEL"):

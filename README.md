@@ -34,6 +34,15 @@ python pilot.py run --tasks tasks.json --out model-runs \
 
 Optional adapter settings: `KLOOP_MAX_COMPLETION_TOKENS` (default 1600), `KLOOP_TEMPERATURE`, `KLOOP_SEED`, `KLOOP_HTTP_TIMEOUT` (default 60 seconds), and `KLOOP_JSON_MODE` (`1` by default; set `0` for endpoints that lack JSON-object mode). Not every provider supports every optional parameter; there is no silent parameter fallback. The adapter records response ID, model, finish reason, requested parameters, and provider-reported token usage with each turn. It deliberately omits credentials from logs.
 
+The credential-bearing adapter sends **direct requests only**: it ignores
+ambient `http_proxy`/`https_proxy` settings and refuses all HTTP redirects,
+including cross-origin redirects that Python's default opener could follow
+while forwarding an `Authorization` header. Configure the final HTTPS URL
+directly. Networks requiring an outbound proxy need a separately reviewed
+transport, not an implicit environment override. This does not establish
+provider identity beyond normal TLS certificate validation or attest the
+remote service.
+
 The runner's `--max-total-tokens` enforces a measured per-task/condition cap when usage is reported. A final API call can overshoot the cap; such an outcome is not scored as a success. For a real trial, use the same chosen model and adapter settings in all four arms, and keep API and test data accessible only to the trusted runner and adapter. A separate mock HTTP integration test exercises the entire request/response path without billable inference.
 
 The HTTP adapter now validates that the provider envelope identifies a model

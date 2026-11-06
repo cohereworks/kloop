@@ -39,6 +39,19 @@ class ProviderModelDriftError(ModelResponseError):
     """The provider-reported model changed during one pinned trial."""
 
 
+class _RejectRedirects(urllib.request.HTTPRedirectHandler):
+    """Keep bearer credentials and experiment requests on the pinned origin."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(req.full_url, code, msg, headers, fp)
+
+
+def _direct_opener():
+    """Do not inherit ambient HTTP(S) proxies or follow provider redirects."""
+    return urllib.request.build_opener(
+        urllib.request.ProxyHandler({}), _RejectRedirects())
+
+
 def integer_env(name, default):
     raw = os.environ.get(name)
     value = int(raw) if raw is not None else default
@@ -114,7 +127,7 @@ def call_model(request, *, resolved_config=None, instructions=INSTRUCTIONS):
         url, data=request_body(request, params, instructions),
         headers=headers, method="POST")
     try:
-        with urllib.request.urlopen(http_request, timeout=timeout) as reply:
+        with _direct_opener().open(http_request, timeout=timeout) as reply:
             raw = reply.read(1_000_001)
     except urllib.error.HTTPError as exc:
         # Do not print response bodies: providers may include sensitive echoes.

@@ -78,6 +78,11 @@ Status: **mechanics verified; real-model hypothesis untested**.
       dependency drift before executing a committed run; reject untracked
       dynamic imports and local-package imports. Record runtime/stdlib/provider
       isolation as separate unsatisfied obligations, not as a source-hash claim.
+- [x] Close an inherited transport-configuration leak: private HTTP inference
+      now refuses provider redirects and ignores ambient HTTP(S) proxy
+      variables, so bearer tokens are not silently forwarded by `urllib` to
+      redirected origins or inherited proxies. Regression-test both with local
+      servers; explicit proxy transport still needs separate trust review.
 
 ## Next, in order
 
@@ -88,7 +93,8 @@ Status: **mechanics verified; real-model hypothesis untested**.
    private-holdout execution remain uncommitted. Do not reuse calibration data.
 3. **Audit and harden adapter isolation**. The new in-process private runner
    uses the reviewed direct HTTP adapter and keeps hidden cases evaluator-side;
-   the metering/identity failure paths are now tested and fail closed.
+   the metering/identity failure paths are now tested and fail closed. HTTP
+   redirects and ambient proxies are now rejected by the adapter.
    Arbitrary local subprocess adapters remain unsandboxed by the legacy runner;
    do not use them for private confirmatory data without OS confinement.
 4. **Audit the private-preference trust boundary**. The trusted runner and
