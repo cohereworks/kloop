@@ -8,7 +8,7 @@
 - Turn cap: `6` per task/condition
 - Adapter: bundled deterministic `baseline_agent.py`, **not a language model**
 - Interpreter: bundled pure JSON-expression evaluator
-- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **116 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, and hosted matched-channel replay checks
+- Initial calibration had **10 passing tests**; the expanded multi-stratum suite now has **118 passing tests**, including mock HTTP, paired analysis, noninterference, four-arm subprocess checks, trusted-runner checks, endpoint-memory canary controls, trace-replay fault-recovery tests, finite-field evidence/ledger-fidelity adversarial tests, retention-projection tests, channel-parity/tampering tests, transport-metering tests, redirect/proxy credential-boundary tests, and hosted matched-channel replay checks
 - Task inputs and hidden reference data: `tasks-v2.json` (public calibration data)
 - Summary and complete per-run audit traces: `reports/calibration-traces.zip`, containing `runs-v2/summary.json` and `runs-v2/tNNNN/{condition}/trace.json`
 

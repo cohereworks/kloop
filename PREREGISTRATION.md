@@ -72,6 +72,8 @@ the manifest/commitment pair, derives per-task pseudorandom streams with HMAC,
 holds reference answers in its trusted evaluator, and sends only public
 requests through the reviewed `api_agent.call_model()` HTTPS adapter. It does
 not start a model-controlled subprocess, and no hidden target file is created.
+The adapter refuses HTTP redirects and inherited proxy configuration, to
+avoid silently forwarding bearer credentials outside the configured origin.
 This is a logical network boundary, **not** an OS sandbox for arbitrary
 imported dependencies or a formally proved confidentiality guarantee. The
 live CLI pins the endpoint/decoder configuration once and detects drift in
