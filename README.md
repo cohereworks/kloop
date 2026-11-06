@@ -24,6 +24,13 @@ The smoke-test adapter is a deterministic greedy search algorithm. Its result sa
 
 Build a self-contained Kaggle task with `python build_kaggle_task.py`; the generated file is not checked into source control. The manually dispatched [Kaggle exploratory workflow](.github/workflows/kaggle-exploratory.yml) can verify credentials and quota, then optionally submit the task and run an explicitly selected model.
 
+The builder excludes the local CLI/subprocess runner and rejects residual
+imports of sibling project Python modules. Its tests simulate a runtime where
+those local modules cannot be imported. The generated file has explicit
+`# %%` notebook cell boundaries. This is stronger than its earlier source-only
+compile check, but does not certify Kaggle server execution. The readiness
+workflow lists available model slugs and quota before optional inference.
+
 **Alternate route: direct model endpoint.** The bundled `api_agent.py` speaks an OpenAI-compatible Chat Completions JSON protocol. Set `KLOOP_MODEL` and either `KLOOP_API_KEY` or `OPENAI_API_KEY` through your normal secret-management mechanism; neither the credential nor its value belongs in the benchmark files. The default HTTPS endpoint is `https://api.openai.com/v1/chat/completions`. Set `KLOOP_API_URL` for a compatible provider or local loopback server.
 
 ```sh

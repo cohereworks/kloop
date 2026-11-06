@@ -83,6 +83,12 @@ Status: **mechanics verified; real-model hypothesis untested**.
       variables, so bearer tokens are not silently forwarded by `urllib` to
       redirected origins or inherited proxies. Regression-test both with local
       servers; explicit proxy transport still needs separate trust review.
+- [x] Correct a false standalone-Kaggle assertion: the generated task used to
+      import a local `api_agent` module, masked by repository-local tests.
+      Exclude unused CLI/subprocess runner code, fail builds on any remaining
+      local imports, test execution with repository imports denied, emit
+      explicit notebook cell markers, and list available model slugs in the
+      readiness workflow. Real Kaggle execution remains unverified.
 
 ## Next, in order
 
