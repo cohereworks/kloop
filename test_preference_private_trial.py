@@ -23,6 +23,12 @@ class PreferencePrivateTrialTests(unittest.TestCase):
         public = commitment(manifest)
         self.assertTrue(verify(manifest, public))
         self.assertEqual({key: public[key] for key in code_hashes()}, code_hashes())
+        for bound in ("api_agent_sha256", "analyze_trial_sha256",
+                      "holdout_commitment_sha256", "pilot_sha256",
+                      "preference_api_agent_sha256", "preference_holdout_sha256",
+                      "preference_pilot_sha256", "preference_private_trial_sha256",
+                      "trusted_sources_sha256"):
+            self.assertIn(bound, public)
         self.assertNotIn(manifest["secret_key"], json.dumps(public))
         self.assertNotIn("secret_key", json.dumps(public))
         with self.assertRaisesRegex(ValueError, "does not match"):
@@ -112,7 +118,7 @@ class PreferencePrivateTrialTests(unittest.TestCase):
                 run_private({**manifest, "secret_key": "00" * 32}, public,
                             root, lambda _: {}, arm_seed=1, max_turns=1,
                             max_total_tokens=1)
-            with patch("preference_private_trial.code_hashes", return_value={
+            with patch("preference_holdout.code_hashes", return_value={
                     **code_hashes(), "preference_pilot_sha256": "0" * 64}):
                 with self.assertRaisesRegex(ValueError, "changed since commitment"):
                     run_private(manifest, public, root, lambda _: {},

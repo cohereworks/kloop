@@ -72,6 +72,12 @@ Status: **mechanics verified; real-model hypothesis untested**.
       totals from known lower bounds, disqualify unknown-cost runs from budget
       certification, and abort immediately on typed provider-reported model
       drift with partial trace evidence. Preserve uncapped calibration traces.
+- [x] Replace incomplete v1 private-holdout code fingerprints with v2
+      commitments binding the transitive statically imported local Python
+      source closure of both trusted runners and the paired analyzer. Detect
+      dependency drift before executing a committed run; reject untracked
+      dynamic imports and local-package imports. Record runtime/stdlib/provider
+      isolation as separate unsatisfied obligations, not as a source-hash claim.
 
 ## Next, in order
 

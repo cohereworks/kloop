@@ -192,7 +192,8 @@ def main(argv=None):
         committed_sha = None
         if args.holdout_commitment:
             public = json.loads(args.holdout_commitment.read_text(encoding="utf-8"))
-            if public.get("schema") != "kloop-holdout-commitment-v1":
+            if public.get("schema") not in (
+                    "kloop-holdout-commitment-v1", "kloop-holdout-commitment-v2"):
                 raise ValueError("Unsupported holdout commitment schema")
             committed_count = public["task_count"] * public["repetitions"]
             if expected is not None and expected != committed_count:
