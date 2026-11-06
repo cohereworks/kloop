@@ -205,6 +205,41 @@ illustrative settings, **not a selected endpoint**. No provider token usage is
 estimated from bytes. See the archived result in
 `reports/discovery-channel-transport-accounting.json`.
 
+### Exploratory hosted matched-channel route
+
+`discovery_channel_api_agent.py` supplies one frozen instruction string for
+the matched-channel schema in **every** arm. Both state carriers must be
+returned identically, including the `ledger.carry` and `message=CARRY:...`
+fields; the HTTP adapter's independent `metrics` field is now permitted but
+is never treated as model-authored state. The original discovery adapter and
+its prompts remain unchanged.
+
+The new direct-HTTP runner never starts an untrusted agent subprocess next
+to the hidden target. It pins the configured model endpoint/parameters,
+requires measured provider-reported token caps, and checks reported model
+identity drift. For an *exploratory* four-arm trial, configure `KLOOP_MODEL`
+and either `KLOOP_API_KEY` or `OPENAI_API_KEY`, then run:
+
+```sh
+python discovery_channel_model_trial.py \
+  --out exploratory-channel-runs --count 4 --state-bytes 48 \
+  --max-turns 6 --max-total-tokens 6000
+python analyze_channel_hosted.py exploratory-channel-runs \
+  --out exploratory-channel-audit.json
+```
+
+The runner generates and records a random replay seed unless `--seed` is
+explicitly provided. The independent analyzer replays public evidence and
+carry claims, recomputes success from generated targets, enforces four-arm
+pairing and trace digests, and checks reported usage. **Do not** use
+`analyze_channel_match.py` for these data: unlike the deterministic positive
+control, hosted models may legitimately produce different actions and scores.
+Malformed/unparsed model responses can incur provider charges without
+recoverable token metrics; these runs are explicitly marked unmetered, not
+assigned zero cost. No hosted-model run has yet been performed.
+Reported provider model-identity drift aborts immediately, preserving
+`abort.json` and completed partial traces but no misleading paired summary.
+
 ## Private preferences stratum
 
 `preference_pilot.py` implements a third, deliberately distinct four-arm

@@ -56,8 +56,14 @@ def validate_carriers(response, max_bytes):
     """Require identical canonical payloads in both outgoing carriers."""
     ledger = response.get("ledger") if isinstance(response, dict) else None
     message = response.get("message") if isinstance(response, dict) else None
+    # A direct hosted-model response carries adapter-owned, provider-reported
+    # metrics in addition to the three model-authored fields. The synthetic
+    # control emits only those three fields. Forbid any other side channel.
+    keys = set(response) if isinstance(response, dict) else set()
     if (not isinstance(ledger, dict) or not isinstance(message, str) or
-            set(response) != {"action", "message", "ledger"} or
+            keys not in ({"action", "message", "ledger"},
+                         {"action", "message", "ledger", "metrics"}) or
+            ("metrics" in keys and not isinstance(response["metrics"], dict)) or
             not message.startswith(PREFIX) or "carry" not in ledger or
             ledger["carry"] != message[len(PREFIX):]):
         raise ValueError("Mismatched or missing state carriers")
@@ -65,13 +71,15 @@ def validate_carriers(response, max_bytes):
     return response
 
 
-def run_matched(task, condition, adapter, max_bytes, inject_probe_failure_at=None):
+def run_matched(task, condition, adapter, max_bytes, inject_probe_failure_at=None,
+                max_total_tokens=None, max_turns=6):
     def checked(request):
         return validate_carriers(adapter(request), max_bytes)
 
-    result = run_one(task, condition, checked, max_turns=6,
+    result = run_one(task, condition, checked, max_turns=max_turns,
                      inject_probe_failure_at=inject_probe_failure_at,
-                     request_projection=matched_projection(max_bytes))
+                     request_projection=matched_projection(max_bytes),
+                     max_total_tokens=max_total_tokens)
     result["schema"] = MATCHED_SCHEMA
     result["state_budget_bytes"] = max_bytes
     return result

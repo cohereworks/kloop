@@ -53,6 +53,13 @@ Status: **mechanics verified; real-model hypothesis untested**.
       per-arm absolute sizes and paired deltas, and archive the independent
       audit. Reject malformed provider-reported token arithmetic and missing
       response model identity without treating usage as externally attested.
+- [x] Make the matched-channel carrier validator compatible with trusted HTTP
+      adapter-owned usage metadata; add one static model prompt for all arms,
+      an in-process HTTP exploratory runner with seeded balanced pairing,
+      response metering, model-identity drift checks, explicit unmetered-error
+      reporting, and an independent outcome/usage/trace replay analyzer.
+      Mock-test the complete request path, false metrics, over-budget calls,
+      fabricated carry facts, identity drift, and tampered archives.
 
 ## Next, in order
 
@@ -88,7 +95,10 @@ Status: **mechanics verified; real-model hypothesis untested**.
    parity is established. A follow-up offline audit now measures the actual
    JSON HTTP body serializer's absolute byte overhead, but **not** model
    tokens. The next live treatment must freeze a common prompt, equal measured
-   token budgets, and independently chosen holdout tasks.
+   token budgets, and independently chosen holdout tasks. A *separate*
+   exploratory direct HTTP matched-channel route now exists and is mock-tested,
+   but is not a confirmatory treatment until endpoint configuration, provider
+   isolation, independent private holdouts and statistical design are frozen.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 
 ## Interpretive boundaries

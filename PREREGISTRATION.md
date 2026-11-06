@@ -122,6 +122,12 @@ ceilings. This is **not** an empirical comparison of language models or a
 replacement preregistration: transport overhead remains unequal, and a future
 trial requires common prompts, model/version pinning, token-accounted budgets,
 randomized independent holdouts and a frozen estimand before inference.
+The later `discovery_channel_model_trial.py` is an *exploratory* trusted-HTTP
+execution route with a single new model-facing carrier prompt and independent
+public-trace replay. It is not the `private_trial.py` committed holdout
+protocol and does not fix the missing preregistration or model/session
+isolation. Provider-reported token caps do not make two prompt representations
+equal in intrinsic token cost, especially when failed calls have unknown usage.
 
 The analyzer accepts a Kaggle JSON artifact with `runs`, or a local runner
 directory of `task/condition/trace.json` files:
