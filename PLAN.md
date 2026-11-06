@@ -47,6 +47,12 @@ Status: **mechanics verified; real-model hypothesis untested**.
       implicit message channels under identical byte limits; enforce canonical
       encoding, observational support, no side-channel handoff, paired parity,
       and archive a six-budget/fault 288-run deterministic calibration.
+- [x] Replay all 456 matched state-channel turn pairs through the **same HTTP
+      body serializer** used by the live adapter; distinguish canonical
+      request, serialized user-message, and total JSON body bytes, preserve
+      per-arm absolute sizes and paired deltas, and archive the independent
+      audit. Reject malformed provider-reported token arithmetic and missing
+      response model identity without treating usage as externally attested.
 
 ## Next, in order
 
@@ -79,8 +85,10 @@ Status: **mechanics verified; real-model hypothesis untested**.
    and treatment equivalence before using this dimension in live inference.
    A first information-matched instrument control now exists, but its measured
    request-wire overhead differs by channel and no token/latency/model-cost
-   parity is established. The next live treatment must freeze a common prompt,
-   equal measured token budgets, and independently chosen holdout tasks.
+   parity is established. A follow-up offline audit now measures the actual
+   JSON HTTP body serializer's absolute byte overhead, but **not** model
+   tokens. The next live treatment must freeze a common prompt, equal measured
+   token budgets, and independently chosen holdout tasks.
 6. **Test generality** on a non-toy maintenance benchmark and compare to findings from the separate multi-agent role-isolation harness.
 
 ## Interpretive boundaries

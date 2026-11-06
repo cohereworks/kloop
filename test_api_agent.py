@@ -8,21 +8,27 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
-from api_agent import call_model, configuration
+from api_agent import call_model, configuration, provider_usage, request_body
 from pilot import CONDITIONS, make_tasks, request_for, run_one
 
 
 class ModelStub(BaseHTTPRequestHandler):
     received = []
+    bodies = []
+    usage = {"prompt_tokens": 40, "completion_tokens": 11, "total_tokens": 51}
+    reported_model = None
 
     def do_POST(self):
         length = int(self.headers["Content-Length"])
-        payload = json.loads(self.rfile.read(length))
+        body_bytes = self.rfile.read(length)
+        self.__class__.bodies.append(body_bytes)
+        payload = json.loads(body_bytes)
         self.__class__.received.append(payload)
         task_request = json.loads(payload["messages"][1]["content"])
         candidate = task_request["candidate"]
         answer = {
             "candidate": candidate, "message": "Mock model: no edit",
+            "metrics": {"total_tokens": -1000, "model": "model-content-forgery"},
             "ledger": {
                 "objective": "Match the function", "established": [],
                 "falsified": [], "unresolved": ["Candidate not repaired"],
@@ -30,9 +36,11 @@ class ModelStub(BaseHTTPRequestHandler):
             },
         }
         response = {
-            "id": "stub-001", "model": payload["model"],
+            "id": "stub-001", "model": (self.__class__.reported_model
+                                         if self.__class__.reported_model is not None
+                                         else payload["model"]),
             "choices": [{"finish_reason": "stop", "message": {"content": json.dumps(answer)}}],
-            "usage": {"prompt_tokens": 40, "completion_tokens": 11, "total_tokens": 51},
+            "usage": self.__class__.usage,
         }
         body = json.dumps(response).encode()
         self.send_response(200)
@@ -58,6 +66,10 @@ class ApiAgentTests(unittest.TestCase):
 
     def test_http_adapter_full_protocol(self):
         ModelStub.received = []
+        ModelStub.bodies = []
+        ModelStub.usage = {"prompt_tokens": 40, "completion_tokens": 11,
+                           "total_tokens": 51}
+        ModelStub.reported_model = None
         server = ThreadingHTTPServer(("127.0.0.1", 0), ModelStub)
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -86,8 +98,13 @@ class ApiAgentTests(unittest.TestCase):
             thread.join(timeout=2)
         self.assertEqual(len(ModelStub.received), 6)
         self.assertEqual(direct["metrics"]["model"], "stub-model")
+        self.assertEqual(direct["metrics"]["total_tokens"], 51)
         self.assertEqual(ModelStub.received[-1]["messages"][0]["content"],
                          "DISCOVERY_TEST_INSTRUCTIONS")
+        self.assertEqual(ModelStub.bodies[-1], request_body(
+            req, frozen[2], "DISCOVERY_TEST_INSTRUCTIONS"))
+        self.assertEqual(direct["metrics"]["usage_provenance"],
+                         "provider_response_envelope_unverified")
         self.assertTrue(all(r["error"] is None for r in runs))
         self.assertTrue(all(r["total_tokens"] == 51 for r in runs))
         self.assertTrue(all(r["trace"][0]["response"]["metrics"]["model"] == "stub-model"
@@ -100,6 +117,55 @@ class ApiAgentTests(unittest.TestCase):
             self.assertNotIn("_hidden", wire)
             self.assertNotIn("_target", wire)
             self.assertEqual(payload["max_completion_tokens"], 123)
+
+    def test_serialization_keeps_unicode_without_falsely_claiming_token_parity(self):
+        request = {"message": "π", "nested": {"z": 1, "a": 2}}
+        body = request_body(request, {"model": "example", "max_completion_tokens": 7},
+                            "a constant instruction")
+        self.assertEqual(json.loads(body)["messages"][1]["content"],
+                         json.dumps(request, sort_keys=True, ensure_ascii=False))
+        self.assertIn(b"\\u03c0", body)  # Outer serializer escapes the inner Unicode.
+
+    def test_provider_usage_rejects_partial_forged_or_inconsistent_counts(self):
+        self.assertEqual(provider_usage({})["total_tokens"], None)
+        self.assertEqual(provider_usage({"usage": {"prompt_tokens": 2,
+                       "completion_tokens": 3, "total_tokens": 5}})["total_tokens"], 5)
+        for value in ({"prompt_tokens": 2, "total_tokens": 2},
+                      {"prompt_tokens": True, "completion_tokens": 2,
+                       "total_tokens": 3},
+                      {"prompt_tokens": -1, "completion_tokens": 4,
+                       "total_tokens": 3},
+                      {"prompt_tokens": 2, "completion_tokens": 2,
+                       "total_tokens": 5}):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                provider_usage({"usage": value})
+
+    def test_model_identity_and_usage_are_provider_observations_not_request_echoes(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), ModelStub)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        config = (f"http://127.0.0.1:{server.server_port}/", None,
+                  {"model": "requested", "max_completion_tokens": 5}, 5)
+        try:
+            ModelStub.reported_model = ""  # Missing identity must not silently use requested.
+            with self.assertRaisesRegex(ValueError, "identity missing"):
+                call_model({"candidate": {"var": "x"}}, resolved_config=config)
+            ModelStub.reported_model = "observed-other-model"
+            ModelStub.usage = {"prompt_tokens": 9, "completion_tokens": 2,
+                               "total_tokens": 100}
+            with self.assertRaisesRegex(ValueError, "disagrees"):
+                call_model({"candidate": {"var": "x"}}, resolved_config=config)
+            ModelStub.usage = {"prompt_tokens": 9, "completion_tokens": 2,
+                               "total_tokens": 11}
+            result = call_model({"candidate": {"var": "x"}}, resolved_config=config)
+            self.assertEqual(result["metrics"]["model"], "observed-other-model")
+        finally:
+            ModelStub.reported_model = None
+            ModelStub.usage = {"prompt_tokens": 40, "completion_tokens": 11,
+                               "total_tokens": 51}
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
 
 
 if __name__ == "__main__":
