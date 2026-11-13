@@ -1,19 +1,8 @@
 name: CPU open-weight exploratory smoke pilot
 
+# Hosted model inference consumes runner minutes and is never dispatched by
+# ordinary PR synchronization, pushes, or CI. Only explicit operator dispatch.
 on:
-  push:
-    branches: [research/cpu-openweight-pilot]
-    paths:
-      - cpu_openweight_pilot.py
-      - cpu_openweight_qwen_pilot.py
-      - test_cpu_openweight_pilot.py
-      - .github/workflows/cpu-openweight-exploratory.yml
-  pull_request:
-    paths:
-      - cpu_openweight_pilot.py
-      - cpu_openweight_qwen_pilot.py
-      - test_cpu_openweight_pilot.py
-      - .github/workflows/cpu-openweight-exploratory.yml
   workflow_dispatch:
 
 jobs:
