@@ -1,0 +1,25 @@
+{
+  "kind": "cpu_openweight_first_model_result",
+  "status": "executed_model_protocol_failure",
+  "source_workflow_run": "https://github.com/cohereworks/kloop/actions/runs/43352478701",
+  "source_commit": "f25bf7bed2ba421f285cf4fe4d11e60588ebb57b",
+  "source_artifact_id": 14004382931,
+  "source_artifact_sha256": "978682b08a75276264d388f14e544795022f6ac772c38c9f163c437768c64d41",
+  "model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "revision": "d22ba992b66e2217e204c1192b2fb496619d031c",
+  "seed": 1337,
+  "tasks": 1,
+  "arms_completed": 4,
+  "calls": 4,
+  "model_outputs_valid_json": 0,
+  "hidden_successes": 0,
+  "condition_results": {
+    "k_implicit": {"input_tokens": 1124, "output_tokens": 160, "error": "Local model output is not JSON"},
+    "rich_implicit": {"input_tokens": 1153, "output_tokens": 160, "error": "Local model output is not JSON"},
+    "k_explicit": {"input_tokens": 1124, "output_tokens": 160, "error": "Local model output is not JSON"},
+    "rich_explicit": {"input_tokens": 1153, "output_tokens": 160, "error": "Local model output is not JSON"}
+  },
+  "observed_failure": "Each completion begins by echoing the input request JSON and stops at the 160-token generation ceiling; none matches the required agent response object.",
+  "interpretation": "Model inference was executed, but the test did not reach valid action evaluation and gives no information about the relative merits of state channels.",
+  "source_data_expires": "2027-02-11T02:29:04Z"
+}
