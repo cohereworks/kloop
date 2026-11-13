@@ -1,0 +1,25 @@
+{
+  "kind": "cpu_openweight_second_model_result",
+  "status": "executed_model_protocol_failure",
+  "source_workflow_run": "https://github.com/cohereworks/kloop/actions/runs/43353276367",
+  "source_commit": "0214baad3c955cda67fa597d7070b7cd75317610",
+  "source_artifact_id": 14004987316,
+  "source_artifact_sha256": "da6195eda257f55c697d2f700c97fa42aa54e90bed0f8f160a24ba3fa3b14b25",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "seed": 1337,
+  "tasks": 1,
+  "arms_completed": 4,
+  "calls": 4,
+  "model_outputs_valid_json": 0,
+  "hidden_successes": 0,
+  "condition_results": {
+    "k_implicit": {"input_tokens": 1181, "output_tokens": 294, "error": "Local model output is not JSON"},
+    "rich_implicit": {"input_tokens": 1211, "output_tokens": 294, "error": "Local model output is not JSON"},
+    "k_explicit": {"input_tokens": 1181, "output_tokens": 289, "error": "Local model output is not JSON"},
+    "rich_explicit": {"input_tokens": 1211, "output_tokens": 306, "error": "Local model output is not JSON"}
+  },
+  "observed_failure": "All completions stop naturally before the 512-token maximum. Each resembles a candidate/ledger JSON response but has a missing delimiter in the nested candidate at character 974 (line 45 column 21), and includes invalid expression shapes. No canonical action was accepted.",
+  "interpretation": "Compared with the first run, the model, generation budget and prompt framing changed together. Neither model reached action validity. No valid representation-effect or model-effect comparison can be derived.",
+  "source_data_expires": "2027-02-11T02:35:50Z"
+}
