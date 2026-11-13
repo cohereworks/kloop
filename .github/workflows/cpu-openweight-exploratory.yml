@@ -7,6 +7,11 @@ on:
       - cpu_openweight_pilot.py
       - test_cpu_openweight_pilot.py
       - .github/workflows/cpu-openweight-exploratory.yml
+  pull_request:
+    paths:
+      - cpu_openweight_pilot.py
+      - test_cpu_openweight_pilot.py
+      - .github/workflows/cpu-openweight-exploratory.yml
   workflow_dispatch:
 
 jobs:
@@ -29,6 +34,12 @@ jobs:
       - name: Run one task across four arms with real model
         run: |
           python cpu_openweight_pilot.py --out cpu-pilot-results --count 1 --max-turns 2 --token-cap 12000
+      - name: Preserve runtime versions and commit, even if inference fails
+        if: always()
+        run: |
+          mkdir -p cpu-pilot-results
+          python -m pip freeze > cpu-pilot-results/pip-freeze.txt
+          git rev-parse HEAD > cpu-pilot-results/commit.txt
       - name: Archive all evidence, even on incomplete model execution
         if: always()
         uses: actions/upload-artifact@v4
