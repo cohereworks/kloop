@@ -1,11 +1,6 @@
 name: CPU finite-choice model action pilot
 
 on:
-  pull_request:
-    paths:
-      - cpu_choice_permutation.py
-      - test_cpu_choice_permutation.py
-      - .github/workflows/cpu-choice-exploratory.yml
   workflow_dispatch:
 
 jobs:
