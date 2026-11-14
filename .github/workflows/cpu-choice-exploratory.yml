@@ -3,8 +3,8 @@ name: CPU finite-choice model action pilot
 on:
   pull_request:
     paths:
-      - cpu_choice_pilot.py
-      - test_cpu_choice_pilot.py
+      - cpu_choice_permutation.py
+      - test_cpu_choice_permutation.py
       - .github/workflows/cpu-choice-exploratory.yml
   workflow_dispatch:
 
@@ -19,26 +19,26 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate bounded action adapter
+      - name: Validate finite-choice and counterbalance code
         run: |
-          python -m unittest -v test_cpu_choice_pilot
-          python -m py_compile cpu_choice_pilot.py
+          python -m unittest -v test_cpu_choice_pilot test_cpu_choice_permutation
+          python -m py_compile cpu_choice_permutation.py
       - name: Install pinned inference dependencies
         run: |
           python -m pip install 'numpy<2' 'transformers==4.46.3' 'huggingface_hub==0.26.5'
           python -m pip install 'torch==2.5.1+cpu' --index-url https://download.pytorch.org/whl/cpu
-      - name: Execute pinned real-model finite-choice experiment
-        run: python cpu_choice_pilot.py --out cpu-choice-results
+      - name: Execute five rotated model prompts (not a four-arm repeat)
+        run: python cpu_choice_permutation.py --out cpu-choice-rotation
       - name: Preserve source commit and resolved dependencies
         if: always()
         run: |
-          mkdir -p cpu-choice-results
-          git rev-parse HEAD > cpu-choice-results/commit.txt
-          python -m pip freeze > cpu-choice-results/pip-freeze.txt
+          mkdir -p cpu-choice-rotation
+          git rev-parse HEAD > cpu-choice-rotation/commit.txt
+          python -m pip freeze > cpu-choice-rotation/pip-freeze.txt
       - name: Archive completed and partial evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kloop-cpu-choice-real-model
-          path: cpu-choice-results/
+          name: kloop-cpu-choice-label-rotation
+          path: cpu-choice-rotation/
           if-no-files-found: warn
