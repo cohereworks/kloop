@@ -1,0 +1,142 @@
+{
+  "kind": "cpu_finite_choice_exploratory_executed",
+  "protocol": "bounded-choice-v1",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "seed": 1337,
+  "full_arm_run": {
+    "workflow": "https://github.com/cohereworks/kloop/actions/runs/43564475012",
+    "head_commit": "e58f72c41a5311ef5104d225b1e36d78fd5e2cbc",
+    "artifact_id": 14101991523,
+    "sha256": "0df0ffce2073360a455340e422b9cae2af7e9ec6969a9fed4a7a4f143aa3c065",
+    "arms": 4,
+    "decisions": 8,
+    "valid_host_constructed_actions": 8,
+    "errors": 0,
+    "hidden_successes": 0,
+    "public_successes": 0,
+    "final_hidden_failures_per_arm": 49,
+    "displayed_choices": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "per_arm_prompt_tokens": {
+      "k_explicit": 1261,
+      "k_implicit": 1312,
+      "rich_explicit": 1321,
+      "rich_implicit": 1372
+    },
+    "caveat": "The candidate AST and ledger are constructed by the host from the model's chosen digit. Model did not generate either."
+  },
+  "same_request_rotation": {
+    "workflow": "https://github.com/cohereworks/kloop/actions/runs/43564692065",
+    "head_commit": "5360a2ebd5e97345dba9c67d136dbd449f0aafbe",
+    "artifact_id": 14101752353,
+    "sha256": "8d07e04ae28b086699a299144413f54e6b1bc4dfe56b6bcf029b551111686e22",
+    "five_rotations": 5,
+    "displayed_indices": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "original_semantic_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "resulting_edits": [
+      {
+        "field": "op",
+        "path": [],
+        "value": "add"
+      },
+      {
+        "field": "const",
+        "path": [
+          0,
+          0,
+          0
+        ],
+        "value": -1
+      },
+      {
+        "field": "op",
+        "path": [
+          1
+        ],
+        "value": "add"
+      },
+      {
+        "field": "op",
+        "path": [
+          1,
+          1
+        ],
+        "value": "min"
+      },
+      {
+        "field": "noop",
+        "path": [],
+        "value": null
+      }
+    ],
+    "model_input_tokens": [
+      596,
+      597,
+      596,
+      597,
+      597
+    ],
+    "model_completion_tokens": 0,
+    "logits": [
+      [
+        19.598488,
+        17.686064,
+        17.55188,
+        17.806988,
+        17.268957
+      ],
+      [
+        18.997936,
+        17.049149,
+        16.844604,
+        17.072298,
+        16.553873
+      ],
+      [
+        19.529984,
+        17.578653,
+        17.469561,
+        17.824759,
+        17.075911
+      ],
+      [
+        18.485212,
+        16.262867,
+        15.953535,
+        16.197205,
+        15.759426
+      ],
+      [
+        18.456154,
+        16.56073,
+        16.117083,
+        16.562828,
+        15.88816
+      ]
+    ],
+    "interpretation": "Pure displayed-first positional selection across five variants of the identical request. This is a deterministic, five-permutation descriptive result; it is not a statistical estimate over tasks."
+  },
+  "scientific_status": "Protocol syntactic validity established via host construction, but model task-directed edit selection not demonstrated. No retained-state hypothesis tested.",
+  "execution_status": "Both real CPU runs completed successfully; standard CI passed on 3.10, 3.12 and 3.13."
+}
