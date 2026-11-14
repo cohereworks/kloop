@@ -31,3 +31,15 @@ python cpu_choice_pilot.py --out cpu-choice-results
 ```
 
 The feature branch has a **one-shot PR-triggered** GitHub Actions workflow for the initial real-model test. Before merging, the workflow must be changed to **manual dispatch only** to avoid recurring inference charges from routine PR synchronization. The Kaggle route remains untouched and remains the primary intended hosted evaluation.
+
+## Real executions and falsification
+
+The four-arm choice pilot completed on [Actions run 43564475012](https://github.com/cohereworks/kloop/actions/runs/43564475012), artifact SHA-256 `0df0ffce2073360a455340e422b9cae2af7e9ec6969a9fed4a7a4f143aa3c065`. Eight real model decisions were scored as valid host-constructed single-node edits, with zero protocol errors, but **0/4 public successes and 0/4 hidden successes** (49 hidden-case mismatches in each arm). The model chose displayed index **0 on every one of eight decisions**. Each arm changed the root operator from `max` to `add` and then to `sub`.
+
+That raised a label-position confound. An independent fixed-request diagnostic on [Actions run 43564692065](https://github.com/cohereworks/kloop/actions/runs/43564692065), artifact SHA-256 `8d07e04ae28b086699a299144413f54e6b1bc4dfe56b6bcf029b551111686e22`, rotated exactly the same five legal edits through all five displayed positions. Qwen chose label **0 in every rotation**, corresponding to **five different original edits**, including no-op. The original task, candidate, evidence, model, and decoding method were held fixed; only option order changed. All five actual next-token logit vectors are archived.
+
+This establishes a deterministic *first-position selection behavior for this one request and prompt*. It is not a population-level statistical conclusion. The chooser is therefore **not a useful positive control for task-directed repair**, even though the host can guarantee that its chosen action has legal syntax. The three completed CPU studies (two unconstrained JSON attempts and these constrained probes) still do **not** test the explicit-state advantage hypothesis.
+
+The independently auditable metrics, workflow identities and archive hashes are committed in [reports/cpu-choice-model-bias.json](reports/cpu-choice-model-bias.json). The full model prompts, logits, per-turn evaluator records and runtime manifests remain in the linked Actions artifacts.
+
+**Next experimental gate:** Establish a model/action interface with demonstrated nontrivial sensitivity to the *meaning* of alternatives, using balanced option ordering, independent tasks and frozen token budgets. Until then, do not interpret a successful host-validated action as meaningful model reasoning.
