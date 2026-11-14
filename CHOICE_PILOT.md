@@ -30,7 +30,7 @@ python -m unittest -v test_cpu_choice_pilot
 python cpu_choice_pilot.py --out cpu-choice-results
 ```
 
-The feature branch has a **one-shot PR-triggered** GitHub Actions workflow for the initial real-model test. Before merging, the workflow must be changed to **manual dispatch only** to avoid recurring inference charges from routine PR synchronization. The Kaggle route remains untouched and remains the primary intended hosted evaluation.
+Both real-model diagnostic jobs have been executed and their results archived. The GitHub Actions workflow is now **manual dispatch only**; routine PR updates and merges will not execute further inference. The Kaggle route remains untouched and remains the primary intended hosted evaluation.
 
 ## Real executions and falsification
 
